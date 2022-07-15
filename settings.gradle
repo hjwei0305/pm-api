@@ -1,0 +1,5 @@
+rootProject.name = 'pm-api'
+
+include 'pm-api-service'
+include 'pm-api-api'
+
