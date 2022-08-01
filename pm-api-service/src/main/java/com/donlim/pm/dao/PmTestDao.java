@@ -1,5 +1,4 @@
 package com.donlim.pm.dao;
-
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.donlim.pm.entity.PmTest;
 import org.springframework.stereotype.Repository;

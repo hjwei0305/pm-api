@@ -3,12 +3,14 @@ sei:
     env: DEV
     code: pm-api
     version: '@project_version@'
-    description: '@project_description@'
+    description: '@project_version@'
   mock:
     user:
       tenant-code: DONLIM
       account: admin
-
+  http:
+    filter:
+      enable: false
 spring:
   application:
     name: ${sei.application.code}
