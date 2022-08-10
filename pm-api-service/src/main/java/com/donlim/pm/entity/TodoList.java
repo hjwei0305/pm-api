@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 import java.time.LocalDate;
 /**
  * 代办事项(TodoList)实体类
@@ -71,12 +70,12 @@ public class TodoList extends BaseAuditableEntity implements Serializable {
      * 是否完成
      */
     @Column(name = "is_completed")
-    private String isCompleted;
+    private Boolean isCompleted;
     /**
      * 是否结案
      */
     @Column(name = "is_finished")
-    private String isFinished;
+    private Boolean isFinished;
     /**
      * 备注
      */
@@ -161,19 +160,19 @@ public class TodoList extends BaseAuditableEntity implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getIsCompleted() {
+    public Boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setIsCompleted(String isCompleted) {
+    public void setIsCompleted(Boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
 
-    public String getIsFinished() {
+    public Boolean getIsFinished() {
         return isFinished;
     }
 
-    public void setIsFinished(String isFinished) {
+    public void setIsFinished(Boolean isFinished) {
         this.isFinished = isFinished;
     }
 

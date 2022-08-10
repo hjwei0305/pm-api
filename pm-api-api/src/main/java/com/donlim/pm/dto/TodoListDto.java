@@ -3,8 +3,8 @@ package com.donlim.pm.dto;
 import com.changhong.sei.core.dto.BaseEntityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * 代办事项(TodoList)DTO类
@@ -64,12 +64,12 @@ public class TodoListDto extends BaseEntityDto {
      * 是否完成
      */
     @ApiModelProperty(value = "是否完成")
-    private String isCompleted;
+    private Boolean isCompleted;
     /**
      * 是否结案
      */
     @ApiModelProperty(value = "是否结案")
-    private String isFinished;
+    private Boolean isFinished;
     /**
      * 备注
      */
@@ -154,19 +154,19 @@ public class TodoListDto extends BaseEntityDto {
         this.endDate = endDate;
     }
 
-    public String getIsCompleted() {
+    public Boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setIsCompleted(String isCompleted) {
+    public void setIsCompleted(Boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
 
-    public String getIsFinished() {
+    public Boolean getIsFinished() {
         return isFinished;
     }
 
-    public void setIsFinished(String isFinished) {
+    public void setIsFinished(Boolean isFinished) {
         this.isFinished = isFinished;
     }
 
