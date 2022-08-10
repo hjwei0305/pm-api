@@ -4,6 +4,8 @@ apply plugin: 'io.spring.dependency-management'
 dependencies {
     // SEI平台依赖包
     compile("com.changhong.sei:sei-core-api:$sei_version")
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
 
 //打包源代码jar包
@@ -18,6 +20,7 @@ jar {
         attributes("Implementation-Vendor": "rcsit.cn")
         attributes("Description": "$project.description")
         attributes("Build-Time": new Date().format("yyyy-MM-dd HH:mm:ss"))
+
     }
 }
 

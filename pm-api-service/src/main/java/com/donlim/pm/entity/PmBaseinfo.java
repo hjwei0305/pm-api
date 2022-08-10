@@ -1,28 +1,29 @@
 package com.donlim.pm.entity;
 
 import com.changhong.sei.core.entity.BaseAuditableEntity;
+import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.annotation.sql.DataSourceDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 import java.time.LocalDate;
-
 /**
- * 基础资料(PmBaseinfo)实体类
+ * 提案清单(PmBaseinfo)实体类
  *
  * @author sei
- * @since 2022-07-28 09:01:47
+ * @since 2022-08-10 15:54:39
  */
 @Entity
 @Table(name = "pm_baseinfo")
 @DynamicInsert
 @DynamicUpdate
+@Data
 public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
-    private static final long serialVersionUID = 999284241070392357L;
+    private static final long serialVersionUID = 531648652937572715L;
     /**
      * 编码
      */
@@ -67,22 +68,22 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 项目天数
      */
     @Column(name = "project_days")
-    private String projectDays;
+    private Integer projectDays;
     /**
      * 是否逾期
      */
     @Column(name = "is_overdue")
-    private Integer isOverdue;
+    private Boolean isOverdue;
     /**
      * 逾期天数
      */
     @Column(name = "overed_days")
-    private String overedDays;
+    private Integer overedDays;
     /**
      * 参与人数
      */
     @Column(name = "attendance_memberr_count")
-    private String attendanceMemberrCount;
+    private Integer attendanceMemberrCount;
     /**
      * 提案日期
      */
@@ -134,194 +135,102 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     @Column(name = "remark")
     private String remark;
     /**
+     * 项目大点节
+     */
+    @Column(name = "big_node")
+    private String bigNode;
+    /**
+     * 项目小节点
+     */
+    @Column(name = "small_node")
+    private String smallNode;
+    /**
+     * 需求范围说明书id
+     */
+    @Column(name = "require_doc_id")
+    private String requireDocId;
+    /**
+     * 验收标准id
+     */
+    @Column(name = "accept_standard_doc_id")
+    private String acceptStandardDocId;
+    /**
+     * 启动报告id
+     */
+    @Column(name = "start_report_doc_id")
+    private String startReportDocId;
+    /**
+     * 用户需求说明书id
+     */
+    @Column(name = "user_require_doc_id")
+    private String userRequireDocId;
+    /**
+     * 设计图id
+     */
+    @Column(name = "designer_doc_id")
+    private String designerDocId;
+    /**
+     * 切图id
+     */
+    @Column(name = "crop_doc_id")
+    private String cropDocId;
+    /**
+     * 测试用例id
+     */
+    @Column(name = "test_example_doc_id")
+    private String testExampleDocId;
+    /**
+     * 测试报告id
+     */
+    @Column(name = "test_report_doc_id")
+    private String testReportDocId;
+    /**
+     * SOP
+     */
+    @Column(name = "sop_doc_id")
+    private String sopDocId;
+    /**
+     * 问题清单id
+     */
+    @Column(name = "question_list_doc_id")
+    private String questionListDocId;
+    /**
+     * 关健节点点检表id
+     */
+    @Column(name = "check_list_doc_id")
+    private String checkListDocId;
+    /**
+     * 结案报告id
+     */
+    @Column(name = "case_close_report_doc_id")
+    private String caseCloseReportDocId;
+    /**
+     * 满意度调查表id
+     */
+    @Column(name = "satisfaction_survey_doc_id")
+    private String satisfactionSurveyDocId;
+    /**
+     * 页面点检id
+     */
+    @Column(name = "page_check_doc_id")
+    private String pageCheckDocId;
+    /**
+     * 验收单id
+     */
+    @Column(name = "accept_order_doc_id")
+    private String acceptOrderDocId;
+    /**
+     * 验收报告id
+     */
+    @Column(name = "accpet_reprot_doc_id")
+    private String accpetReprotDocId;
+    /**
      * 租户代码
      */
     @Column(name = "tenant_code")
     private String tenantCode;
 
 
-    public String getCode() {
-        return code;
-    }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProjectMaster() {
-        return projectMaster;
-    }
-
-    public void setProjectMaster(String projectMaster) {
-        this.projectMaster = projectMaster;
-    }
-
-    public String getCurrentPeriod() {
-        return currentPeriod;
-    }
-
-    public void setCurrentPeriod(String currentPeriod) {
-        this.currentPeriod = currentPeriod;
-    }
-
-    public String getMasterScheduleRate() {
-        return masterScheduleRate;
-    }
-
-    public void setMasterScheduleRate(String masterScheduleRate) {
-        this.masterScheduleRate = masterScheduleRate;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getPlanFinishDate() {
-        return planFinishDate;
-    }
-
-    public void setPlanFinishDate(LocalDate planFinishDate) {
-        this.planFinishDate = planFinishDate;
-    }
-
-    public LocalDate getFinalFinishDate() {
-        return finalFinishDate;
-    }
-
-    public void setFinalFinishDate(LocalDate finalFinishDate) {
-        this.finalFinishDate = finalFinishDate;
-    }
-
-    public String getProjectDays() {
-        return projectDays;
-    }
-
-    public void setProjectDays(String projectDays) {
-        this.projectDays = projectDays;
-    }
-
-    public Integer getIsOverdue() {
-        return isOverdue;
-    }
-
-    public void setIsOverdue(Integer isOverdue) {
-        this.isOverdue = isOverdue;
-    }
-
-    public String getOveredDays() {
-        return overedDays;
-    }
-
-    public void setOveredDays(String overedDays) {
-        this.overedDays = overedDays;
-    }
-
-    public String getAttendanceMemberrCount() {
-        return attendanceMemberrCount;
-    }
-
-    public void setAttendanceMemberrCount(String attendanceMemberrCount) {
-        this.attendanceMemberrCount = attendanceMemberrCount;
-    }
-
-    public LocalDate getSubmissionDate() {
-        return submissionDate;
-    }
-
-    public void setSubmissionDate(LocalDate submissionDate) {
-        this.submissionDate = submissionDate;
-    }
-
-    public String getPlanningApproval() {
-        return planningApproval;
-    }
-
-    public void setPlanningApproval(String planningApproval) {
-        this.planningApproval = planningApproval;
-    }
-
-    public String getCurrentDescription() {
-        return currentDescription;
-    }
-
-    public void setCurrentDescription(String currentDescription) {
-        this.currentDescription = currentDescription;
-    }
-
-    public String getRequirementDescription() {
-        return requirementDescription;
-    }
-
-    public void setRequirementDescription(String requirementDescription) {
-        this.requirementDescription = requirementDescription;
-    }
-
-    public String getImproveBenefits() {
-        return improveBenefits;
-    }
-
-    public void setImproveBenefits(String improveBenefits) {
-        this.improveBenefits = improveBenefits;
-    }
-
-    public String getPromotionDegree() {
-        return promotionDegree;
-    }
-
-    public void setPromotionDegree(String promotionDegree) {
-        this.promotionDegree = promotionDegree;
-    }
-
-    public String getHardwareRequirement() {
-        return hardwareRequirement;
-    }
-
-    public void setHardwareRequirement(String hardwareRequirement) {
-        this.hardwareRequirement = hardwareRequirement;
-    }
-
-    public String getProjectTypes() {
-        return projectTypes;
-    }
-
-    public void setProjectTypes(String projectTypes) {
-        this.projectTypes = projectTypes;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
 
 }
