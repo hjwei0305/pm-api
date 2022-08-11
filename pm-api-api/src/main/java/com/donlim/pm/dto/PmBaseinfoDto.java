@@ -1,11 +1,16 @@
 package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
+import com.donlim.pm.em.FileTypeEnum;
+import com.donlim.pm.util.EnumJsonRemarkSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 /**
@@ -225,4 +230,9 @@ public class PmBaseinfoDto extends BaseEntityDto {
     private String tenantCode;
 
 
+    @ApiModelProperty(value = "文档ID")
+    private List<String> attachmentIdList;
+
+    @ApiModelProperty(value = "文档类别")
+    private String fileType;
 }
