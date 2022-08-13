@@ -4,6 +4,8 @@ import com.changhong.sei.core.dao.BaseEntityDao;
 import com.donlim.pm.entity.PmBaseinfo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 基础资料(PmBaseinfo)数据库访问类
  *
@@ -12,5 +14,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PmBaseinfoDao extends BaseEntityDao<PmBaseinfo> {
+
+    public List<PmBaseinfo>findAllByCodeIn(List<String>codeList);
 
 }

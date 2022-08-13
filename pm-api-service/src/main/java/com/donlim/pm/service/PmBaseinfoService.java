@@ -3,6 +3,7 @@ package com.donlim.pm.service;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.sdk.DocumentManager;
+import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dao.PmBaseinfoDao;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.FileTypeEnum;
@@ -16,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -55,6 +59,21 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 save(byId.get());
             }
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void  syncIppInfo(LocalDate localDate){
+        List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(localDate);
+        List<String> codeList = pmBaseinfoList.stream().map(PmBaseinfo::getCode).collect(Collectors.toList());
+        List<PmBaseinfo> allByCodeInList = dao.findAllByCodeIn(codeList);
+        //更新的附上ID
+        for(PmBaseinfo pmBaseinfo :pmBaseinfoList){
+            Optional<PmBaseinfo> first = allByCodeInList.stream().filter(a -> a.getCode().equals(pmBaseinfo.getCode())).findFirst();
+            if(first.isPresent()){
+                pmBaseinfo.setId(first.get().getId());
+            }
+        }
+        dao.save(pmBaseinfoList);
     }
 
 
