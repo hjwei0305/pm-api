@@ -18,4 +18,7 @@ import javax.validation.Valid;
 @FeignClient(name = "pm-api", path = PmBaseinfoApi.PATH)
 public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageApi<PmBaseinfoDto> {
     String PATH = "pmBaseinfo";
+
+
+
 }

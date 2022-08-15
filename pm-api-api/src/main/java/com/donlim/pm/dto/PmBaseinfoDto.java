@@ -1,21 +1,28 @@
 package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
+import com.donlim.pm.em.FileTypeEnum;
+import com.donlim.pm.util.EnumJsonRemarkSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
+
 
 /**
- * 基础资料(PmBaseinfo)DTO类
+ * 提案清单(PmBaseinfo)DTO类
  *
  * @author sei
- * @since 2022-07-28 08:56:29
+ * @since 2022-08-10 15:49:26
  */
-@ApiModel(description = "基础资料DTO")
+@ApiModel(description = "提案清单DTO")
+@Data
 public class PmBaseinfoDto extends BaseEntityDto {
-    private static final long serialVersionUID = 770347183022104499L;
+    private static final long serialVersionUID = 417621879606687300L;
     /**
      * 编码
      */
@@ -46,7 +53,6 @@ public class PmBaseinfoDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "开始日期")
     private LocalDate startDate;
-    //private Date startDate;
     /**
      * 计划结案日期
      */
@@ -61,17 +67,17 @@ public class PmBaseinfoDto extends BaseEntityDto {
      * 项目天数
      */
     @ApiModelProperty(value = "项目天数")
-    private String projectDays;
+    private Integer projectDays;
     /**
      * 是否逾期
      */
     @ApiModelProperty(value = "是否逾期")
-    private Integer isOverdue;
+    private Boolean isOverdue;
     /**
      * 逾期天数
      */
     @ApiModelProperty(value = "逾期天数")
-    private String overedDays;
+    private Integer overedDays;
     /**
      * 参与人数
      */
@@ -128,193 +134,105 @@ public class PmBaseinfoDto extends BaseEntityDto {
     @ApiModelProperty(value = "备注")
     private String remark;
     /**
+     * 项目大点节
+     */
+    @ApiModelProperty(value = "项目大点节")
+    private String bigNode;
+    /**
+     * 项目小节点
+     */
+    @ApiModelProperty(value = "项目小节点")
+    private String smallNode;
+    /**
+     * 需求范围说明书id
+     */
+    @ApiModelProperty(value = "需求范围说明书id")
+    private String requireDocId;
+    /**
+     * 验收标准id
+     */
+    @ApiModelProperty(value = "验收标准id")
+    private String acceptStandardDocId;
+    /**
+     * 启动报告id
+     */
+    @ApiModelProperty(value = "启动报告id")
+    private String startReportDocId;
+    /**
+     * 用户需求说明书id
+     */
+    @ApiModelProperty(value = "用户需求说明书id")
+    private String userRequireDocId;
+    /**
+     * 设计图id
+     */
+    @ApiModelProperty(value = "设计图id")
+    private String designerDocId;
+    /**
+     * 切图id
+     */
+    @ApiModelProperty(value = "切图id")
+    private String cropDocId;
+    /**
+     * 测试用例id
+     */
+    @ApiModelProperty(value = "测试用例id")
+    private String testExampleDocId;
+    /**
+     * 测试报告id
+     */
+    @ApiModelProperty(value = "测试报告id")
+    private String testReportDocId;
+    /**
+     * SOP
+     */
+    @ApiModelProperty(value = "SOP")
+    private String sopDocId;
+    /**
+     * 问题清单id
+     */
+    @ApiModelProperty(value = "问题清单id")
+    private String questionListDocId;
+    /**
+     * 关健节点点检表id
+     */
+    @ApiModelProperty(value = "关健节点点检表id")
+    private String checkListDocId;
+    /**
+     * 结案报告id
+     */
+    @ApiModelProperty(value = "结案报告id")
+    private String caseCloseReportDocId;
+    /**
+     * 满意度调查表id
+     */
+    @ApiModelProperty(value = "满意度调查表id")
+    private String satisfactionSurveyDocId;
+    /**
+     * 页面点检id
+     */
+    @ApiModelProperty(value = "页面点检id")
+    private String pageCheckDocId;
+    /**
+     * 验收单id
+     */
+    @ApiModelProperty(value = "验收单id")
+    private String acceptOrderDocId;
+    /**
+     * 验收报告id
+     */
+    @ApiModelProperty(value = "验收报告id")
+    private String accpetReprotDocId;
+    /**
      * 租户代码
      */
     @ApiModelProperty(value = "租户代码")
     private String tenantCode;
 
 
-    public String getCode() {
-        return code;
-    }
+    @ApiModelProperty(value = "文档ID")
+    private List<String> attachmentIdList;
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProjectMaster() {
-        return projectMaster;
-    }
-
-    public void setProjectMaster(String projectMaster) {
-        this.projectMaster = projectMaster;
-    }
-
-    public String getCurrentPeriod() {
-        return currentPeriod;
-    }
-
-    public void setCurrentPeriod(String currentPeriod) {
-        this.currentPeriod = currentPeriod;
-    }
-
-    public String getMasterScheduleRate() {
-        return masterScheduleRate;
-    }
-
-    public void setMasterScheduleRate(String masterScheduleRate) {
-        this.masterScheduleRate = masterScheduleRate;
-    }
-
-    //public Date getStartDate() {return startDate;}
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    //public void setStartDate(Date startDate) {this.startDate = startDate;}
-    public void setStartDate(LocalDate startDate) {this.startDate = startDate;}
-    public LocalDate getPlanFinishDate() {
-        return planFinishDate;
-    }
-
-    public void setPlanFinishDate(LocalDate planFinishDate) {
-        this.planFinishDate = planFinishDate;
-    }
-
-    public LocalDate getFinalFinishDate() {
-        return finalFinishDate;
-    }
-
-    public void setFinalFinishDate(LocalDate finalFinishDate) {
-        this.finalFinishDate = finalFinishDate;
-    }
-
-    public String getProjectDays() {
-        return projectDays;
-    }
-
-    public void setProjectDays(String projectDays) {
-        this.projectDays = projectDays;
-    }
-
-    public Integer getIsOverdue() {
-        return isOverdue;
-    }
-
-    public void setIsOverdue(Integer isOverdue) {
-        this.isOverdue = isOverdue;
-    }
-
-    public String getOveredDays() {
-        return overedDays;
-    }
-
-    public void setOveredDays(String overedDays) {
-        this.overedDays = overedDays;
-    }
-
-    public String getAttendanceMemberrCount() {
-        return attendanceMemberrCount;
-    }
-
-    public void setAttendanceMemberrCount(String attendanceMemberrCount) {
-        this.attendanceMemberrCount = attendanceMemberrCount;
-    }
-
-    public LocalDate getSubmissionDate() {
-        return submissionDate;
-    }
-
-    public void setSubmissionDate(LocalDate submissionDate) {
-        this.submissionDate = submissionDate;
-    }
-
-    public String getPlanningApproval() {
-        return planningApproval;
-    }
-
-    public void setPlanningApproval(String planningApproval) {
-        this.planningApproval = planningApproval;
-    }
-
-    public String getCurrentDescription() {
-        return currentDescription;
-    }
-
-    public void setCurrentDescription(String currentDescription) {
-        this.currentDescription = currentDescription;
-    }
-
-    public String getRequirementDescription() {
-        return requirementDescription;
-    }
-
-    public void setRequirementDescription(String requirementDescription) {
-        this.requirementDescription = requirementDescription;
-    }
-
-    public String getImproveBenefits() {
-        return improveBenefits;
-    }
-
-    public void setImproveBenefits(String improveBenefits) {
-        this.improveBenefits = improveBenefits;
-    }
-
-    public String getPromotionDegree() {
-        return promotionDegree;
-    }
-
-    public void setPromotionDegree(String promotionDegree) {
-        this.promotionDegree = promotionDegree;
-    }
-
-    public String getHardwareRequirement() {
-        return hardwareRequirement;
-    }
-
-    public void setHardwareRequirement(String hardwareRequirement) {
-        this.hardwareRequirement = hardwareRequirement;
-    }
-
-    public String getProjectTypes() {
-        return projectTypes;
-    }
-
-    public void setProjectTypes(String projectTypes) {
-        this.projectTypes = projectTypes;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
+    @ApiModelProperty(value = "文档类别")
+    private String fileType;
 }
