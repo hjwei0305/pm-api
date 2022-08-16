@@ -2,118 +2,137 @@ package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 /**
- * 员工表(PmEmployee)DTO类
+ * (PmEmployee)DTO类
  *
  * @author sei
- * @since 2022-07-27 17:16:06
+ * @since 2022-08-10 16:44:03
  */
-@ApiModel(description = "员工表DTO")
+@ApiModel(description = "DTO")
 public class PmEmployeeDto extends BaseEntityDto {
-    private static final long serialVersionUID = -26136492049020062L;
-    /**
-     * EMPID
-     */
-    @ApiModelProperty(value = "EMPID")
-    private Integer empId;
-    /**
-     * 工号
-     */
-    @ApiModelProperty(value = "工号")
-    private String code;
-    /**
-     * 姓名
-     */
-    @ApiModelProperty(value = "姓名")
-    private String name;
-    /**
-     * 部门id
-     */
-    @ApiModelProperty(value = "部门id")
-    private String empDeptId;
-    /**
-     * 职务
-     */
-    @ApiModelProperty(value = "职务")
-    private String empZhiwu;
-    /**
-     * 人员状态
-     */
-    @ApiModelProperty(value = "人员状态")
-    private Integer empState;
-    /**
-     * 联系电话
-     */
-    @ApiModelProperty(value = "联系电话")
-    private String empLxdh;
-    /**
-     * 备注
-     */
-    @ApiModelProperty(value = "备注")
+    private static final long serialVersionUID = -47355896084772616L;
+
+
+    private String employeeCode;
+
+
+    private String employeeName;
+
+
+    private Integer groupid;
+
+
+    private Integer orgid;
+
+
+    private String orgcode;
+
+
+    private String orgname;
+
+
+    private String spName;
+
+
+    private String telephone;
+
+
+    private String empstatid;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDate ljdate;
+
+
     private String empRemark;
-    /**
-     * 租户代码
-     */
-    @ApiModelProperty(value = "租户代码")
+
+
     private String tenantCode;
 
+    private String idpath;
 
-    public Integer getEmpId() {
-        return empId;
+
+    public String getEmployeeCode() {
+        return employeeCode;
     }
 
-    public void setEmpId(Integer empId) {
-        this.empId = empId;
+    public void setEmployeeCode(String employeeCode) {
+        this.employeeCode = employeeCode;
     }
 
-    public String getCode() {
-        return code;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
-    public String getName() {
-        return name;
+    public Integer getGroupid() {
+        return groupid;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setGroupid(Integer groupid) {
+        this.groupid = groupid;
     }
 
-    public String getEmpDeptId() {
-        return empDeptId;
+    public Integer getOrgid() {
+        return orgid;
     }
 
-    public void setEmpDeptId(String empDeptId) {
-        this.empDeptId = empDeptId;
+    public void setOrgid(Integer orgid) {
+        this.orgid = orgid;
     }
 
-    public String getEmpZhiwu() {
-        return empZhiwu;
+    public String getOrgcode() {
+        return orgcode;
     }
 
-    public void setEmpZhiwu(String empZhiwu) {
-        this.empZhiwu = empZhiwu;
+    public void setOrgcode(String orgcode) {
+        this.orgcode = orgcode;
     }
 
-    public Integer getEmpState() {
-        return empState;
+    public String getOrgname() {
+        return orgname;
     }
 
-    public void setEmpState(Integer empState) {
-        this.empState = empState;
+    public void setOrgname(String orgname) {
+        this.orgname = orgname;
     }
 
-    public String getEmpLxdh() {
-        return empLxdh;
+    public String getSpName() {
+        return spName;
     }
 
-    public void setEmpLxdh(String empLxdh) {
-        this.empLxdh = empLxdh;
+    public void setSpName(String spName) {
+        this.spName = spName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getEmpstatid() {
+        return empstatid;
+    }
+
+    public void setEmpstatid(String empstatid) {
+        this.empstatid = empstatid;
+    }
+
+    public LocalDate getLjdate() {
+        return ljdate;
+    }
+
+    public void setLjdate(LocalDate ljdate) {
+        this.ljdate = ljdate;
     }
 
     public String getEmpRemark() {
@@ -132,4 +151,11 @@ public class PmEmployeeDto extends BaseEntityDto {
         this.tenantCode = tenantCode;
     }
 
+    public String getIdpath() {
+        return idpath;
+    }
+
+    public void setIdpath(String idpath) {
+        this.idpath = idpath;
+    }
 }

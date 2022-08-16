@@ -1,7 +1,10 @@
 package com.donlim.pm.controller;
 
-import com.changhong.sei.core.controller.BaseEntityController;
-import com.changhong.sei.core.service.BaseEntityService;
+import com.changhong.sei.core.controller.BaseTreeController;
+import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageResult;
+import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.service.BaseTreeService;
 import com.donlim.pm.api.PmOrganizeApi;
 import com.donlim.pm.dto.PmOrganizeDto;
 import com.donlim.pm.entity.PmOrganize;
@@ -12,25 +15,36 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 /**
- * 部门(PmOrganize)控制类
+ * (PmOrganize)控制类
  *
  * @author sei
- * @since 2022-07-30 08:12:25
+ * @since 2022-08-11 14:05:49
  */
 @RestController
-@Api(value = "PmOrganizeApi", tags = "部门服务")
+@Api(value = "PmOrganizeApi", tags = "服务")
 @RequestMapping(path = PmOrganizeApi.PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-public class PmOrganizeController extends BaseEntityController<PmOrganize, PmOrganizeDto> implements PmOrganizeApi {
+public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrganizeDto> implements PmOrganizeApi {
     /**
-     * 部门服务对象
+     * 服务对象
      */
     @Autowired
     private PmOrganizeService service;
 
     @Override
-    public BaseEntityService<PmOrganize> getService() {
+    public BaseTreeService<PmOrganize> getService() {
         return service;
     }
 
+    @Override
+    public ResultData<PageResult<PmOrganizeDto>> findByPage(Search search) {
+        return convertToDtoPageResult(service.findByPage(search));
+    }
+
+    @Override
+    public ResultData<PmOrganizeDto> findTree() {
+        return ResultData.success(convertToDto(service.findTree()));
+    }
 }
