@@ -1,6 +1,9 @@
 package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
+import com.changhong.sei.core.dto.serializer.EnumJsonSerializer;
+import com.donlim.pm.em.EmpstatidEnum;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -40,8 +43,8 @@ public class PmEmployeeDto extends BaseEntityDto {
 
     private String telephone;
 
-
-    private String empstatid;
+    @JsonSerialize(using = EnumJsonSerializer.class)
+    private EmpstatidEnum empstatid;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate ljdate;
@@ -119,14 +122,6 @@ public class PmEmployeeDto extends BaseEntityDto {
         this.telephone = telephone;
     }
 
-    public String getEmpstatid() {
-        return empstatid;
-    }
-
-    public void setEmpstatid(String empstatid) {
-        this.empstatid = empstatid;
-    }
-
     public LocalDate getLjdate() {
         return ljdate;
     }
@@ -157,5 +152,13 @@ public class PmEmployeeDto extends BaseEntityDto {
 
     public void setIdpath(String idpath) {
         this.idpath = idpath;
+    }
+
+    public EmpstatidEnum getEmpstatid() {
+        return empstatid;
+    }
+
+    public void setEmpstatid(EmpstatidEnum empstatid) {
+        this.empstatid = empstatid;
     }
 }

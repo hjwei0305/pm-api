@@ -3,9 +3,11 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
+import com.changhong.sei.util.EnumUtils;
 import com.donlim.pm.connector.HRMSConnector;
 import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dto.EmployeeDTO;
+import com.donlim.pm.em.EmpstatidEnum;
 import com.donlim.pm.entity.PmEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,7 @@ public class PmEmployeeService extends BaseEntityService<PmEmployee> {
         List<PmEmployee> allList = findAll();
         ArrayList<PmEmployee> saveList = new ArrayList<>();
         for (EmployeeDTO.DataDTO dataDTO : empList) {
+
             // 对比信息
             List<PmEmployee> pmEmployees = allList.stream()
                     .filter(emp -> emp.getEmployeeCode().equals(dataDTO.getEmployeeCode()))
@@ -56,7 +59,7 @@ public class PmEmployeeService extends BaseEntityService<PmEmployee> {
                 pmEmployee.setOrgname(dataDTO.getOrgname());
                 pmEmployee.setSpName(dataDTO.getSpName());
                 pmEmployee.setTelephone(dataDTO.getTelphone());
-                pmEmployee.setEmpstatid(dataDTO.getEmpstatid());
+                pmEmployee.setEmpstatid(EnumUtils.getEnum(EmpstatidEnum.class,Integer.valueOf(dataDTO.getEmpstatid())));
                 pmEmployee.setIdpath(dataDTO.getIdpath());
                 if(null != dataDTO.getLjdate() && !"0000-00-00 00:00:00".equals(dataDTO.getLjdate())){
                     pmEmployee.setLjdate(LocalDate.parse(dataDTO.getLjdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -72,7 +75,7 @@ public class PmEmployeeService extends BaseEntityService<PmEmployee> {
                 pmEmployee.setOrgname(dataDTO.getOrgname());
                 pmEmployee.setSpName(dataDTO.getSpName());
                 pmEmployee.setTelephone(dataDTO.getTelphone());
-                pmEmployee.setEmpstatid(dataDTO.getEmpstatid());
+                pmEmployee.setEmpstatid(EnumUtils.getEnum(EmpstatidEnum.class,Integer.valueOf(dataDTO.getEmpstatid())));
                 pmEmployee.setIdpath(dataDTO.getIdpath());
                 if(null != dataDTO.getLjdate() && !"0000-00-00 00:00:00".equals(dataDTO.getLjdate())){
                     pmEmployee.setLjdate(LocalDate.parse(dataDTO.getLjdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

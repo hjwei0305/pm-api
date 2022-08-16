@@ -1,6 +1,9 @@
 package com.donlim.pm.entity;
 
+import com.changhong.sei.core.dto.serializer.EnumJsonSerializer;
 import com.changhong.sei.core.entity.BaseAuditableEntity;
+import com.donlim.pm.em.EmpstatidEnum;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,8 +51,9 @@ public class PmEmployee extends BaseAuditableEntity implements Serializable {
     @Column(name = "telephone")
     private String telephone;
 
+    @JsonSerialize(using = EnumJsonSerializer.class)
     @Column(name = "empstatid")
-    private String empstatid;
+    private EmpstatidEnum empstatid;
 
     @Column(name = "ljdate")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -129,11 +133,11 @@ public class PmEmployee extends BaseAuditableEntity implements Serializable {
         this.telephone = telephone;
     }
 
-    public String getEmpstatid() {
+    public EmpstatidEnum getEmpstatid() {
         return empstatid;
     }
 
-    public void setEmpstatid(String empstatid) {
+    public void setEmpstatid(EmpstatidEnum empstatid) {
         this.empstatid = empstatid;
     }
 

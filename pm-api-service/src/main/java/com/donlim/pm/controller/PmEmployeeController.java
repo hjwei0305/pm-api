@@ -5,12 +5,12 @@ import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.service.BaseEntityService;
+import com.changhong.sei.util.EnumUtils;
 import com.donlim.pm.api.PmEmployeeApi;
-import com.donlim.pm.constant.HRMSConstant;
 import com.donlim.pm.dto.PmEmployeeDto;
-import com.donlim.pm.dto.enums.EmpstatidEnum;
-import com.donlim.pm.dto.excel.PmEmployeeExcelDto;
 import com.donlim.pm.dto.PmOrganizeDto;
+import com.donlim.pm.em.EmpstatidEnum;
+import com.donlim.pm.dto.excel.PmEmployeeExcelDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.service.PmEmployeeService;
 import io.swagger.annotations.Api;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -64,24 +65,8 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
         TypeMap<PmEmployee, PmEmployeeExcelDto> typeMap = modelMapper.typeMap(PmEmployee.class, PmEmployeeExcelDto.class);
         List<PmEmployeeExcelDto> collect = allOrders.stream().map(typeMap::map).collect(Collectors.toList());
         collect.stream().forEach(c ->{
-            if(null != c.getEmpstatid()) {
-                switch (c.getEmpstatid()) {
-                    case HRMSConstant.PRACTICE:
-                        c.setEmpstatid(EmpstatidEnum.PRACTICE.getNote());
-                        break;
-                    case HRMSConstant.TRY:
-                        c.setEmpstatid(EmpstatidEnum.TRY.getNote());
-                        break;
-                    case HRMSConstant.INSPECT:
-                        c.setEmpstatid(EmpstatidEnum.INSPECT.getNote());
-                        break;
-                    case HRMSConstant.OFFICIAL:
-                        c.setEmpstatid(EmpstatidEnum.OFFICIAL.getNote());
-                        break;
-                    case HRMSConstant.LEAVE:
-                        c.setEmpstatid(EmpstatidEnum.LEAVE.getNote());
-                        break;
-                }
+            if(Objects.nonNull(c.getEmpstatid())){
+                c.setEmpstatid(EnumUtils.getEnumItemRemark(EmpstatidEnum.class,EnumUtils.getEnum(EmpstatidEnum.class,c.getEmpstatid())));
             }
         });
         return ResultData.success(collect);
