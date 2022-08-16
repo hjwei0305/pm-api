@@ -48,8 +48,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PmBaseinfoDto> save(PmBaseinfoDto dto) {
-
         service.bindFile(dto);
         return ResultData.success();
+
     }
+
+
+
+
 }

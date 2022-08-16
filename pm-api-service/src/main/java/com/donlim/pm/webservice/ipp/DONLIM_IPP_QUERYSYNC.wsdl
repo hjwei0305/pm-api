@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!--File DONLIM_IMOS_QUERYSYNC.wsdl, application DONLIM_IPP_QUERYSYNC--><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="DONLIM_IMOS_QUERYSYNC" targetNamespace="http://www.example.org/DONLIM_IMOS_QUERYSYNC/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/DONLIM_IMOS_QUERYSYNC/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <generatedXSD location="DONLIM_IMOS_QUERYSYNC_InlineSchema1.xsd"/>
+        <binding hasEncoding="false" imported="true" name="DONLIM_IMOS_QUERYSYNCSOAP" originalBindingStyle="document"/>
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  
+  
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/DONLIM_IMOS_QUERYSYNC/">
+<xsd:include schemaLocation="http://10.233.0.138:7801/WS/DONLIM/IPP/DONLIM_IPP_QUERYSYNC?xsd=xsd0"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="DONLIM_IMOS_QUERYSYNCRequest">
+    <wsdl:part element="tns:DONLIM_IMOS_QUERYSYNC" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="DONLIM_IMOS_QUERYSYNCResponse">
+    <wsdl:part element="tns:DONLIM_IMOS_QUERYSYNCResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="DONLIM_IMOS_QUERYSYNC">
+    <wsdl:operation name="DONLIM_IMOS_QUERYSYNC">
+      <wsdl:input message="tns:DONLIM_IMOS_QUERYSYNCRequest"/>
+      <wsdl:output message="tns:DONLIM_IMOS_QUERYSYNCResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DONLIM_IMOS_QUERYSYNCSOAP" type="tns:DONLIM_IMOS_QUERYSYNC">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DONLIM_IMOS_QUERYSYNC">
+      <soap:operation soapAction="http://www.example.org/DONLIM_IMOS_QUERYSYNC/DONLIM_IMOS_QUERYSYNC"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DONLIM_IMOS_QUERYSYNC">
+    <wsdl:port binding="tns:DONLIM_IMOS_QUERYSYNCSOAP" name="DONLIM_IMOS_QUERYSYNCSOAP">
+      <soap:address location="http://10.233.0.138:7801/WS/DONLIM/IPP/DONLIM_IPP_QUERYSYNC"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
