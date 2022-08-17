@@ -9,6 +9,7 @@ import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dto.EmployeeDTO;
 import com.donlim.pm.em.EmpstatidEnum;
 import com.donlim.pm.entity.PmEmployee;
+import com.donlim.pm.entity.PmOrganize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 public class PmEmployeeService extends BaseEntityService<PmEmployee> {
     @Autowired
     private PmEmployeeDao dao;
+    @Autowired
+    private PmOrganizeService pmOrganizeService;
 
     @Override
     protected BaseEntityDao<PmEmployee> getDao() {
@@ -41,18 +44,23 @@ public class PmEmployeeService extends BaseEntityService<PmEmployee> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void synEmp(){
+        // 组织要有租户代码
+        List<PmOrganize> allOrgList = pmOrganizeService.findAll();
         List<EmployeeDTO.DataDTO> empList = HRMSConnector.getEmp();
         List<PmEmployee> allList = findAll();
         ArrayList<PmEmployee> saveList = new ArrayList<>();
         for (EmployeeDTO.DataDTO dataDTO : empList) {
-
             // 对比信息
             List<PmEmployee> pmEmployees = allList.stream()
                     .filter(emp -> emp.getEmployeeCode().equals(dataDTO.getEmployeeCode()))
                     .collect(Collectors.toList());
+            List<PmOrganize> orgList = allOrgList.stream()
+                    .filter(org -> org.getCode().equals(dataDTO.getOrgcode()))
+                    .collect(Collectors.toList());
             if(pmEmployees.size()>0){
                 // 更新
                 PmEmployee pmEmployee = pmEmployees.get(0);
+                pmEmployee.setGroupid(orgList.size() > 0 ? orgList.get(0).getId() : null);
                 pmEmployee.setEmployeeName(dataDTO.getEmployeeName());
                 pmEmployee.setOrgid(dataDTO.getOrgid());
                 pmEmployee.setOrgcode(dataDTO.getOrgcode());
@@ -68,6 +76,7 @@ public class PmEmployeeService extends BaseEntityService<PmEmployee> {
             }else {
                 // 新增
                 PmEmployee pmEmployee = new PmEmployee();
+                pmEmployee.setGroupid(orgList.size() > 0 ? orgList.get(0).getId() : null);
                 pmEmployee.setEmployeeCode(dataDTO.getEmployeeCode());
                 pmEmployee.setEmployeeName(dataDTO.getEmployeeName());
                 pmEmployee.setOrgid(dataDTO.getOrgid());

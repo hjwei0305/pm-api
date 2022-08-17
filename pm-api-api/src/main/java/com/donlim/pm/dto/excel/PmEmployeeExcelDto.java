@@ -20,6 +20,9 @@ public class PmEmployeeExcelDto {
     @ApiModelProperty(value = "职务")
     private String spName;
 
+    @ApiModelProperty(value = "所在小组")
+    private String pmOrganizeGroupName;
+
     @ApiModelProperty(value = "所在部门")
     private String orgname;
 
@@ -75,5 +78,13 @@ public class PmEmployeeExcelDto {
 
     public void setEmpstatid(String empstatid) {
         this.empstatid = empstatid;
+    }
+
+    public String getPmOrganizeGroupName() {
+        return pmOrganizeGroupName;
+    }
+
+    public void setPmOrganizeGroupName(String pmOrganizeGroupName) {
+        this.pmOrganizeGroupName = pmOrganizeGroupName;
     }
 }

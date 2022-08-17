@@ -26,10 +26,12 @@ public class PmEmployeeDto extends BaseEntityDto {
     private String employeeName;
 
 
-    private Integer groupid;
+    private String groupid;
 
 
     private Integer orgid;
+
+    private String pmOrganizeGroupName;
 
 
     private String orgcode;
@@ -74,11 +76,11 @@ public class PmEmployeeDto extends BaseEntityDto {
         this.employeeName = employeeName;
     }
 
-    public Integer getGroupid() {
+    public String getGroupid() {
         return groupid;
     }
 
-    public void setGroupid(Integer groupid) {
+    public void setGroupid(String groupid) {
         this.groupid = groupid;
     }
 
@@ -160,5 +162,13 @@ public class PmEmployeeDto extends BaseEntityDto {
 
     public void setEmpstatid(EmpstatidEnum empstatid) {
         this.empstatid = empstatid;
+    }
+
+    public String getPmOrganizeGroupName() {
+        return pmOrganizeGroupName;
+    }
+
+    public void setPmOrganizeGroupName(String pmOrganizeGroupName) {
+        this.pmOrganizeGroupName = pmOrganizeGroupName;
     }
 }

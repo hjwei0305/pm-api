@@ -42,6 +42,9 @@ public class PmOrganize extends BaseAuditableEntity implements Serializable , IF
     @Column(name = "manager")
     private String manager;
 
+    @Column(name = "group_name")
+    private String groupName;
+
     @Column(name = "superid")
     private Integer superid;
 
@@ -61,7 +64,7 @@ public class PmOrganize extends BaseAuditableEntity implements Serializable , IF
     private String category;
 
     @Column(name = "member_count")
-    private String memberCount;
+    private Integer memberCount;
 
     @Column(name = "remark")
     private String remark;
@@ -212,11 +215,11 @@ public class PmOrganize extends BaseAuditableEntity implements Serializable , IF
         this.category = category;
     }
 
-    public String getMemberCount() {
+    public Integer getMemberCount() {
         return memberCount;
     }
 
-    public void setMemberCount(String memberCount) {
+    public void setMemberCount(Integer memberCount) {
         this.memberCount = memberCount;
     }
 
@@ -245,5 +248,13 @@ public class PmOrganize extends BaseAuditableEntity implements Serializable , IF
     @Override
     public void setFrozen(Boolean frozen) {
         this.frozen = frozen;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
