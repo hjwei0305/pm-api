@@ -8,9 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -34,7 +32,11 @@ public class PmEmployee extends BaseAuditableEntity implements Serializable {
     private String employeeName;
 
     @Column(name = "groupid")
-    private Integer groupid;
+    private String groupid;
+
+    @JoinColumn(name = "groupid",insertable = false,updatable = false)
+    @ManyToOne
+    private PmOrganize pmOrganize;
 
     @Column(name = "orgid")
     private Integer orgid;
@@ -85,11 +87,11 @@ public class PmEmployee extends BaseAuditableEntity implements Serializable {
         this.employeeName = employeeName;
     }
 
-    public Integer getGroupid() {
+    public String getGroupid() {
         return groupid;
     }
 
-    public void setGroupid(Integer groupid) {
+    public void setGroupid(String groupid) {
         this.groupid = groupid;
     }
 
@@ -171,5 +173,13 @@ public class PmEmployee extends BaseAuditableEntity implements Serializable {
 
     public void setIdpath(String idpath) {
         this.idpath = idpath;
+    }
+
+    public PmOrganize getPmOrganize() {
+        return pmOrganize;
+    }
+
+    public void setPmOrganize(PmOrganize pmOrganize) {
+        this.pmOrganize = pmOrganize;
     }
 }

@@ -31,6 +31,7 @@ public class PmOrganizeDto extends BaseEntityDto implements TreeEntity<PmOrganiz
 
     private String manager;
 
+    private String groupName;
 
     private Integer superid;
 
@@ -50,7 +51,7 @@ public class PmOrganizeDto extends BaseEntityDto implements TreeEntity<PmOrganiz
     private String category;
 
 
-    private String memberCount;
+    private Integer memberCount;
 
 
     private String remark;
@@ -131,11 +132,11 @@ public class PmOrganizeDto extends BaseEntityDto implements TreeEntity<PmOrganiz
         this.category = category;
     }
 
-    public String getMemberCount() {
+    public Integer getMemberCount() {
         return memberCount;
     }
 
-    public void setMemberCount(String memberCount) {
+    public void setMemberCount(Integer memberCount) {
         this.memberCount = memberCount;
     }
 
@@ -216,4 +217,11 @@ public class PmOrganizeDto extends BaseEntityDto implements TreeEntity<PmOrganiz
         this.children = children;
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 }

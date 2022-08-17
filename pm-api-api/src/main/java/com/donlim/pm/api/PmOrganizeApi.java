@@ -3,12 +3,18 @@ package com.donlim.pm.api;
 import com.changhong.sei.core.api.BaseTreeApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.PmOrganizeDto;
+import com.donlim.pm.dto.excel.PmOrganizeExcelDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 /**
@@ -30,4 +36,12 @@ public interface PmOrganizeApi extends BaseTreeApi<PmOrganizeDto>, FindByPageApi
     @GetMapping(path = "findOrgTree")
     @ApiOperation(value = "获取组织机构树",notes = "获取组织机构树")
     ResultData<PmOrganizeDto> findTree();
+
+    /**
+     * 导出组织一览表excel
+     * @param search 查询条件
+     */
+    @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "导出组织一览表" ,notes = "导出组织一览表")
+    ResultData<List<PmOrganizeExcelDto>> export(@RequestBody Search search);
 }

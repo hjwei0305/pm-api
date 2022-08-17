@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>SvcHdrsType complex typeµÄ Java Àà¡£
+ * <p>SvcHdrsType complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>
  * &lt;complexType name="SvcHdrsType">
@@ -68,7 +68,7 @@ public class SvcHdrsType {
     protected String resultJson;
 
     /**
-     * »ñÈ¡rcodeÊôĞÔµÄÖµ¡£
+     * è·å–rcodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -80,7 +80,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃrcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®rcodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -92,7 +92,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡rdescÊôĞÔµÄÖµ¡£
+     * è·å–rdescå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -104,7 +104,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃrdescÊôĞÔµÄÖµ¡£
+     * è®¾ç½®rdescå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -116,7 +116,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡esbcodeÊôĞÔµÄÖµ¡£
+     * è·å–esbcodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -128,7 +128,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃesbcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®esbcodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -140,7 +140,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡user01ÊôĞÔµÄÖµ¡£
+     * è·å–user01å±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -152,7 +152,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃuser01ÊôĞÔµÄÖµ¡£
+     * è®¾ç½®user01å±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -164,7 +164,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡user02ÊôĞÔµÄÖµ¡£
+     * è·å–user02å±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -176,7 +176,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃuser02ÊôĞÔµÄÖµ¡£
+     * è®¾ç½®user02å±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -188,7 +188,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡user03ÊôĞÔµÄÖµ¡£
+     * è·å–user03å±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -200,7 +200,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃuser03ÊôĞÔµÄÖµ¡£
+     * è®¾ç½®user03å±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -212,7 +212,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡user04ÊôĞÔµÄÖµ¡£
+     * è·å–user04å±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -224,7 +224,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃuser04ÊôĞÔµÄÖµ¡£
+     * è®¾ç½®user04å±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -236,7 +236,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡user05ÊôĞÔµÄÖµ¡£
+     * è·å–user05å±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -248,7 +248,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃuser05ÊôĞÔµÄÖµ¡£
+     * è®¾ç½®user05å±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -260,7 +260,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * »ñÈ¡resultJsonÊôĞÔµÄÖµ¡£
+     * è·å–resultJsonå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -272,7 +272,7 @@ public class SvcHdrsType {
     }
 
     /**
-     * ÉèÖÃresultJsonÊôĞÔµÄÖµ¡£
+     * è®¾ç½®resultJsonå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
