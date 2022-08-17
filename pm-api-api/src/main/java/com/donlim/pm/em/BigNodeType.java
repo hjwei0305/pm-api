@@ -7,7 +7,7 @@ import com.changhong.sei.annotation.Remark;
  * @Author: chenzhiquan
  * @Date: 2022/8/10.
  */
-public enum BigNodeEnum {
+public enum BigNodeType {
 
     @Remark("项目提案")
     Start,

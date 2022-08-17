@@ -1,10 +1,10 @@
 package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
-import com.donlim.pm.em.FileTypeEnum;
-import com.donlim.pm.util.EnumJsonRemarkSerializer;
+import com.changhong.sei.core.dto.serializer.EnumJsonSerializer;
+import com.donlim.pm.em.BigNodeType;
+import com.donlim.pm.em.SmallNodeType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -137,12 +137,14 @@ public class PmBaseinfoDto extends BaseEntityDto {
      * 项目大点节
      */
     @ApiModelProperty(value = "项目大点节")
-    private String bigNode;
+    @JsonSerialize(using = EnumJsonSerializer.class)
+    private BigNodeType bigNode;
     /**
      * 项目小节点
      */
     @ApiModelProperty(value = "项目小节点")
-    private String smallNode;
+    @JsonSerialize(using = EnumJsonSerializer.class)
+    private SmallNodeType smallNode;
     /**
      * 需求范围说明书id
      */
@@ -235,4 +237,43 @@ public class PmBaseinfoDto extends BaseEntityDto {
 
     @ApiModelProperty(value = "文档类别")
     private String fileType;
+
+    @ApiModelProperty(value = "状态数据JSON")
+    private String gfxJson;
+
+    /**
+     * UI评审
+     */
+    @ApiModelProperty(value = "UI评审")
+    private Boolean uiReview;
+    /**
+     * 代码评审
+     */
+    @ApiModelProperty(value = "代码评审")
+    private Boolean codeReview;
+    /**
+     * 前端评审
+     */
+    @ApiModelProperty(value = "前端评审")
+    private Boolean webReview;
+    /**
+     * 后端开发文档id
+     */
+    @ApiModelProperty(value = "后端开发文档id")
+    private String codeDevDocId;
+    /**
+     * 前端开发文档id
+     */
+    @ApiModelProperty(value = "前端开发文档id")
+    private String webDevDocId;
+    /**
+     * 测试结果
+     */
+    @ApiModelProperty(value = "测试结果")
+    private Boolean test;
+    /**
+     * 需求评审
+     */
+    @ApiModelProperty(value = "需求评审")
+    private Boolean requireReview;
 }

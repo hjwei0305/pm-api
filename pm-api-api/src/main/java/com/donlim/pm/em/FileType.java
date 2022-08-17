@@ -6,7 +6,7 @@ import com.changhong.sei.annotation.Remark;
  * @Author: chenzhiquan
  * @Date: 2022/8/10.
  */
-public enum FileTypeEnum {
+public enum FileType {
     @Remark("需求范围说明书")
     RequireDoc,
     @Remark("验收标准")

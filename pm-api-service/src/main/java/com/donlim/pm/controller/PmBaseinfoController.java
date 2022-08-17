@@ -8,14 +8,11 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.api.PmBaseinfoApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
-import com.donlim.pm.em.FileTypeEnum;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.service.PmBaseinfoService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +40,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
-        return convertToDtoPageResult(service.findByPage(search));
+        return  convertToDtoPageResult(service.findByPage(search));
     }
 
     @Override

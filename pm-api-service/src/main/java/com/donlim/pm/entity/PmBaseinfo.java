@@ -5,17 +5,17 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.annotation.sql.DataSourceDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
+
 /**
  * 提案清单(PmBaseinfo)实体类
  *
  * @author sei
- * @since 2022-08-10 15:54:39
+ * @since 2022-08-17 16:29:22
  */
 @Entity
 @Table(name = "pm_baseinfo")
@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @DynamicUpdate
 @Data
 public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
-    private static final long serialVersionUID = 531648652937572715L;
+    private static final long serialVersionUID = -51650165192343461L;
     /**
      * 编码
      */
@@ -53,17 +53,17 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 开始日期
      */
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private Date startDate;
     /**
      * 计划结案日期
      */
     @Column(name = "plan_finish_date")
-    private LocalDate planFinishDate;
+    private Date planFinishDate;
     /**
      * 实际结案日期
      */
     @Column(name = "final_finish_date")
-    private LocalDate finalFinishDate;
+    private Date finalFinishDate;
     /**
      * 项目天数
      */
@@ -73,7 +73,7 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 是否逾期
      */
     @Column(name = "is_overdue")
-    private Boolean isOverdue;
+    private Boolean overdue;
     /**
      * 逾期天数
      */
@@ -88,7 +88,7 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 提案日期
      */
     @Column(name = "submission_date")
-    private LocalDate submissionDate;
+    private Date submissionDate;
     /**
      * 规划审批
      */
@@ -154,6 +154,11 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "accept_standard_doc_id")
     private String acceptStandardDocId;
+    /**
+     * 需求评审
+     */
+    @Column(name = "require_review")
+    private Boolean requireReview;
     /**
      * 启动报告id
      */
@@ -229,8 +234,36 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "tenant_code")
     private String tenantCode;
-
-
+    /**
+     * UI评审
+     */
+    @Column(name = "ui_review")
+    private Boolean uiReview;
+    /**
+     * 代码评审
+     */
+    @Column(name = "code_review")
+    private Boolean codeReview;
+    /**
+     * 前端评审
+     */
+    @Column(name = "web_review")
+    private Boolean webReview;
+    /**
+     * 后端开发文档id
+     */
+    @Column(name = "code_dev_doc_id")
+    private String codeDevDocId;
+    /**
+     * 前端开发文档id
+     */
+    @Column(name = "web_dev_doc_id")
+    private String webDevDocId;
+    /**
+     * 测试结果
+     */
+    @Column(name = "test")
+    private Boolean test;
 
 
 }
