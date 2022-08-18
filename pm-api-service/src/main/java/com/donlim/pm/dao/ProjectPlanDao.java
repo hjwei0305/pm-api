@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProjectPlanDao extends BaseEntityDao<ProjectPlan> {
-
+    Long countByProjectIdAndPlanType(String id,String type);
 }

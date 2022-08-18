@@ -6,10 +6,12 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dao.PmBaseinfoDao;
+import com.donlim.pm.dao.ProjectPlanDao;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
+import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.util.ReflectUtils;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ import org.springframework.util.StringUtils;
 import javax.xml.soap.Node;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,12 +42,30 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     private PmBaseinfoDao dao;
     @Autowired
     private DocumentManager documentManager;
+    @Autowired
+    private ProjectPlanDao projectPlanDao;
 
     @Override
     protected BaseEntityDao<PmBaseinfo> getDao() {
         return dao;
     }
 
+    /**
+     * 主计划
+     */
+    private static final String PROJECT_MASTER_PLAN = "0";
+    /**
+     * 后端开发计划
+     */
+    private static final String PROJECT_DEV_PLAN = "1";
+    /**
+     * 前端开发计划
+     */
+    private static final String PROJECT_WEB_PLAN = "2";
+    /**
+     * 实施计划
+     */
+    private static final String PROJECT_IMPL_PLAN = "3";
 
     /**
      * 绑定上传附件关系
@@ -68,37 +89,37 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
 
     /**
      * 同步项目基础信息
+     *
      * @param code 提案单号
      */
     @Transactional(rollbackFor = Exception.class)
     public PmBaseinfo syncIppInfo(String code) {
         List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
-        if(pmBaseinfoList.size()>0){
+        if (pmBaseinfoList.size() > 0) {
             Optional<PmBaseinfo> byCode = dao.findByCode(code);
-            if(byCode.isPresent()){
+            if (byCode.isPresent()) {
                 //已经存在
                 return null;
-            }else{
-               // dao.save(pmBaseinfoList);
+            } else {
+                // dao.save(pmBaseinfoList);
                 return pmBaseinfoList.get(0);
             }
-        }else{
+        } else {
             return null;
         }
 
     }
 
-    public void updateProjectInfo(){
+    public void updateProjectInfo() {
         //更新尚未结案的项目状态
         List<PmBaseinfo> allByStatus = dao.findAllByStatus("1");
-
-
 
 
     }
 
     /**
      * 获取项目详细信息供进度图使用
+     *
      * @param id 项目ID
      * @return
      */
@@ -108,7 +129,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             PmBaseinfo pmBaseinfo = byId.get();
             ModelMapper dtoModelMapper = new ModelMapper();
             PmBaseinfoDto pmBaseinfoDto = dtoModelMapper.map(pmBaseinfo, PmBaseinfoDto.class);
-            HashMap<String, String> map = new HashMap<>();
+            LinkedHashMap<String, String> map = new LinkedHashMap<>();
             boolean flag = true;
             //2.1调研
             if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getAcceptStandardDocId())) {
@@ -164,13 +185,15 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             //4.1前端开发 4.3后台开发 填写计划即当完成
             if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getWebDevDocId())) {
+                //获取后端开发计划表
+                if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(),PROJECT_WEB_PLAN ) > 0) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                 } else {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                     flag = false;
                 }
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeDevDocId())) {
+                //获取前端计划表
+                if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(),PROJECT_DEV_PLAN ) > 0) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                 } else {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -193,8 +216,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
 
             }
-
-            //5.1缺陷系统
+            //5.1测试用例
             if (flag) {
                 if (!StringUtils.isEmpty(pmBaseinfoDto.getTestExampleDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getTestReportDocId())) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -233,7 +255,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             //7.1结案
             if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getCaseCloseReportDocId())&& !StringUtils.isEmpty(pmBaseinfoDto.getSatisfactionSurveyDocId())&& !StringUtils.isEmpty(pmBaseinfoDto.getPageCheckDocId())) {
+                if (!StringUtils.isEmpty(pmBaseinfoDto.getCaseCloseReportDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getSatisfactionSurveyDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getPageCheckDocId())) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                 } else {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -242,7 +264,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             //7.2验收
             if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getAcceptOrderDocId()) && StringUtils.isEmpty(pmBaseinfoDto.getAccpetReprotDocId())) {
+                if (pmBaseinfoDto.getStatus().equals("1")) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                 } else {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -255,10 +277,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             String gtfJson = JSONObject.toJSONString(map);
             pmBaseinfoDto.setGfxJson(gtfJson);
-            return  pmBaseinfoDto;
+            return pmBaseinfoDto;
         }
-      return null;
+        return null;
     }
-
-
 }
