@@ -66,25 +66,43 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         }
     }
 
+    /**
+     * 同步项目基础信息
+     * @param code 提案单号
+     */
     @Transactional(rollbackFor = Exception.class)
-    public void syncIppInfo(LocalDate localDate) {
-        List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(localDate);
-        List<String> codeList = pmBaseinfoList.stream().map(PmBaseinfo::getCode).collect(Collectors.toList());
-        List<PmBaseinfo> allByCodeInList = dao.findAllByCodeIn(codeList);
-        //更新的附上ID
-        for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
-            Optional<PmBaseinfo> first = allByCodeInList.stream().filter(a -> a.getCode().equals(pmBaseinfo.getCode())).findFirst();
-            if (first.isPresent()) {
-                pmBaseinfo.setId(first.get().getId());
+    public PmBaseinfo syncIppInfo(String code) {
+        List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
+        if(pmBaseinfoList.size()>0){
+            Optional<PmBaseinfo> byCode = dao.findByCode(code);
+            if(byCode.isPresent()){
+                //已经存在
+                return null;
+            }else{
+               // dao.save(pmBaseinfoList);
+                return pmBaseinfoList.get(0);
             }
+        }else{
+            return null;
         }
-        dao.save(pmBaseinfoList);
+
+    }
+
+    public void updateProjectInfo(){
+        //更新尚未结案的项目状态
+        List<PmBaseinfo> allByStatus = dao.findAllByStatus("1");
+
+
+
+
     }
 
     /**
+     * 获取项目详细信息供进度图使用
+     * @param id 项目ID
      * @return
      */
-    public void findById(String id) {
+    public PmBaseinfoDto findByIdForSchedule(String id) {
         Optional<PmBaseinfo> byId = dao.findById(id);
         if (byId.isPresent()) {
             PmBaseinfo pmBaseinfo = byId.get();
@@ -237,8 +255,9 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             String gtfJson = JSONObject.toJSONString(map);
             pmBaseinfoDto.setGfxJson(gtfJson);
+            return  pmBaseinfoDto;
         }
-
+      return null;
     }
 
 

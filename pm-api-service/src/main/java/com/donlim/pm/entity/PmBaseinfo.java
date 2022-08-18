@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -88,7 +89,7 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 提案日期
      */
     @Column(name = "submission_date")
-    private Date submissionDate;
+    private LocalDate submissionDate;
     /**
      * 规划审批
      */

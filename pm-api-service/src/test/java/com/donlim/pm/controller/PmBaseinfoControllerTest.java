@@ -3,6 +3,7 @@ package com.donlim.pm.controller;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JsonUtils;
+import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.entity.PmBaseinfo;
@@ -26,6 +27,7 @@ public class PmBaseinfoControllerTest extends BaseUnitTest {
     private PmBaseinfoController controller;
 @Autowired
 private PmBaseinfoService pmBaseinfoService;
+@Autowired PmBaseinfoController pmBaseinfoController;
     @Test
     public void findOne() {
 /*        String id = "";
@@ -33,7 +35,9 @@ private PmBaseinfoService pmBaseinfoService;
         LOG.debug(JsonUtils.toJson(resultData));
         Assert.assertTrue(resultData.successful());*/
         //List<PmBaseinfo> porjectInfo = IppConnector.getPorjectInfo();
-        pmBaseinfoService.syncIppInfo(LocalDate.of(2022, 1, 1));
+        ResultData resultData = pmBaseinfoController.syncProjectInfo("E20220408004");
+        resultData.getData();
+
     }
 
 }

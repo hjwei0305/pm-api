@@ -126,7 +126,7 @@ public class PmBaseinfoDto extends BaseEntityDto {
     /**
      * 状态
      */
-    @ApiModelProperty(value = "状态")
+    @ApiModelProperty(value = "项目状态0为进行中、1为结束")
     private String status;
     /**
      * 备注

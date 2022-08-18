@@ -34,10 +34,10 @@ public class IppConnector {
 
     /**
      * 获取项目
-     * @param date
+     * @param code
      * @return
      */
-    public static List<PmBaseinfo> getPorjectInfo(LocalDate date) {
+    public static List<PmBaseinfo> getPorjectInfo(String code) {
 
         svcHdr.setBO("项目管理系统");
         svcHdr.setSOURCEID(sourceId);
@@ -47,7 +47,7 @@ public class IppConnector {
         svcHdr.setNO("631");
         svcHdr.setPageIndex(1);
         svcHdr.setPageSize(1);
-        svcHdr.setBodyJson("{\"CreateDateSqlMin\":\"" + DateUtils.LocalDateToString(date) + "\"}");
+        svcHdr.setBodyJson("{\"ProposalID\":\"" +code + "\"}");
         try {
             svcHdrs = sync.donlimIMOSQUERYSYNC(svcHdr);
         } catch (Exception e) {
@@ -71,6 +71,8 @@ public class IppConnector {
                     pmBaseinfo.setImproveBenefits(ipp.getImprovedDescription());
                     pmBaseinfo.setPromotionDegree(ipp.getPromotionDescription());
                     pmBaseinfo.setHardwareRequirement(ipp.getHardwareNeedDescription());
+                    pmBaseinfo.setProjectTypes(ipp.getProposalType());
+                    pmBaseinfo.setStatus("1");
                     pmBaseinfoList.add(pmBaseinfo);
                 }
             }
