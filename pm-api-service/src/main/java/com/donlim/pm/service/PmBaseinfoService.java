@@ -162,7 +162,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     flag = false;
                 }
             }
-            //4.1前端开发 4.3后台开发
+            //4.1前端开发 4.3后台开发 填写计划即当完成
             if (flag) {
                 if (!StringUtils.isEmpty(pmBaseinfoDto.getWebDevDocId())) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));

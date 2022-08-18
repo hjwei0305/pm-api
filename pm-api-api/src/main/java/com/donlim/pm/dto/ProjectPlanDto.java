@@ -1,116 +1,121 @@
-package com.donlim.pm.entity;
+package com.donlim.pm.dto;
 
-import com.changhong.sei.core.entity.BaseAuditableEntity;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import com.changhong.sei.core.dto.BaseEntityDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Date;
-import java.time.LocalDate;
 
 /**
- * 项目计划表(ProjectSchedule)实体类
+ * 项目计划表(ProjectPlan)DTO类
  *
  * @author sei
- * @since 2022-07-30 08:16:10
+ * @since 2022-08-18 16:41:31
  */
-@Entity
-@Table(name = "project_schedule")
-@DynamicInsert
-@DynamicUpdate
-public class ProjectSchedule extends BaseAuditableEntity implements Serializable {
-    private static final long serialVersionUID = -21686520281561050L;
+@ApiModel(description = "项目计划表DTO")
+public class ProjectPlanDto extends BaseEntityDto {
+    private static final long serialVersionUID = -27235344758934297L;
     /**
-     * 计划类型
+     * 项目ID
      */
-    @Column(name = "schedure_type")
-    private String schedureType;
+    @ApiModelProperty(value = "项目ID")
+    private String projectId;
+    /**
+     * 计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划)
+     */
+    @ApiModelProperty(value = "计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划)")
+    private String planType;
     /**
      * 项目编码
      */
-    @Column(name = "project_code")
+    @ApiModelProperty(value = "项目编码")
     private String projectCode;
     /**
      * 项目名称
      */
-    @Column(name = "project_name")
+    @ApiModelProperty(value = "项目名称")
     private String projectName;
     /**
      * 计划开始日期
      */
-    @Column(name = "plan_start_date")
-    private LocalDate planStartDate;
+    @ApiModelProperty(value = "计划开始日期")
+    private Date planStartDate;
     /**
      * 计划结束日期
      */
-    @Column(name = "plan_end_date")
-    private LocalDate planEndDate;
+    @ApiModelProperty(value = "计划结束日期")
+    private Date planEndDate;
     /**
      * 实际开始日期
      */
-    @Column(name = "actual_start_date")
-    private LocalDate actualStartDate;
+    @ApiModelProperty(value = "实际开始日期")
+    private Date actualStartDate;
     /**
      * 实际结束日期
      */
-    @Column(name = "actual_end_date")
-    private LocalDate actualEndDate;
+    @ApiModelProperty(value = "实际结束日期")
+    private Date actualEndDate;
     /**
      * 天数
      */
-    @Column(name = "schedure_days")
+    @ApiModelProperty(value = "天数")
     private String schedureDays;
     /**
      * 序号
      */
-    @Column(name = "schedure_no")
+    @ApiModelProperty(value = "序号")
     private String schedureNo;
     /**
      * 状态
      */
-    @Column(name = "schedure_status")
+    @ApiModelProperty(value = "状态")
     private String schedureStatus;
     /**
      * 任务类型
      */
-    @Column(name = "work_type")
+    @ApiModelProperty(value = "任务类型")
     private String workType;
     /**
      * 任务列表
      */
-    @Column(name = "work_todo_list")
+    @ApiModelProperty(value = "任务列表")
     private String workTodoList;
     /**
      * 负责人
      */
-    @Column(name = "work_onduty")
+    @ApiModelProperty(value = "负责人")
     private String workOnduty;
     /**
      * 协助人
      */
-    @Column(name = "work_assist")
+    @ApiModelProperty(value = "协助人")
     private String workAssist;
     /**
      * 备注
      */
-    @Column(name = "remark")
+    @ApiModelProperty(value = "备注")
     private String remark;
     /**
      * 租户代码
      */
-    @Column(name = "tenant_code")
+    @ApiModelProperty(value = "租户代码")
     private String tenantCode;
 
 
-    public String getSchedureType() {
-        return schedureType;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setSchedureType(String schedureType) {
-        this.schedureType = schedureType;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getPlanType() {
+        return planType;
+    }
+
+    public void setPlanType(String planType) {
+        this.planType = planType;
     }
 
     public String getProjectCode() {
@@ -129,35 +134,35 @@ public class ProjectSchedule extends BaseAuditableEntity implements Serializable
         this.projectName = projectName;
     }
 
-    public LocalDate getPlanStartDate() {
+    public Date getPlanStartDate() {
         return planStartDate;
     }
 
-    public void setPlanStartDate(LocalDate planStartDate) {
+    public void setPlanStartDate(Date planStartDate) {
         this.planStartDate = planStartDate;
     }
 
-    public LocalDate getPlanEndDate() {
+    public Date getPlanEndDate() {
         return planEndDate;
     }
 
-    public void setPlanEndDate(LocalDate planEndDate) {
+    public void setPlanEndDate(Date planEndDate) {
         this.planEndDate = planEndDate;
     }
 
-    public LocalDate getActualStartDate() {
+    public Date getActualStartDate() {
         return actualStartDate;
     }
 
-    public void setActualStartDate(LocalDate actualStartDate) {
+    public void setActualStartDate(Date actualStartDate) {
         this.actualStartDate = actualStartDate;
     }
 
-    public LocalDate getActualEndDate() {
+    public Date getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(LocalDate actualEndDate) {
+    public void setActualEndDate(Date actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 
