@@ -276,4 +276,14 @@ public class PmBaseinfoDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "需求评审")
     private Boolean requireReview;
+    @ApiModelProperty(value = "主导人")
+    private String leader;
+    @ApiModelProperty(value = "设计人员")
+    private String  designer;
+    @ApiModelProperty(value = "开发人员")
+    private String  developer;
+    @ApiModelProperty(value = "实施人员")
+    private String implementer;
+
+
 }
