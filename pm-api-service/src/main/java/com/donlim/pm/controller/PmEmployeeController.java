@@ -54,8 +54,8 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
 
 
     @Override
-    public ResultData<PageResult<PmEmployeeDto>> findEmp(PmOrganizeDto pmOrganize) {
-        return convertToDtoPageResult(service.findByPage(new Search()));
+    public ResultData<PageResult<PmEmployeeDto>> findEmp(Search search) {
+        return convertToDtoPageResult(service.findByPage(search));
     }
 
     @Override

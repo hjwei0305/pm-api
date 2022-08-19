@@ -31,7 +31,7 @@ public interface PmEmployeeApi extends BaseEntityApi<PmEmployeeDto>, FindByPageA
     String PATH = "pmEmployee";
 
     @PostMapping("findEmp")
-    ResultData<PageResult<PmEmployeeDto>> findEmp(@RequestBody PmOrganizeDto pmOrganizeDto);
+    ResultData<PageResult<PmEmployeeDto>> findEmp(@RequestBody Search search);
 
     /**
      * 导出人员一览表excel

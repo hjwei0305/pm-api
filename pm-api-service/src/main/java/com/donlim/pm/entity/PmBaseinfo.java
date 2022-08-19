@@ -37,11 +37,6 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     @Column(name = "name")
     private String name;
     /**
-     * 主导人
-     */
-    @Column(name = "project_master")
-    private String projectMaster;
-    /**
      * 当前阶段
      */
     @Column(name = "current_period")
