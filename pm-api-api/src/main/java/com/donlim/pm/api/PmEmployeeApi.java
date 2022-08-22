@@ -30,6 +30,11 @@ import java.util.List;
 public interface PmEmployeeApi extends BaseEntityApi<PmEmployeeDto>, FindByPageApi<PmEmployeeDto> {
     String PATH = "pmEmployee";
 
+    /**
+     * 查找所有人员
+     * @param search
+     * @return
+     */
     @PostMapping("findEmp")
     ResultData<PageResult<PmEmployeeDto>> findEmp(@RequestBody Search search);
 

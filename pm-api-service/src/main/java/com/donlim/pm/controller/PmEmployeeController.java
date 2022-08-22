@@ -2,6 +2,7 @@ package com.donlim.pm.controller;
 
 import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageInfo;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.service.BaseEntityService;
@@ -55,6 +56,9 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
 
     @Override
     public ResultData<PageResult<PmEmployeeDto>> findEmp(Search search) {
+        PageInfo pageInfo=new PageInfo();
+        pageInfo.setRows(Integer.MAX_VALUE);
+        search.setPageInfo(pageInfo);
         return convertToDtoPageResult(service.findByPage(search));
     }
 

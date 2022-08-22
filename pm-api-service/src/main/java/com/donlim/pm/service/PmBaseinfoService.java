@@ -4,9 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.sdk.DocumentManager;
+import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.connector.IppConnector;
+import com.donlim.pm.connector.TestConnector;
+import com.donlim.pm.constant.IppConstant;
 import com.donlim.pm.dao.PmBaseinfoDao;
 import com.donlim.pm.dao.ProjectPlanDao;
+import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.SmallNodeType;
@@ -110,11 +114,30 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
 
     }
 
+    /**
+     * 定时更新项目状态
+     */
+    @Transactional(rollbackFor = Exception.class)
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
-        List<PmBaseinfo> allByStatus = dao.findAllByStatus("1");
-
-
+        List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0");
+        for (PmBaseinfo pmBaseinfo:pmBaseinfoList){
+            List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
+            for (IppProjectInfoDetails.TableDTO data :list){
+                if(data.getDevelopWay().equals(IppConstant.UI)){
+                    pmBaseinfo.setUiReview(true);
+                }else if(data.getDevelopWay().equals(IppConstant.REQUIRE_REVIEW)){
+                    pmBaseinfo.setRequireReview(true);
+                }else if(data.getDevelopWay().equals(IppConstant.WEB_REVIEW)){
+                    pmBaseinfo.setWebReview(true);
+                }else if (data.getDevelopWay().equals(IppConstant.CODE_REVIEW)){
+                    pmBaseinfo.setCodeReview(true);
+                }
+            }
+            //pmBaseinfo.setTest(TestConnector.isFinish(pmBaseinfo.getCode()));
+            pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode())?"1":"0");
+        }
+        save(pmBaseinfoList);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.donlim.pm.connector;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.donlim.pm.dto.IppProjectDto;
+import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.util.DateUtils;
 import com.donlim.pm.webservice.ipp.DONLIMIMOSQUERYSYNC;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description:
+ * @Description:提案系统对接
  * @Author: chenzhiquan
  * @Date: 2022/8/12.
  */
@@ -31,14 +32,12 @@ public class IppConnector {
     private static final String type = "SELECT";
     private static final String ipAddress = "127.0.0.1";
 
-
     /**
      * 获取项目
      * @param code
      * @return
      */
     public static List<PmBaseinfo> getPorjectInfo(String code) {
-
         svcHdr.setBO("项目管理系统");
         svcHdr.setSOURCEID(sourceId);
         svcHdr.setDESTINATIONID(destinationId);
@@ -79,4 +78,33 @@ public class IppConnector {
         }
         return pmBaseinfoList;
     }
+    /**
+     * 获取项目
+     * @param code
+     * @return
+     */
+    public static List<IppProjectInfoDetails.TableDTO> getPorjectInfoDetails(String code) {
+        svcHdr.setBO("项目管理系统");
+        svcHdr.setSOURCEID(sourceId);
+        svcHdr.setDESTINATIONID(destinationId);
+        svcHdr.setTYPE(type);
+        svcHdr.setIPADDRESS(ipAddress);
+        svcHdr.setNO("633");
+        svcHdr.setPageIndex(1);
+        svcHdr.setPageSize(1);
+        svcHdr.setBodyJson("{\"ProposalID\":\"" +code + "\"}");
+        try {
+            svcHdrs = sync.donlimIMOSQUERYSYNC(svcHdr);
+        } catch (Exception e) {
+            e.toString();
+        }
+        List<IppProjectInfoDetails.TableDTO>ippProjectInfoDetailList=new ArrayList<>();
+        if ("S".equals(svcHdrs.getRCODE())) {
+            JSONObject result = JSONObject.parseObject("{\"table\":" + svcHdrs.getResultJson() + "}");
+            IppProjectInfoDetails ippProjectInfoDetails = JSON.toJavaObject(result, IppProjectInfoDetails.class);
+            ippProjectInfoDetailList=  ippProjectInfoDetails.getTable();
+        }
+        return ippProjectInfoDetailList;
+    }
+
 }
