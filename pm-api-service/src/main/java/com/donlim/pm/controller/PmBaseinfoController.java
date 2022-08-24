@@ -79,5 +79,4 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     }
 
-
 }

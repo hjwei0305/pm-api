@@ -4,13 +4,13 @@ import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.util.EnumUtils;
 import com.donlim.pm.api.PmEmployeeApi;
 import com.donlim.pm.dto.PmEmployeeDto;
-import com.donlim.pm.dto.PmOrganizeDto;
-import com.donlim.pm.em.EmpstatidEnum;
 import com.donlim.pm.dto.excel.PmEmployeeExcelDto;
+import com.donlim.pm.em.EmpstatidEnum;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.service.PmEmployeeService;
 import io.swagger.annotations.Api;
@@ -49,13 +49,19 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
 
     @Override
     public ResultData<PageResult<PmEmployeeDto>> findByPage(Search search) {
+        List<SearchFilter> filters = search.getFilters();
+        SearchFilter searchFilter = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
+        filters.add(searchFilter);
+        search.setFilters(filters);
         return convertToDtoPageResult(service.findByPage(search));
     }
 
 
     @Override
-    public ResultData<PageResult<PmEmployeeDto>> findEmp(Search search) {
-        return convertToDtoPageResult(service.findByPage(search));
+    public ResultData<List<PmEmployeeDto>> findEmp(Search search) {
+        SearchFilter searchFilter = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
+        return ResultData.success(convertToDtos(service.findByFilter(searchFilter)));
+
     }
 
     @Override
