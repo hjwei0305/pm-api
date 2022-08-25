@@ -51,7 +51,9 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
     public ResultData<PageResult<PmEmployeeDto>> findByPage(Search search) {
         List<SearchFilter> filters = search.getFilters();
         SearchFilter searchFilter = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
+        SearchFilter searchFilter2 = new SearchFilter("empstatid",EmpstatidEnum.LEAVE, SearchFilter.Operator.NE);
         filters.add(searchFilter);
+        filters.add(searchFilter2);
         search.setFilters(filters);
         return convertToDtoPageResult(service.findByPage(search));
     }
@@ -59,8 +61,12 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
 
     @Override
     public ResultData<List<PmEmployeeDto>> findEmp(Search search) {
-        SearchFilter searchFilter = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
-        return ResultData.success(convertToDtos(service.findByFilter(searchFilter)));
+        SearchFilter searchFilter1 = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
+        SearchFilter searchFilter2 = new SearchFilter("empstatid",EmpstatidEnum.LEAVE, SearchFilter.Operator.NE);
+        List<SearchFilter> filters = search.getFilters();
+        filters.add(searchFilter1);
+        filters.add(searchFilter2);
+        return ResultData.success(convertToDtos(service.findByFilters(new Search().setFilters(filters))));
 
     }
 
