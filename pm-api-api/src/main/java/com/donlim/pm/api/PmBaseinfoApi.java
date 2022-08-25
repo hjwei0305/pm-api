@@ -51,4 +51,8 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     @ApiOperation(value = "根据提案单号获取项目信息", notes = "根据提案单号获取项目信息")
     ResultData syncProjectInfo(@RequestParam("code") String code);
 
+    @PostMapping(path = "saveBaseInfo")
+    @ApiOperation(value = "保存项目信息", notes = "保存项目信息")
+    ResultData<PmBaseinfoDto> saveBaseInfo(@RequestBody PmBaseinfoDto dto);
+
 }
