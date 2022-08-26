@@ -38,6 +38,9 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
 
     @Override
     public ResultData<PageResult<TodoListDto>> findByPage(Search search) {
+        if(search.getFilters() == null){
+            return ResultData.success();
+        }
         return convertToDtoPageResult(service.findByPage(search));
     }
 }

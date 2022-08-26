@@ -1,6 +1,9 @@
 package com.donlim.pm.controller;
 
 import com.changhong.sei.core.controller.BaseEntityController;
+import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageResult;
+import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.ProjectPlanApi;
 import com.donlim.pm.dto.ProjectPlanDto;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 项目计划表(ProjectPlan)控制类
@@ -33,4 +38,14 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
         return service;
     }
 
+    @Override
+    public ResultData<PageResult<ProjectPlanDto>> findByPage(Search search) {
+        return convertToDtoPageResult(service.findByPage(search));
+    }
+
+    @Override
+    public ResultData<String> saveBatch(List<ProjectPlanDto> projectPlanDtos) {
+        projectPlanDtos.stream().parallel().forEach(p -> save(p));
+        return ResultData.success("保存成功");
+    }
 }

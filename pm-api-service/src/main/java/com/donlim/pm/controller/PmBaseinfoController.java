@@ -52,9 +52,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     public ResultData<PmBaseinfoDto> save(PmBaseinfoDto dto) {
         service.bindFile(dto);
         return ResultData.success();
-
     }
 
+    @Override
+    public ResultData<PmBaseinfoDto> saveBaseInfo(PmBaseinfoDto dto) {
+        return super.save(dto);
+    }
 
     @Override
     public ResultData<PmBaseinfoDto> findByIdForSchedule(String id) {
@@ -78,6 +81,5 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         }
 
     }
-
 
 }

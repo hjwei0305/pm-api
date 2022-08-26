@@ -4,7 +4,7 @@ import com.changhong.sei.core.dto.BaseEntityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * 项目计划表(ProjectPlan)DTO类
@@ -39,22 +39,22 @@ public class ProjectPlanDto extends BaseEntityDto {
      * 计划开始日期
      */
     @ApiModelProperty(value = "计划开始日期")
-    private Date planStartDate;
+    private LocalDate planStartDate;
     /**
      * 计划结束日期
      */
     @ApiModelProperty(value = "计划结束日期")
-    private Date planEndDate;
+    private LocalDate planEndDate;
     /**
      * 实际开始日期
      */
     @ApiModelProperty(value = "实际开始日期")
-    private Date actualStartDate;
+    private LocalDate actualStartDate;
     /**
      * 实际结束日期
      */
     @ApiModelProperty(value = "实际结束日期")
-    private Date actualEndDate;
+    private LocalDate actualEndDate;
     /**
      * 天数
      */
@@ -134,35 +134,35 @@ public class ProjectPlanDto extends BaseEntityDto {
         this.projectName = projectName;
     }
 
-    public Date getPlanStartDate() {
+    public LocalDate getPlanStartDate() {
         return planStartDate;
     }
 
-    public void setPlanStartDate(Date planStartDate) {
+    public void setPlanStartDate(LocalDate planStartDate) {
         this.planStartDate = planStartDate;
     }
 
-    public Date getPlanEndDate() {
+    public LocalDate getPlanEndDate() {
         return planEndDate;
     }
 
-    public void setPlanEndDate(Date planEndDate) {
+    public void setPlanEndDate(LocalDate planEndDate) {
         this.planEndDate = planEndDate;
     }
 
-    public Date getActualStartDate() {
+    public LocalDate getActualStartDate() {
         return actualStartDate;
     }
 
-    public void setActualStartDate(Date actualStartDate) {
+    public void setActualStartDate(LocalDate actualStartDate) {
         this.actualStartDate = actualStartDate;
     }
 
-    public Date getActualEndDate() {
+    public LocalDate getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(Date actualEndDate) {
+    public void setActualEndDate(LocalDate actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 

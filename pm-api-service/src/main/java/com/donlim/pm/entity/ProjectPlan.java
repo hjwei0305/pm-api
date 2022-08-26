@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * 项目计划表(ProjectPlan)实体类
@@ -46,22 +46,22 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
      * 计划开始日期
      */
     @Column(name = "plan_start_date")
-    private Date planStartDate;
+    private LocalDate planStartDate;
     /**
      * 计划结束日期
      */
     @Column(name = "plan_end_date")
-    private Date planEndDate;
+    private LocalDate planEndDate;
     /**
      * 实际开始日期
      */
     @Column(name = "actual_start_date")
-    private Date actualStartDate;
+    private LocalDate actualStartDate;
     /**
      * 实际结束日期
      */
     @Column(name = "actual_end_date")
-    private Date actualEndDate;
+    private LocalDate actualEndDate;
     /**
      * 天数
      */
@@ -141,35 +141,35 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
         this.projectName = projectName;
     }
 
-    public Date getPlanStartDate() {
+    public LocalDate getPlanStartDate() {
         return planStartDate;
     }
 
-    public void setPlanStartDate(Date planStartDate) {
+    public void setPlanStartDate(LocalDate planStartDate) {
         this.planStartDate = planStartDate;
     }
 
-    public Date getPlanEndDate() {
+    public LocalDate getPlanEndDate() {
         return planEndDate;
     }
 
-    public void setPlanEndDate(Date planEndDate) {
+    public void setPlanEndDate(LocalDate planEndDate) {
         this.planEndDate = planEndDate;
     }
 
-    public Date getActualStartDate() {
+    public LocalDate getActualStartDate() {
         return actualStartDate;
     }
 
-    public void setActualStartDate(Date actualStartDate) {
+    public void setActualStartDate(LocalDate actualStartDate) {
         this.actualStartDate = actualStartDate;
     }
 
-    public Date getActualEndDate() {
+    public LocalDate getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(Date actualEndDate) {
+    public void setActualEndDate(LocalDate actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 

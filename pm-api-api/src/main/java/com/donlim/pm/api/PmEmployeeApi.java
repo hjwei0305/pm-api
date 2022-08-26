@@ -3,11 +3,9 @@ package com.donlim.pm.api;
 import com.changhong.sei.core.api.BaseEntityApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
-import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.PmEmployeeDto;
 import com.donlim.pm.dto.excel.PmEmployeeExcelDto;
-import com.donlim.pm.dto.PmOrganizeDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -36,7 +34,7 @@ public interface PmEmployeeApi extends BaseEntityApi<PmEmployeeDto>, FindByPageA
      * @return
      */
     @PostMapping("findEmp")
-    ResultData<PageResult<PmEmployeeDto>> findEmp(@RequestBody Search search);
+    ResultData<List<PmEmployeeDto>> findEmp(@RequestBody Search search);
 
     /**
      * 导出人员一览表excel
