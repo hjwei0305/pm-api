@@ -7,6 +7,7 @@ import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.service.PmBaseinfoService;
+import com.donlim.pm.webservice.eip.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,7 +36,20 @@ public class HelloControllerTest extends BaseUnitTest {
        // System.out.println(SmallNodeType.Start.name()); ;
       //  System.out.println(EnumUtils.getEnumItemRemark(SmallNodeType.class,SmallNodeType.Research));
 
-        pmBaseinfoService.updateProjectInfo();
+      //  pmBaseinfoService.updateProjectInfo();
+        APPHDR appHdr=new APPHDR();
 
+       /* APPBODY appBody=new APPBODY();
+        appBody.setPROJECTNO("E20211222011");
+        SVCHDR svcHdr=new SVCHDR();
+        ObjectFactory objectFactory=new ObjectFactory();
+        CheckSearchSevice checkSearchSevice=new CheckSearchSevice();
+        SVCBODYS svcbodys = checkSearchSevice.getDomino().synchecksearch(svcHdr, appHdr, appBody);
+        if("S".equals(svcbodys.getOSVCHDRS().getRCODE())) {
+            if (svcbodys.getOAPPBODYS().isRESULT()) {
+
+            }
+        }*/
+      IppConnector.getTestResult("E20211008003");
     }
 }

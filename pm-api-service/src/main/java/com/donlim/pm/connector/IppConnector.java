@@ -107,4 +107,33 @@ public class IppConnector {
         return ippProjectInfoDetailList;
     }
 
+    /**
+     * 获取测试结果
+     * @param code
+     * @return
+     */
+    public static boolean getTestResult(String code) {
+        svcHdr.setBO("项目管理系统");
+        svcHdr.setSOURCEID(sourceId);
+        svcHdr.setDESTINATIONID(destinationId);
+        svcHdr.setTYPE(type);
+        svcHdr.setIPADDRESS(ipAddress);
+        svcHdr.setNO("633-01");
+        svcHdr.setPageIndex(1);
+        svcHdr.setPageSize(1);
+        svcHdr.setBodyJson("{\"num\":\"" +code + "\"}");
+        try {
+            svcHdrs = sync.donlimIMOSQUERYSYNC(svcHdr);
+        } catch (Exception e) {
+            e.toString();
+        }
+        if ("S".equals(svcHdrs.getRCODE())) {
+            JSONObject result = JSONObject.parseObject(svcHdrs.getResultJson().replace("[","").replace("]",""));
+            if("通过".equals(result.getString("result"))){
+                return true;
+            }
+
+        }
+        return false;
+    }
 }
