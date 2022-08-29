@@ -53,6 +53,6 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
 
     @PostMapping(path = "saveBaseInfo")
     @ApiOperation(value = "保存项目信息", notes = "保存项目信息")
-    ResultData<PmBaseinfoDto> saveBaseInfo(@RequestBody PmBaseinfoDto dto);
+    ResultData<PmBaseinfoDto> saveBaseInfo(@RequestBody PmBaseinfoDto dto) throws IllegalAccessException;
 
 }

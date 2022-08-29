@@ -82,7 +82,7 @@ public class PmBaseinfoDto extends BaseEntityDto {
      * 参与人数
      */
     @ApiModelProperty(value = "参与人数")
-    private String attendanceMemberrCount;
+    private Integer attendanceMemberrCount;
     /**
      * 提案日期
      */
@@ -284,6 +284,11 @@ public class PmBaseinfoDto extends BaseEntityDto {
     private String  developer;
     @ApiModelProperty(value = "实施人员")
     private String implementer;
+    /**
+     * 流程配置
+     */
+    @ApiModelProperty(value = "流程配置")
+    private String proOpt;
 
 
 }

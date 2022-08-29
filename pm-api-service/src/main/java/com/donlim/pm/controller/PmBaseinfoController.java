@@ -11,11 +11,15 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.api.PmBaseinfoApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.service.PmBaseinfoService;
+import com.donlim.pm.util.EnumUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,6 +49,36 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
+        PageResult<PmBaseinfo> byPage = service.findByPage(search);
+        byPage.getRows().stream().forEach(info -> {
+            if(StringUtils.isNotEmpty(info.getProjectTypes())){
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
+                info.setProjectTypes(enumItemRemark);
+            }
+            // 1、验收阶段（还没对接）
+            // 2、测试结果
+            if(null != info.getTest() && info.getTest()){
+                info.setCurrentPeriod("测试");
+                info.setMasterScheduleRate("80%");
+            }else if((null != info.getCodeReview() && info.getTest()) || (null != info.getWebReview() && info.getWebReview())){
+                // 3、前后端
+                info.setCurrentPeriod("开发");
+                info.setMasterScheduleRate("60%");
+            }else if(null != info.getUiReview() && info.getUiReview()){
+                // 4、UI设计
+                info.setCurrentPeriod("设计");
+                info.setMasterScheduleRate("40%");
+            }else if(null != info.getRequireReview() && info.getRequireReview()){
+                // 4、需求规划
+                info.setCurrentPeriod("规划");
+                info.setMasterScheduleRate("20%");
+            }else {
+                info.setCurrentPeriod("未开始");
+                info.setMasterScheduleRate("0%");
+            }
+
+
+        });
         return  convertToDtoPageResult(service.findByPage(search));
     }
 
@@ -55,8 +89,19 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     }
 
     @Override
-    public ResultData<PmBaseinfoDto> saveBaseInfo(PmBaseinfoDto dto) {
-        return super.save(dto);
+    @Transactional(rollbackFor = Exception.class)
+    public ResultData<PmBaseinfoDto> saveBaseInfo(PmBaseinfoDto dto) throws IllegalAccessException {
+        PmBaseinfo pmBaseinfo = service.findOne(dto.getId());
+        PmBaseinfoDto pmBaseinfoDto = convertToDto(pmBaseinfo);
+        pmBaseinfoDto.setProjectTypes(dto.getProjectTypes());
+        pmBaseinfoDto.setCurrentPeriod(dto.getCurrentPeriod());
+        pmBaseinfoDto.setLeader(dto.getLeader());
+        pmBaseinfoDto.setDesigner(dto.getDesigner());
+        pmBaseinfoDto.setImplementer(dto.getImplementer());
+        pmBaseinfoDto.setDeveloper(dto.getDeveloper());
+        pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
+        pmBaseinfoDto.setProOpt(dto.getProOpt());
+        return super.save(pmBaseinfoDto);
     }
 
     @Override
