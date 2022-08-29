@@ -55,9 +55,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                 info.setProjectTypes(enumItemRemark);
             }
-            // 1、验收阶段（还没对接）
+            // 1、验收阶段
+            if(null != info.getStatus() && info.getStatus().equals("1")){
+                info.setCurrentPeriod("验收");
+                info.setMasterScheduleRate("100%");
+            }else if(null != info.getTest() && info.getTest()){
             // 2、测试结果
-            if(null != info.getTest() && info.getTest()){
                 info.setCurrentPeriod("测试");
                 info.setMasterScheduleRate("80%");
             }else if((null != info.getCodeReview() && info.getTest()) || (null != info.getWebReview() && info.getWebReview())){
