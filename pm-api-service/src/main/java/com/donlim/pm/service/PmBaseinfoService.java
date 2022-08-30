@@ -6,7 +6,6 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.connector.IppConnector;
-import com.donlim.pm.connector.TestConnector;
 import com.donlim.pm.constant.IppConstant;
 import com.donlim.pm.dao.PmBaseinfoDao;
 import com.donlim.pm.dao.ProjectPlanDao;
@@ -15,7 +14,6 @@ import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
-import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.util.ReflectUtils;
 import org.modelmapper.ModelMapper;
@@ -25,13 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.xml.soap.Node;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
@@ -152,151 +146,181 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             PmBaseinfo pmBaseinfo = byId.get();
             ModelMapper dtoModelMapper = new ModelMapper();
             PmBaseinfoDto pmBaseinfoDto = dtoModelMapper.map(pmBaseinfo, PmBaseinfoDto.class);
+            String proOpt = pmBaseinfoDto.getProOpt();
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
             boolean flag = true;
             //2.1调研
-            if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getAcceptStandardDocId())) {
-                map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-            } else {
-                map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                flag = false;
+            // 1、包含该节点---判断是否通过  2、不包含节点 -- 直接跳过
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Research))){
+                if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getAcceptStandardDocId())) {
+                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                } else {
+                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                    flag = false;
+                }
             }
             //2.2启动会议
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getStartReportDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getStartReportDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //2.3提案系统
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getUserRequireDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getUserRequireDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //2.4需求评审
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireReview())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireReview())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //3.1ui设计
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getDesignerDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getCropDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getDesignerDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getCropDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //3.2ui评审
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getUiReview())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getUiReview())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //4.1前端开发 4.3后台开发 填写计划即当完成
-            if (flag) {
-                //获取后端开发计划表
-                if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(),PROJECT_WEB_PLAN ) > 0) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
-                }
-                //获取前端计划表
-                if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(),PROJECT_DEV_PLAN ) > 0) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev))) {
+                if (flag) {
+                    //获取后端开发计划表
+                    if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_WEB_PLAN) > 0) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
+                    //获取前端计划表
+                    if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_DEV_PLAN) > 0) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //4.2前端评审 4.4后台评审
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
-                }
-
             }
             //5.1测试用例
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getTestExampleDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getTestReportDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getTestExampleDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getTestReportDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //5.2测试结果
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getTest())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Test))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getTest())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
-
             //6.1上线
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getSopDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getQuestionListDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Online))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getSopDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getQuestionListDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //6.2监控
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getCheckListDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getCheckListDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //7.1结案
-            if (flag) {
-                if (!StringUtils.isEmpty(pmBaseinfoDto.getCaseCloseReportDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getSatisfactionSurveyDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getPageCheckDocId())) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Close))) {
+                if (flag) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getCaseCloseReportDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getSatisfactionSurveyDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getPageCheckDocId())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //7.2验收
-            if (flag) {
-                if (pmBaseinfoDto.getStatus().equals("1")) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                } else {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                    flag = false;
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance))) {
+                if (flag) {
+                    if (pmBaseinfoDto.getStatus().equals("1")) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
                 }
             }
             //7.3完结
-            if (flag) {
-                map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.End), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.End))) {
+                if (flag) {
+                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.End), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                }
             }
             String gtfJson = JSONObject.toJSONString(map);
             pmBaseinfoDto.setGfxJson(gtfJson);
