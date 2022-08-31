@@ -215,41 +215,49 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //4.1前端开发 4.3后台开发 填写计划即当完成
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev))) {
+
                 if (flag) {
-                    //获取后端开发计划表
-                    if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_WEB_PLAN) > 0) {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                    } else {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                        flag = false;
+                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev))) {
+                        //获取后端开发计划表
+                        if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_WEB_PLAN) > 0) {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        } else {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                            flag = false;
+                        }
                     }
-                    //获取前端计划表
-                    if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_DEV_PLAN) > 0) {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                    } else {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                        flag = false;
+                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev))) {
+                        //获取前端计划表
+                        if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_DEV_PLAN) > 0) {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        } else {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                            flag = false;
+                        }
                     }
                 }
-            }
+
             //4.2前端评审 4.4后台评审
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
+
                 if (flag) {
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                    } else {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                        flag = false;
+                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
+                        if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        } else {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                            flag = false;
+                        }
                     }
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                    } else {
-                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                        flag = false;
+                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview))) {
+                        if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        } else {
+                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                            flag = false;
+                        }
                     }
                 }
-            }
+
             //5.1测试用例
             if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem))) {
                 if (flag) {
