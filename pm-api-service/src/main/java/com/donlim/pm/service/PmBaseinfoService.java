@@ -3,6 +3,7 @@ package com.donlim.pm.service;
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
+import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.connector.IppConnector;
@@ -26,6 +27,7 @@ import org.springframework.util.StringUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -75,11 +77,14 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         if (!StringUtils.isEmpty(dto.getId()) && !CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
             Optional<PmBaseinfo> byId = dao.findById(dto.getId());
             if (byId.isPresent() && EnumUtils.isIncludeFileTypeEnum(dto.getFileType())) {
-                documentManager.bindBusinessDocuments(dto.getId(), dto.getAttachmentIdList());
+                List<String> idList = documentManager.getEntityDocumentInfos(dto.getId()).getData().stream().map(DocumentDto::getDocId).collect(Collectors.toList());
+                idList.add(dto.getAttachmentIdList().get(0));
+                documentManager.bindBusinessDocuments(dto.getId(), idList);
                 //首字母转小写并加上Id
                 String fieldName = dto.getFileType().substring(0, 1).toLowerCase() + dto.getFileType().substring(1) + "Id";
                 //根据不同的类别记录附件的ID
                 ReflectUtils.setFieldValue(byId.get(), fieldName, dto.getAttachmentIdList().get(0));
+                documentManager.bindBusinessDocuments(dto.getAttachmentIdList().get(0), dto.getAttachmentIdList());
                 save(byId.get());
             }
         }
@@ -325,10 +330,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //7.3完结
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.End))) {
-                if (flag) {
-                    map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.End), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                }
+            if (flag) {
+                map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.End), EnumUtils.getNodeTypeRemark(NodeType.Pass));
             }
             String gtfJson = JSONObject.toJSONString(map);
             pmBaseinfoDto.setGfxJson(gtfJson);
