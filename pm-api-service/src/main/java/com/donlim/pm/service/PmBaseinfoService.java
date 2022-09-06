@@ -133,7 +133,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     pmBaseinfo.setCodeReview(true);
                 }
             }
-            //pmBaseinfo.setTest(TestConnector.isFinish(pmBaseinfo.getCode()));
+            pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
             pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode())?"1":"0");
         }
         save(pmBaseinfoList);

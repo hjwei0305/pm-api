@@ -2,11 +2,12 @@ package com.donlim.pm.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.test.BaseUnitTest;
-import com.changhong.sei.util.EnumUtils;
 import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dto.IppProjectInfoDetails;
+import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.service.PmBaseinfoService;
+import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.webservice.eip.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class HelloControllerTest extends BaseUnitTest {
     private PmBaseinfoService pmBaseinfoService;
     @Test
     public void sayHello() {
+        System.out.println( EnumUtils.getEnumItemRemark(LogType.class,LogType.ModifyCodePlan));
        /* String name = "程序员";
         ResultData<String> result = controller.sayHello(name);
         LOG.debug(JsonUtils.toJson(result));*/
@@ -37,7 +39,7 @@ public class HelloControllerTest extends BaseUnitTest {
       //  System.out.println(EnumUtils.getEnumItemRemark(SmallNodeType.class,SmallNodeType.Research));
 
       //  pmBaseinfoService.updateProjectInfo();
-        APPHDR appHdr=new APPHDR();
+      //  APPHDR appHdr=new APPHDR();
 
        /* APPBODY appBody=new APPBODY();
         appBody.setPROJECTNO("E20211222011");
@@ -50,6 +52,6 @@ public class HelloControllerTest extends BaseUnitTest {
 
             }
         }*/
-      IppConnector.getTestResult("E20211008003");
+     // IppConnector.getTestResult("E20211008003");
     }
 }
