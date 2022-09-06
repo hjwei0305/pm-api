@@ -42,6 +42,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     private PmBaseinfoService service;
     @Autowired
     private DocumentManager documentManager;
+
     @Override
     public BaseEntityService<PmBaseinfo> getService() {
         return service;
@@ -51,38 +52,38 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
         PageResult<PmBaseinfo> byPage = service.findByPage(search);
         byPage.getRows().stream().forEach(info -> {
-            if(StringUtils.isNotEmpty(info.getProjectTypes())){
+            if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                 info.setProjectTypes(enumItemRemark);
             }
             // 1、验收阶段
-            if(null != info.getStatus() && info.getStatus().equals("1")){
+            if (null != info.getStatus() && info.getStatus().equals("1")) {
                 info.setCurrentPeriod("验收");
                 info.setMasterScheduleRate("100%");
-            }else if(null != info.getTest() && info.getTest()){
-            // 2、测试结果
+            } else if (null != info.getTest() && info.getTest()) {
+                // 2、测试结果
                 info.setCurrentPeriod("测试");
                 info.setMasterScheduleRate("80%");
-            }else if((null != info.getCodeReview() && info.getTest()) || (null != info.getWebReview() && info.getWebReview())){
+            } else if ((null != info.getCodeReview() && info.getTest()) || (null != info.getWebReview() && info.getWebReview())) {
                 // 3、前后端
                 info.setCurrentPeriod("开发");
                 info.setMasterScheduleRate("60%");
-            }else if(null != info.getUiReview() && info.getUiReview()){
+            } else if (null != info.getUiReview() && info.getUiReview()) {
                 // 4、UI设计
                 info.setCurrentPeriod("设计");
                 info.setMasterScheduleRate("40%");
-            }else if(null != info.getRequireReview() && info.getRequireReview()){
+            } else if (null != info.getRequireReview() && info.getRequireReview()) {
                 // 4、需求规划
                 info.setCurrentPeriod("规划");
                 info.setMasterScheduleRate("20%");
-            }else {
+            } else {
                 info.setCurrentPeriod("未开始");
                 info.setMasterScheduleRate("0%");
             }
 
 
         });
-        return  convertToDtoPageResult(service.findByPage(search));
+        return convertToDtoPageResult(service.findByPage(search));
     }
 
     @Override
@@ -94,8 +95,19 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<PmBaseinfoDto> saveBaseInfo(PmBaseinfoDto dto) throws IllegalAccessException {
-        PmBaseinfo pmBaseinfo = service.findOne(dto.getId());
-        PmBaseinfoDto pmBaseinfoDto = convertToDto(pmBaseinfo);
+        PmBaseinfoDto pmBaseinfoDto;
+        if (StringUtils.isNotEmpty(dto.getId())) {
+            //只有主导人或管理员才能修改
+            if (StringUtils.isNotEmpty(dto.getLeader()) && dto.getLeader().contains(ContextUtil.getUserName())) {
+
+            }else{
+                return ResultData.fail("只有主导人才可以修改信息");
+            }
+            PmBaseinfo pmBaseinfo = service.findOne(dto.getId());
+            pmBaseinfoDto = convertToDto(pmBaseinfo);
+        } else {
+            pmBaseinfoDto = dto;
+        }
         pmBaseinfoDto.setProjectTypes(dto.getProjectTypes());
         pmBaseinfoDto.setCurrentPeriod(dto.getCurrentPeriod());
         pmBaseinfoDto.setLeader(dto.getLeader());
@@ -109,7 +121,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PmBaseinfoDto> findByIdForSchedule(String id) {
-      return  ResultData.success(service.findByIdForSchedule(id)) ;
+        return ResultData.success(service.findByIdForSchedule(id));
     }
 
     @Override
@@ -122,9 +134,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData syncProjectInfo(String code) {
         PmBaseinfo pmBaseinfo = service.syncIppInfo(code);
-        if(pmBaseinfo!=null){
+        if (pmBaseinfo != null) {
             return ResultData.success(convertToDto(pmBaseinfo));
-        }else{
+        } else {
             return ResultData.fail("同步失败！！！该单号数据不存在或已经建档。");
         }
 

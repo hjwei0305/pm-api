@@ -97,20 +97,19 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
      */
     @Transactional(rollbackFor = Exception.class)
     public PmBaseinfo syncIppInfo(String code) {
-        List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
-        if (pmBaseinfoList.size() > 0) {
             Optional<PmBaseinfo> byCode = dao.findByCode(code);
             if (byCode.isPresent()) {
                 //已经存在
                 return null;
             } else {
-                // dao.save(pmBaseinfoList);
-                return pmBaseinfoList.get(0);
+                List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
+                if (pmBaseinfoList.size() > 0) {
+                    // dao.save(pmBaseinfoList);
+                    return pmBaseinfoList.get(0);
+                }else{
+                    return null;
             }
-        } else {
-            return null;
         }
-
     }
 
     /**

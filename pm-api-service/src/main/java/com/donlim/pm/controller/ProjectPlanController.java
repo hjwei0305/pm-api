@@ -55,7 +55,6 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
 
     @Override
     public ResultData<String> saveBatch(List<ProjectPlanDto> projectPlanDtos) {
-
         if (projectPlanDtos.size() > 0) {
             String projectId = projectPlanDtos.get(0).getProjectId();
             List<String> projectList = new ArrayList<>();
