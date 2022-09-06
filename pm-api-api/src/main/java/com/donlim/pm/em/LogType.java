@@ -8,6 +8,8 @@ import com.changhong.sei.annotation.Remark;
  * @Date: 2022/9/6.
  */
 public enum  LogType {
+    @Remark("修改项目资料")
+    ModifyProjectInfo,
     @Remark("修改主计划")
     ModifyMasterPlan,
     @Remark("修改前端计划")

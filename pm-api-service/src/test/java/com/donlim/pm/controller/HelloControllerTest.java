@@ -23,9 +23,13 @@ public class HelloControllerTest extends BaseUnitTest {
     private HelloController controller;
     @Autowired
     private PmBaseinfoService pmBaseinfoService;
+    @Autowired
+    private  PmBaseinfoController pmBaseinfoController;
     @Test
     public void sayHello() {
-        System.out.println( EnumUtils.getEnumItemRemark(LogType.class,LogType.ModifyCodePlan));
+
+        pmBaseinfoController.syncProjectInfo("E20220808002");
+       // System.out.println( EnumUtils.getEnumItemRemark(LogType.class,LogType.ModifyCodePlan));
        /* String name = "程序员";
         ResultData<String> result = controller.sayHello(name);
         LOG.debug(JsonUtils.toJson(result));*/

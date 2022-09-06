@@ -11,9 +11,12 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.api.PmBaseinfoApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
+import com.donlim.pm.entity.PmLog;
 import com.donlim.pm.service.PmBaseinfoService;
+import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.util.EnumUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +43,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
      */
     @Autowired
     private PmBaseinfoService service;
+    @Autowired
+    private   PmLogService pmLogService;
     @Autowired
     private DocumentManager documentManager;
 
@@ -116,6 +121,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setDeveloper(dto.getDeveloper());
         pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
         pmBaseinfoDto.setProOpt(dto.getProOpt());
+        pmLogService.save(LogType.ModifyProjectInfo);
         return super.save(pmBaseinfoDto);
     }
 
