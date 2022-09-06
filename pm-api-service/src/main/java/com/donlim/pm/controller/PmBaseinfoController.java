@@ -103,7 +103,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         PmBaseinfoDto pmBaseinfoDto;
         if (StringUtils.isNotEmpty(dto.getId())) {
             //只有主导人或管理员才能修改
-            if (StringUtils.isNotEmpty(dto.getLeader()) && dto.getLeader().contains(ContextUtil.getUserName())) {
+            if (StringUtils.isNotEmpty(dto.getLeader()) && (dto.getLeader().contains(ContextUtil.getUserName())||ContextUtil.getUserName().equals("admin"))) {
 
             }else{
                 return ResultData.fail("只有主导人才可以修改信息");
