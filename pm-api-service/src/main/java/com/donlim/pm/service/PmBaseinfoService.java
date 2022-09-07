@@ -87,6 +87,15 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 documentManager.bindBusinessDocuments(dto.getAttachmentIdList().get(0), dto.getAttachmentIdList());
                 save(byId.get());
             }
+        }else if(!StringUtils.isEmpty(dto.getId()) && CollectionUtils.isEmpty(dto.getAttachmentIdList())){
+            // 清除附件绑定
+            Optional<PmBaseinfo> byId = dao.findById(dto.getId());
+            if (byId.isPresent() && EnumUtils.isIncludeFileTypeEnum(dto.getFileType())) {
+                String fieldName = dto.getFileType().substring(0, 1).toLowerCase() + dto.getFileType().substring(1) + "Id";
+                // 字段内容清除
+                ReflectUtils.setFieldValue(byId.get(), fieldName, null);
+                save(byId.get());
+            }
         }
     }
 
