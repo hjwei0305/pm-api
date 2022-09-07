@@ -61,7 +61,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
-        //
+        //非管理员只显示自己的项目
         boolean isAdmin=false;
         ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
         if (featureRolesByAccount.getSuccess()) {
@@ -72,8 +72,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
           }
         }
         PageResult<PmBaseinfo> byPage=new PageResult<PmBaseinfo>();
+        byPage = service.findByPage(search);
         if(isAdmin || ContextUtil.getUserAccount().equals("admin")){
-            byPage = service.findByPage(search);
+
             return convertToDtoPageResult(byPage);
         }else{
             List<PmBaseinfo>newRows=new ArrayList<>();
