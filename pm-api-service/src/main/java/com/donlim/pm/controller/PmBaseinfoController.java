@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,15 +62,32 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
         //
+        boolean isAdmin=false;
         ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
         if (featureRolesByAccount.getSuccess()) {
           for(FeatureRoleDto roleDto:featureRolesByAccount.getData()){
-              return ResultData.fail(roleDto.toString());
+             if(roleDto.getCode().equals("DONLIM-XB-PM-ADMIN")){
+                 isAdmin=true;
+             }
           }
-
+        }
+        PageResult<PmBaseinfo> byPage=new PageResult<PmBaseinfo>();
+        if(isAdmin || ContextUtil.getUserAccount().equals("admin")){
+            byPage = service.findByPage(search);
+            return convertToDtoPageResult(byPage);
+        }else{
+            List<PmBaseinfo>newRows=new ArrayList<>();
+            ArrayList<PmBaseinfo> rows = byPage.getRows();
+            for(PmBaseinfo pmBaseinfo :rows){
+                if(pmBaseinfo.getLeader().contains(ContextUtil.getUserName())||pmBaseinfo.getDesigner().contains(ContextUtil.getUserName())||pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName())||pmBaseinfo.getImplementer().contains(ContextUtil.getUserName())){
+                    newRows.add(pmBaseinfo);
+                }
+            }
+            byPage.setRows(newRows);
+            return convertToDtoPageResult(byPage);
 
         }
-        PageResult<PmBaseinfo> byPage = service.findByPage(search);
+     /*   PageResult<PmBaseinfo> byPage = service.findByPage(search);
         byPage.getRows().stream().forEach(info -> {
             if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
@@ -102,7 +120,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
 
         });
-        return convertToDtoPageResult(service.findByPage(search));
+        return convertToDtoPageResult(service.findByPage(search));*/
     }
 
     @Override
