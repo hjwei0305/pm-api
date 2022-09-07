@@ -62,7 +62,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
         //非管理员只显示自己的项目
         boolean isAdmin=false;
-        ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
+      /*  ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
         if (featureRolesByAccount.getSuccess()) {
           for(FeatureRoleDto roleDto:featureRolesByAccount.getData()){
              if(roleDto.getCode().equals("DONLIM-XB-PM-ADMIN")){
@@ -76,8 +76,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                 info.setProjectTypes(enumItemRemark);
             }
-        });
-        if(isAdmin || ContextUtil.getUserAccount().equals("admin")){
+        });*/
+        PageResult<PmBaseinfo> byPage = service.findByPage(search);
+        if(true || ContextUtil.getUserAccount().equals("admin")){
             return convertToDtoPageResult(byPage);
         }else{
             List<PmBaseinfo>newRows=new ArrayList<>();
