@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * 提案清单(PmBaseinfo)实体类
@@ -50,22 +49,22 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 开始日期
      */
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
     /**
      * 计划结案日期
      */
     @Column(name = "plan_finish_date")
-    private Date planFinishDate;
+    private LocalDate planFinishDate;
     /**
      * 实际结案日期
      */
     @Column(name = "final_finish_date")
-    private Date finalFinishDate;
+    private LocalDate finalFinishDate;
     /**
      * 项目天数
      */
     @Column(name = "project_days")
-    private Integer projectDays;
+    private Long projectDays;
     /**
      * 是否逾期
      */
@@ -75,7 +74,7 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 逾期天数
      */
     @Column(name = "overed_days")
-    private Integer overedDays;
+    private Long overedDays;
     /**
      * 参与人数
      */

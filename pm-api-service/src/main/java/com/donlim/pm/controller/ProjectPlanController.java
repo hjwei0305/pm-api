@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 项目计划表(ProjectPlan)控制类
@@ -64,6 +65,17 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
             String planType = projectPlanDtos.get(0).getPlanType();
             if (pmBaseinfo.getLeader().contains(ContextUtil.getUserName()) && planType.equals("0")) {
                 pmLogService.save(LogType.ModifyMasterPlan);
+                //拿出序号1用来计算计划周期
+                Optional<ProjectPlanDto> first = projectPlanDtos.stream().filter(a -> a.getSchedureNo().equals("1")).findFirst();
+                if(first.isPresent()){
+                    pmBaseinfo.setStartDate(first.get().getActualStartDate());
+                    pmBaseinfo.setPlanFinishDate(first.get().getPlanEndDate());
+                    pmBaseinfo.setFinalFinishDate(first.get().getActualEndDate());
+                    pmBaseinfo.setProjectDays(first.get().getPlanEndDate().toEpochDay()-first.get().getPlanStartDate().toEpochDay());
+                    pmBaseinfoService.save(pmBaseinfo);
+                }else{
+                    return ResultData.fail("序号1必填！！！");
+                }
             } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("2")) {
                 pmLogService.save(LogType.ModifyFrontPlan);
             } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("3")) {
