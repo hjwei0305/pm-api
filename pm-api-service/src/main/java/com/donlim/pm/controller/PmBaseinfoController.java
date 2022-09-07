@@ -16,7 +16,6 @@ import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
-import com.donlim.pm.entity.PmLog;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.util.EnumUtils;
@@ -72,6 +71,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
           }
         }
         PageResult<PmBaseinfo> byPage = service.findByPage(search);
+        byPage.getRows().stream().forEach(info -> {
+            if (StringUtils.isNotEmpty(info.getProjectTypes())) {
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
+                info.setProjectTypes(enumItemRemark);
+            }
+        });
         if(isAdmin || ContextUtil.getUserAccount().equals("admin")){
             return convertToDtoPageResult(byPage);
         }else{
