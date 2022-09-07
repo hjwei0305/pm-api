@@ -71,10 +71,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
              }
           }
         }
-        PageResult<PmBaseinfo> byPage=new PageResult<PmBaseinfo>();
-        byPage = service.findByPage(search);
+        PageResult<PmBaseinfo> byPage = service.findByPage(search);
         if(isAdmin || ContextUtil.getUserAccount().equals("admin")){
-
             return convertToDtoPageResult(byPage);
         }else{
             List<PmBaseinfo>newRows=new ArrayList<>();
