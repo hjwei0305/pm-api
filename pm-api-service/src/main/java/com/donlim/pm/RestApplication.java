@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @version 1.0.1 2019-12-18 10:41
  */
 @SpringBootApplication
-@EnableFeignClients(basePackages = {"com.donlim.pm.service"})
+@EnableFeignClients(basePackages = {"com.donlim.pm.service","com.changhong.sei.basic.api"})
 public class RestApplication {
     public static void main(String[] args) {
         SpringApplication.run(RestApplication.class, args);

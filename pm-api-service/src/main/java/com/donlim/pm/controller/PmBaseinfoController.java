@@ -1,5 +1,7 @@
 package com.donlim.pm.controller;
 
+import com.changhong.sei.basic.api.UserApi;
+import com.changhong.sei.basic.dto.FeatureRoleDto;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,9 +47,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Autowired
     private PmBaseinfoService service;
     @Autowired
-    private   PmLogService pmLogService;
+    private PmLogService pmLogService;
     @Autowired
     private DocumentManager documentManager;
+    @Autowired
+    private UserApi userApi;
 
     @Override
     public BaseEntityService<PmBaseinfo> getService() {
@@ -55,6 +60,15 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
+        //
+        ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
+        if (featureRolesByAccount.getSuccess()) {
+          for(FeatureRoleDto roleDto:featureRolesByAccount.getData()){
+              return ResultData.fail(roleDto.toString());
+          }
+
+
+        }
         PageResult<PmBaseinfo> byPage = service.findByPage(search);
         byPage.getRows().stream().forEach(info -> {
             if (StringUtils.isNotEmpty(info.getProjectTypes())) {
@@ -103,9 +117,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         PmBaseinfoDto pmBaseinfoDto;
         if (StringUtils.isNotEmpty(dto.getId())) {
             //只有主导人或管理员才能修改
-            if (StringUtils.isNotEmpty(dto.getLeader()) && (dto.getLeader().contains(ContextUtil.getUserName())||ContextUtil.getUserName().equals("admin"))) {
+            if (StringUtils.isNotEmpty(dto.getLeader()) && (dto.getLeader().contains(ContextUtil.getUserName()) || ContextUtil.getUserName().equals("admin"))) {
 
-            }else{
+            } else {
                 return ResultData.fail("只有主导人才可以修改信息");
             }
             PmBaseinfo pmBaseinfo = service.findOne(dto.getId());

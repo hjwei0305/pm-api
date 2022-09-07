@@ -1,6 +1,9 @@
 package com.donlim.pm.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.changhong.sei.basic.api.UserApi;
+import com.changhong.sei.basic.dto.FeatureRoleDto;
+import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.test.BaseUnitTest;
 import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dto.IppProjectInfoDetails;
@@ -25,10 +28,21 @@ public class HelloControllerTest extends BaseUnitTest {
     private PmBaseinfoService pmBaseinfoService;
     @Autowired
     private  PmBaseinfoController pmBaseinfoController;
+    @Autowired
+    private UserApi userApi;
     @Test
     public void sayHello() {
 
-        pmBaseinfoController.syncProjectInfo("E20220808002");
+
+        ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount("admin");
+        if (featureRolesByAccount.getSuccess()) {
+            for(FeatureRoleDto roleDto:featureRolesByAccount.getData()){
+                System.out.println(roleDto);
+            }
+
+
+        }
+      //  pmBaseinfoController.syncProjectInfo("E20220808002");
        // System.out.println( EnumUtils.getEnumItemRemark(LogType.class,LogType.ModifyCodePlan));
        /* String name = "程序员";
         ResultData<String> result = controller.sayHello(name);
