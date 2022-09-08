@@ -14,6 +14,7 @@ import com.donlim.pm.dao.ProjectPlanDao;
 import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProjectInfoDto;
+import com.donlim.pm.em.FileType;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.em.SmallNodeType;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 
 import java.time.LocalDate;
@@ -101,6 +103,42 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 String fieldName = dto.getFileType().substring(0, 1).toLowerCase() + dto.getFileType().substring(1) + "Id";
                 // 字段内容清除
                 ReflectUtils.setFieldValue(byId.get(), fieldName, null);
+                save(byId.get());
+            }
+        }
+    }
+
+    /**
+     * 绑定上传附件列表
+     *
+     * @param dto
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void bindFileList(PmBaseinfoDto dto) {
+        List<com.changhong.sei.util.EnumUtils.EnumEntity> enumDataList = EnumUtils.getEnumDataList(FileType.class);
+        if (!StringUtils.isEmpty(dto.getId()) && !CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
+            Optional<PmBaseinfo> byId = dao.findById(dto.getId());
+            if (byId.isPresent()) {
+                for (com.changhong.sei.util.EnumUtils.EnumEntity enumEntity : enumDataList) {
+                    String fieldName = enumEntity.getName().substring(0, 1).toLowerCase() + enumEntity.getName().substring(1) + "Id";
+                    if(!ObjectUtils.isEmpty(ReflectUtils.getFieldValue(byId.get(), fieldName)) &&
+                            !dto.getAttachmentIdList().contains(ReflectUtils.getFieldValue(byId.get(), fieldName))){
+                        ReflectUtils.setFieldValue(byId.get(), fieldName, null);
+                    }
+                }
+                documentManager.bindBusinessDocuments(dto.getId(), dto.getAttachmentIdList());
+                save(byId.get());
+            }
+        }else if(!StringUtils.isEmpty(dto.getId()) && CollectionUtils.isEmpty(dto.getAttachmentIdList())){
+            // 附件list为空，清空绑定
+            documentManager.deleteBusinessInfos(dto.getId());
+            // 清除附件绑定
+            Optional<PmBaseinfo> byId = dao.findById(dto.getId());
+            if (byId.isPresent()) {
+                for (com.changhong.sei.util.EnumUtils.EnumEntity enumEntity : enumDataList) {
+                    String fieldName = enumEntity.getName().substring(0, 1).toLowerCase() + enumEntity.getName().substring(1) + "Id";
+                    ReflectUtils.setFieldValue(byId.get(), fieldName, null);
+                }
                 save(byId.get());
             }
         }
