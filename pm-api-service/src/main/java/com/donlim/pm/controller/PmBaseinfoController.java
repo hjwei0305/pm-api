@@ -1,7 +1,6 @@
 package com.donlim.pm.controller;
 
 import com.changhong.sei.basic.api.UserApi;
-import com.changhong.sei.basic.dto.FeatureRoleDto;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
@@ -78,6 +77,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             }
         });*/
         PageResult<PmBaseinfo> byPage = service.findByPage(search);
+        byPage.getRows().stream().forEach(info -> {
+            if (StringUtils.isNotEmpty(info.getProjectTypes())) {
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
+                info.setProjectTypes(enumItemRemark);
+            }
+        });
         if(true || ContextUtil.getUserAccount().equals("admin")){
             return convertToDtoPageResult(byPage);
         }else{
@@ -160,6 +165,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setProOpt(dto.getProOpt());
         pmLogService.save(LogType.ModifyProjectInfo);
         return super.save(pmBaseinfoDto);
+    }
+
+    @Override
+    public ResultData<PmBaseinfoDto> saveAttachList(PmBaseinfoDto dto) throws IllegalAccessException {
+        service.bindFileList(dto);
+        return ResultDataUtil.success("执行成功");
     }
 
     @Override

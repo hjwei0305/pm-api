@@ -69,7 +69,7 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      * 是否逾期
      */
     @Column(name = "is_overdue")
-    private Boolean overdue;
+    private Boolean isOverdue;
     /**
      * 逾期天数
      */

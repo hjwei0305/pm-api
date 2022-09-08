@@ -155,7 +155,6 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
                 pmBaseinfo.setProjectTypes(enumItemRemark);
             }
-
             // 1、验收阶段
             if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
                 pmBaseinfo.setCurrentPeriod("验收");
@@ -188,22 +187,14 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     if (projectPlan.getPlanEndDate() != null) {
                         long daydiff = LocalDate.now().toEpochDay() - projectPlan.getPlanEndDate().toEpochDay();
                         if (daydiff > 0) {
-                            pmBaseinfo.setOverdue(true);
+                            pmBaseinfo.setIsOverdue(true);
                             pmBaseinfo.setOveredDays(daydiff);
                         } else {
-                            pmBaseinfo.setOverdue(false);
+                            pmBaseinfo.setIsOverdue(false);
                         }
                     }
                 }
-                if(projectPlan.getActualEndDate()!=null){
-                    finishNum++;
-                }
             }
-            String scheduleRatePercent="0%";
-            if(planList.size()>0){
-                scheduleRatePercent=  Math.round(finishNum*100/planList.size())+"%";
-            }
-            pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
         }
         save(pmBaseinfoList);
     }
@@ -443,6 +434,4 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         projectInfoDto.setOverTimeNum(overTimeNum);
         return projectInfoDto;
     }
-
-
 }

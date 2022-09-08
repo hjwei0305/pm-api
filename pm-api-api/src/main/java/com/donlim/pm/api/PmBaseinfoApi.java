@@ -51,8 +51,24 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     @ApiOperation(value = "根据提案单号获取项目信息", notes = "根据提案单号获取项目信息")
     ResultData syncProjectInfo(@RequestParam("code") String code);
 
+    /**
+     * 保存项目信息
+     * @param dto
+     * @return
+     * @throws IllegalAccessException
+     */
     @PostMapping(path = "saveBaseInfo")
     @ApiOperation(value = "保存项目信息", notes = "保存项目信息")
     ResultData<PmBaseinfoDto> saveBaseInfo(@RequestBody PmBaseinfoDto dto) throws IllegalAccessException;
+
+    /**
+     * 绑定附件列表
+     * @param dto
+     * @return
+     * @throws IllegalAccessException
+     */
+    @PostMapping(path = "saveAttachList")
+    @ApiOperation(value = "绑定附件列表", notes = "绑定附件列表")
+    ResultData<PmBaseinfoDto> saveAttachList(@RequestBody PmBaseinfoDto dto) throws IllegalAccessException;
 
 }
