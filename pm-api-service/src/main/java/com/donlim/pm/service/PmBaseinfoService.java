@@ -15,17 +15,19 @@ import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProjectInfoDto;
 import com.donlim.pm.em.NodeType;
+import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.util.ReflectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -149,6 +151,35 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
             pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
             //检查是否逾期，逾期天数
+            if (StringUtils.isNotEmpty(pmBaseinfo.getProjectTypes())) {
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
+                pmBaseinfo.setProjectTypes(enumItemRemark);
+            }
+            // 1、验收阶段
+            if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
+                pmBaseinfo.setCurrentPeriod("验收");
+                pmBaseinfo.setMasterScheduleRate("100%");
+            } else if (null != pmBaseinfo.getTest() && pmBaseinfo.getTest()) {
+                // 2、测试结果
+                pmBaseinfo.setCurrentPeriod("测试");
+                pmBaseinfo.setMasterScheduleRate("80%");
+            } else if ((null != pmBaseinfo.getCodeReview() && pmBaseinfo.getTest()) || (null != pmBaseinfo.getWebReview() && pmBaseinfo.getWebReview())) {
+                // 3、前后端
+                pmBaseinfo.setCurrentPeriod("开发");
+                pmBaseinfo.setMasterScheduleRate("60%");
+            } else if (null != pmBaseinfo.getUiReview() && pmBaseinfo.getUiReview()) {
+                // 4、UI设计
+                pmBaseinfo.setCurrentPeriod("设计");
+                pmBaseinfo.setMasterScheduleRate("40%");
+            } else if (null != pmBaseinfo.getRequireReview() && pmBaseinfo.getRequireReview()) {
+                // 4、需求规划
+                pmBaseinfo.setCurrentPeriod("规划");
+                pmBaseinfo.setMasterScheduleRate("20%");
+            } else {
+                pmBaseinfo.setCurrentPeriod("未开始");
+                pmBaseinfo.setMasterScheduleRate("0%");
+            }
+
             List<ProjectPlan> allByPlanTypeAndSchedureNo = projectPlanDao.getAllByPlanTypeAndSchedureNo(PROJECT_MASTER_PLAN, "1");
             Optional<ProjectPlan> projectPlan = allByPlanTypeAndSchedureNo.stream().filter(a -> a.getProjectId().equals(pmBaseinfo.getId())).findFirst();
             if (projectPlan.isPresent()) {
@@ -216,7 +247,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             //2.4需求评审
             if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview))) {
                 if (flag) {
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireReview())) {
+                    if (pmBaseinfoDto.getRequireReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -238,7 +269,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             //3.2ui评审
             if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview))) {
                 if (flag) {
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getUiReview())) {
+                    if (pmBaseinfoDto.getUiReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -273,7 +304,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
 
             if (flag) {
                 if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
+                    if (pmBaseinfoDto.getWebReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -281,7 +312,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     }
                 }
                 if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview))) {
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
+                    if (pmBaseinfoDto.getCodeReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
@@ -304,7 +335,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             //5.2测试结果
             if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Test))) {
                 if (flag) {
-                    if (!StringUtils.isEmpty(pmBaseinfoDto.getTest())) {
+                    if (pmBaseinfoDto.getTest()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
