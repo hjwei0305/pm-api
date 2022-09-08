@@ -155,6 +155,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
                 pmBaseinfo.setProjectTypes(enumItemRemark);
             }
+
             // 1、验收阶段
             if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
                 pmBaseinfo.setCurrentPeriod("验收");
@@ -194,11 +195,18 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                         }
                     }
                 }
+                if(projectPlan.getActualEndDate()!=null){
+                    finishNum++;
+                }
             }
+            String scheduleRatePercent="0%";
+            if(planList.size()>0){
+                scheduleRatePercent=  Math.round(finishNum*100/planList.size())+"%";
+            }
+            pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
         }
         save(pmBaseinfoList);
     }
-
     /**
      * 获取项目详细信息供进度图使用
      *
