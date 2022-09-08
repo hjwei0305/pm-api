@@ -1,6 +1,7 @@
 package com.donlim.pm.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
@@ -12,6 +13,7 @@ import com.donlim.pm.dao.PmBaseinfoDao;
 import com.donlim.pm.dao.ProjectPlanDao;
 import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.ProjectInfoDto;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
@@ -90,7 +92,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 documentManager.bindBusinessDocuments(dto.getAttachmentIdList().get(0), dto.getAttachmentIdList());
                 save(byId.get());
             }
-        }else if(!StringUtils.isEmpty(dto.getId()) && CollectionUtils.isEmpty(dto.getAttachmentIdList())){
+        } else if (!StringUtils.isEmpty(dto.getId()) && CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
             // 清除附件绑定
             Optional<PmBaseinfo> byId = dao.findById(dto.getId());
             if (byId.isPresent() && EnumUtils.isIncludeFileTypeEnum(dto.getFileType())) {
@@ -109,17 +111,17 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
      */
     @Transactional(rollbackFor = Exception.class)
     public PmBaseinfo syncIppInfo(String code) {
-            Optional<PmBaseinfo> byCode = dao.findByCode(code);
-            if (byCode.isPresent()) {
-                //已经存在
-                return null;
+        Optional<PmBaseinfo> byCode = dao.findByCode(code);
+        if (byCode.isPresent()) {
+            //已经存在
+            return null;
+        } else {
+            List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
+            if (pmBaseinfoList.size() > 0) {
+                // dao.save(pmBaseinfoList);
+                return pmBaseinfoList.get(0);
             } else {
-                List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
-                if (pmBaseinfoList.size() > 0) {
-                    // dao.save(pmBaseinfoList);
-                    return pmBaseinfoList.get(0);
-                }else{
-                    return null;
+                return null;
             }
         }
     }
@@ -131,31 +133,31 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0");
-        for (PmBaseinfo pmBaseinfo:pmBaseinfoList){
+        for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
-            for (IppProjectInfoDetails.TableDTO data :list){
-                if(data.getDevelopWay().equals(IppConstant.UI)){
+            for (IppProjectInfoDetails.TableDTO data : list) {
+                if (data.getDevelopWay().equals(IppConstant.UI)) {
                     pmBaseinfo.setUiReview(true);
-                }else if(data.getDevelopWay().equals(IppConstant.REQUIRE_REVIEW)){
+                } else if (data.getDevelopWay().equals(IppConstant.REQUIRE_REVIEW)) {
                     pmBaseinfo.setRequireReview(true);
-                }else if(data.getDevelopWay().equals(IppConstant.WEB_REVIEW)){
+                } else if (data.getDevelopWay().equals(IppConstant.WEB_REVIEW)) {
                     pmBaseinfo.setWebReview(true);
-                }else if (data.getDevelopWay().equals(IppConstant.CODE_REVIEW)){
+                } else if (data.getDevelopWay().equals(IppConstant.CODE_REVIEW)) {
                     pmBaseinfo.setCodeReview(true);
                 }
             }
             pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
-            pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode())?"1":"0");
+            pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
             //检查是否逾期，逾期天数
             List<ProjectPlan> allByPlanTypeAndSchedureNo = projectPlanDao.getAllByPlanTypeAndSchedureNo(PROJECT_MASTER_PLAN, "1");
             Optional<ProjectPlan> projectPlan = allByPlanTypeAndSchedureNo.stream().filter(a -> a.getProjectId().equals(pmBaseinfo.getId())).findFirst();
-            if(projectPlan.isPresent()){
-                if(projectPlan.get().getPlanEndDate()!=null){
-                    long daydiff= LocalDate.now().toEpochDay()-projectPlan.get().getPlanEndDate().toEpochDay();
-                    if(daydiff>0){
+            if (projectPlan.isPresent()) {
+                if (projectPlan.get().getPlanEndDate() != null) {
+                    long daydiff = LocalDate.now().toEpochDay() - projectPlan.get().getPlanEndDate().toEpochDay();
+                    if (daydiff > 0) {
                         pmBaseinfo.setOverdue(true);
                         pmBaseinfo.setOveredDays(daydiff);
-                    }else{
+                    } else {
                         pmBaseinfo.setOverdue(false);
                     }
                 }
@@ -181,7 +183,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             boolean flag = true;
             //2.1调研
             // 1、包含该节点---判断是否通过  2、不包含节点 -- 直接跳过
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Research))){
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Research))) {
                 if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getAcceptStandardDocId())) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.Pass));
                 } else {
@@ -190,7 +192,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //2.2启动会议
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getStartReportDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -201,7 +203,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //2.3提案系统
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getUserRequireDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -212,7 +214,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //2.4需求评审
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireReview())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -223,7 +225,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //3.1ui设计
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getDesignerDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getCropDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -234,7 +236,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //3.2ui评审
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getUiReview())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -246,50 +248,50 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             //4.1前端开发 4.3后台开发 填写计划即当完成
 
-                if (flag) {
-                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev))) {
-                        //获取后端开发计划表
-                        if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_WEB_PLAN) > 0) {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                        } else {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                            flag = false;
-                        }
-                    }
-                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev))) {
-                        //获取前端计划表
-                        if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_DEV_PLAN) > 0) {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                        } else {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                            flag = false;
-                        }
+            if (flag) {
+                if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev))) {
+                    //获取后端开发计划表
+                    if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_WEB_PLAN) > 0) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
                     }
                 }
+                if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev))) {
+                    //获取前端计划表
+                    if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_DEV_PLAN) > 0) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
+                }
+            }
 
             //4.2前端评审 4.4后台评审
 
-                if (flag) {
-                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
-                        if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                        } else {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                            flag = false;
-                        }
-                    }
-                    if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview))) {
-                        if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
-                        } else {
-                            map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
-                            flag = false;
-                        }
+            if (flag) {
+                if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getWebReview())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
                     }
                 }
+                if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview))) {
+                    if (!StringUtils.isEmpty(pmBaseinfoDto.getCodeReview())) {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    } else {
+                        map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
+                        flag = false;
+                    }
+                }
+            }
 
             //5.1测试用例
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getTestExampleDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getTestReportDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -300,7 +302,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //5.2测试结果
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Test))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Test))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getTest())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -311,7 +313,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //6.1上线
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Online))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Online))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getSopDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getQuestionListDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -322,7 +324,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //6.2监控
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getCheckListDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -333,7 +335,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //7.1结案
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Close))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Close))) {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getCaseCloseReportDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getSatisfactionSurveyDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getPageCheckDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Close), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -344,7 +346,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
             }
             //7.2验收
-            if(proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance))) {
+            if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance))) {
                 if (flag) {
                     if (pmBaseinfoDto.getStatus().equals("1")) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Acceptance), EnumUtils.getNodeTypeRemark(NodeType.Pass));
@@ -363,5 +365,40 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             return pmBaseinfoDto;
         }
         return null;
+    }
+
+    /**获取个人的项目概况
+     * @return
+     */
+    public ProjectInfoDto getProjectInfo() {
+        String userName= ContextUtil.getUserName();
+        ProjectInfoDto projectInfoDto = new ProjectInfoDto();
+        int notStartedNum = 0;
+        int processingNum = 0;
+        int onLineNum = 0;
+        int advanceFinishNum = 0;
+        int overTimeNum = 0;
+        for (PmBaseinfo pmBaseinfo : dao.findAll()) {
+            if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate())&& pmBaseinfo.getStatus().equals("0")) {
+                notStartedNum++;
+            }if(pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate() )&& pmBaseinfo.getStatus().equals("0")){
+                processingNum++;
+            }if(pmBaseinfo.getSopDocId()!=null && pmBaseinfo.getStartDate().getYear()==LocalDate.now().getYear()){
+                onLineNum++;
+            }if(pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isBefore(pmBaseinfo.getPlanFinishDate())){
+                advanceFinishNum++;
+            }
+            if(pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
+                overTimeNum++;
+            }else if (pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate() != null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
+                overTimeNum++;
+            }
+        }
+        projectInfoDto.setNotStartedNum(notStartedNum);
+        projectInfoDto.setProcessingNum(processingNum);
+        projectInfoDto.setOnLineNum(onLineNum);
+        projectInfoDto.setAdvanceFinishNum(advanceFinishNum);
+        projectInfoDto.setOverTimeNum(overTimeNum);
+        return projectInfoDto;
     }
 }
