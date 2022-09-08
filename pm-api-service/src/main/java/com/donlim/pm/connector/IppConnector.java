@@ -129,11 +129,10 @@ public class IppConnector {
         }
         if ("S".equals(svcHdrs.getRCODE())) {
             JSONObject result = JSONObject.parseObject(svcHdrs.getResultJson().replace("[","").replace("]",""));
-            if("通过".equals(result.getString("result"))){
-                return true;
+                if(result!=null && "通过".equals(result.getString("result"))){
+                    return true;
+                }
             }
-
-        }
         return false;
     }
 }

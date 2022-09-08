@@ -15,6 +15,7 @@ import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
+import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.util.ReflectUtils;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     protected BaseEntityDao<PmBaseinfo> getDao() {
         return dao;
     }
+
 
     /**
      * 主计划
@@ -143,6 +146,20 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
             pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode())?"1":"0");
+            //检查是否逾期，逾期天数
+            List<ProjectPlan> allByPlanTypeAndSchedureNo = projectPlanDao.getAllByPlanTypeAndSchedureNo(PROJECT_MASTER_PLAN, "1");
+            Optional<ProjectPlan> projectPlan = allByPlanTypeAndSchedureNo.stream().filter(a -> a.getProjectId().equals(pmBaseinfo.getId())).findFirst();
+            if(projectPlan.isPresent()){
+                if(projectPlan.get().getPlanEndDate()!=null){
+                    long daydiff= LocalDate.now().toEpochDay()-projectPlan.get().getPlanEndDate().toEpochDay();
+                    if(daydiff>0){
+                        pmBaseinfo.setOverdue(true);
+                        pmBaseinfo.setOveredDays(daydiff);
+                    }else{
+                        pmBaseinfo.setOverdue(false);
+                    }
+                }
+            }
         }
         save(pmBaseinfoList);
     }
