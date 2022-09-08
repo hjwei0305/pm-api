@@ -17,7 +17,24 @@ public interface ProjectPlanDao extends BaseEntityDao<ProjectPlan> {
     Long countByProjectIdAndPlanType(String id,String type);
 
     /**
-     * 取出所有主计划的第一项
+     * 获取计划列表
+     * @param ProjectIds 项目ID
+     * @param planType 计划类型
+     * @return
+     */
+    List<ProjectPlan> getAllByProjectIdInAndPlanType(List<String>ProjectIds, String planType);
+
+
+    /**
+     * 获取计划列表
+     * @param ProjectId 项目ID
+     * @param planType 计划类型
+     * @return
+     */
+    List<ProjectPlan> getAllByProjectIdAndPlanType(String ProjectId, String planType);
+
+    /**
+     * 取出所有主计划的第N项
      * @param planType
      * @param schedureNo
      * @return

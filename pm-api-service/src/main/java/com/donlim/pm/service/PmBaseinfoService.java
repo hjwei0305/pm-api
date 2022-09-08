@@ -155,6 +155,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
                 pmBaseinfo.setProjectTypes(enumItemRemark);
             }
+
             // 1、验收阶段
             if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
                 pmBaseinfo.setCurrentPeriod("验收");
@@ -179,20 +180,30 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 pmBaseinfo.setCurrentPeriod("未开始");
                 pmBaseinfo.setMasterScheduleRate("0%");
             }
-
-            List<ProjectPlan> allByPlanTypeAndSchedureNo = projectPlanDao.getAllByPlanTypeAndSchedureNo(PROJECT_MASTER_PLAN, "1");
-            Optional<ProjectPlan> projectPlan = allByPlanTypeAndSchedureNo.stream().filter(a -> a.getProjectId().equals(pmBaseinfo.getId())).findFirst();
-            if (projectPlan.isPresent()) {
-                if (projectPlan.get().getPlanEndDate() != null) {
-                    long daydiff = LocalDate.now().toEpochDay() - projectPlan.get().getPlanEndDate().toEpochDay();
-                    if (daydiff > 0) {
-                        pmBaseinfo.setOverdue(true);
-                        pmBaseinfo.setOveredDays(daydiff);
-                    } else {
-                        pmBaseinfo.setOverdue(false);
+            //计算主计划达成率
+            List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
+            int finishNum=0;
+            for (ProjectPlan projectPlan :planList){
+                if(projectPlan.getSchedureNo().equals("1")){
+                    if (projectPlan.getPlanEndDate() != null) {
+                        long daydiff = LocalDate.now().toEpochDay() - projectPlan.getPlanEndDate().toEpochDay();
+                        if (daydiff > 0) {
+                            pmBaseinfo.setOverdue(true);
+                            pmBaseinfo.setOveredDays(daydiff);
+                        } else {
+                            pmBaseinfo.setOverdue(false);
+                        }
                     }
                 }
+                if(projectPlan.getActualEndDate()!=null){
+                    finishNum++;
+                }
             }
+            String scheduleRatePercent="0%";
+            if(planList.size()>0){
+                scheduleRatePercent=  Math.round(finishNum*100/planList.size())+"%";
+            }
+            pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
         }
         save(pmBaseinfoList);
     }
@@ -432,4 +443,6 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         projectInfoDto.setOverTimeNum(overTimeNum);
         return projectInfoDto;
     }
+
+
 }
