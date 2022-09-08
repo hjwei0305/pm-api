@@ -76,11 +76,11 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
                 }else{
                     return ResultData.fail("序号1必填！！！");
                 }
-            } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("2")) {
+            } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("1")) {
                 pmLogService.save(LogType.ModifyFrontPlan);
-            } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("3")) {
+            } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("2")) {
                 pmLogService.save(LogType.ModifyCodePlan);
-            } else if (pmBaseinfo.getImplementer().contains(ContextUtil.getUserName()) && planType.equals("4")) {
+            } else if (pmBaseinfo.getImplementer().contains(ContextUtil.getUserName()) && planType.equals("3")) {
                 pmLogService.save(LogType.ModifyImplPlan);
             }else{
                 return ResultData.fail("你没有权限操作，请联系项目负责人添加！！！");
