@@ -174,6 +174,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     }
 
     @Override
+    public ResultData getProjectInfo() throws IllegalAccessException {
+        return ResultData.success(service.getProjectInfo());
+    }
+
+    @Override
     public ResultData<PmBaseinfoDto> findByIdForSchedule(String id) {
         return ResultData.success(service.findByIdForSchedule(id));
     }
