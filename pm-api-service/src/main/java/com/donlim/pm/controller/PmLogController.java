@@ -1,6 +1,9 @@
 package com.donlim.pm.controller;
 
 import com.changhong.sei.core.controller.BaseEntityController;
+import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageResult;
+import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.PmLogApi;
 import com.donlim.pm.dto.PmLogDto;
@@ -33,4 +36,8 @@ public class PmLogController extends BaseEntityController<PmLog, PmLogDto> imple
         return service;
     }
 
+    @Override
+    public ResultData<PageResult<PmLogDto>> findByPage(Search search) {
+        return convertToDtoPageResult(service.findByPage(search));
+    }
 }

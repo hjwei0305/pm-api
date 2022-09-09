@@ -4,6 +4,8 @@ import com.changhong.sei.core.dto.BaseEntityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 /**
  * (PmLog)DTO类
  *
@@ -13,6 +15,16 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "DTO")
 public class PmLogDto extends BaseEntityDto {
     private static final long serialVersionUID = -12905451610446700L;
+    /**
+     * 项目id
+     */
+    @ApiModelProperty(value = "项目id")
+    private String projectId;
+    /**
+     * 项目类型
+     */
+    @ApiModelProperty(value = "项目类型")
+    private String projectTypes;
     /**
      * 工号
      */
@@ -31,6 +43,9 @@ public class PmLogDto extends BaseEntityDto {
 
 
     private String tenantCode;
+
+    @ApiModelProperty(value = "创建时间")
+    protected Date createdDate;
 
 
     public String getEmployeeCode() {
@@ -65,4 +80,27 @@ public class PmLogDto extends BaseEntityDto {
         this.tenantCode = tenantCode;
     }
 
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectTypes() {
+        return projectTypes;
+    }
+
+    public void setProjectTypes(String projectTypes) {
+        this.projectTypes = projectTypes;
+    }
 }

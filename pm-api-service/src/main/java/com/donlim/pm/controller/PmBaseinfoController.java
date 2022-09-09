@@ -163,8 +163,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setDeveloper(dto.getDeveloper());
         pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
         pmBaseinfoDto.setProOpt(dto.getProOpt());
-        pmLogService.save(LogType.ModifyProjectInfo);
-        return super.save(pmBaseinfoDto);
+        // 新建项目取项目id
+        ResultData<PmBaseinfoDto> result = super.save(pmBaseinfoDto);
+        dto.setId(result.getData().getId());
+        pmLogService.save(LogType.ModifyProjectInfo,dto);
+        return result;
     }
 
     @Override

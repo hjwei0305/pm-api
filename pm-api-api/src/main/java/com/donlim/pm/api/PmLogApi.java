@@ -1,6 +1,7 @@
 package com.donlim.pm.api;
 
 import com.changhong.sei.core.api.BaseEntityApi;
+import com.changhong.sei.core.api.FindByPageApi;
 import com.donlim.pm.dto.PmLogDto;
 import org.springframework.cloud.openfeign.FeignClient;
 
@@ -15,6 +16,6 @@ import javax.validation.Valid;
  */
 @Valid
 @FeignClient(name = "pm-api", path = PmLogApi.PATH)
-public interface PmLogApi extends BaseEntityApi<PmLogDto> {
+public interface PmLogApi extends BaseEntityApi<PmLogDto>, FindByPageApi<PmLogDto> {
     String PATH = "pmLog";
 }

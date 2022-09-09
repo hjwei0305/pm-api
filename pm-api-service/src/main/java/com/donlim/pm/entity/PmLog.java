@@ -22,6 +22,16 @@ import java.io.Serializable;
 public class PmLog extends BaseAuditableEntity implements Serializable {
     private static final long serialVersionUID = -84298899024966139L;
     /**
+     * 项目id
+     */
+    @Column(name = "project_id")
+    private String projectId;
+    /**
+     * 项目类型
+     */
+    @Column(name = "project_types")
+    private String projectTypes;
+    /**
      * 工号
      */
     @Column(name = "employee_code")
@@ -73,4 +83,19 @@ public class PmLog extends BaseAuditableEntity implements Serializable {
         this.tenantCode = tenantCode;
     }
 
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectTypes() {
+        return projectTypes;
+    }
+
+    public void setProjectTypes(String projectTypes) {
+        this.projectTypes = projectTypes;
+    }
 }
