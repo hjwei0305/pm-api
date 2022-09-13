@@ -197,9 +197,14 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     public ResultData syncProjectInfo(String code) {
         PmBaseinfo pmBaseinfo = service.syncIppInfo(code);
         if (pmBaseinfo != null) {
-            return ResultData.success(convertToDto(pmBaseinfo));
+            if(pmBaseinfo.getId()!=null){
+                return ResultData.fail("该单号数据已经建档，请联系管理员。");
+            }else{
+                return ResultData.success(convertToDto(pmBaseinfo));
+            }
+
         } else {
-            return ResultData.fail("同步失败！！！该单号数据不存在或已经建档。");
+            return ResultData.fail("同步失败！！！该单号数据不存在。");
         }
 
     }

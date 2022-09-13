@@ -152,7 +152,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         Optional<PmBaseinfo> byCode = dao.findByCode(code);
         if (byCode.isPresent()) {
             //已经存在
-            return null;
+            return byCode.get();
         } else {
             List<PmBaseinfo> pmBaseinfoList = IppConnector.getPorjectInfo(code);
             if (pmBaseinfoList.size() > 0) {
