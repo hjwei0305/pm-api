@@ -16,7 +16,6 @@ import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProjectInfoDto;
 import com.donlim.pm.em.FileType;
 import com.donlim.pm.em.NodeType;
-import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-
 
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -189,10 +187,10 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
             pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
             //检查是否逾期，逾期天数
-            if (StringUtils.isNotEmpty(pmBaseinfo.getProjectTypes())) {
-                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
-                pmBaseinfo.setProjectTypes(enumItemRemark);
-            }
+//            if (StringUtils.isNotEmpty(pmBaseinfo.getProjectTypes())) {
+//                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
+//                pmBaseinfo.setProjectTypes(enumItemRemark);
+//            }
 
             // 1、验收阶段
             if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
