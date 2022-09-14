@@ -24,4 +24,8 @@ public class TodoListService extends BaseEntityService<TodoList> {
         return dao;
     }
 
+
+    public  void SendEipTask(){
+
+    }
 }

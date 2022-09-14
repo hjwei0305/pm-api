@@ -37,8 +37,11 @@ private PmBaseinfoService pmBaseinfoService;
         //List<PmBaseinfo> porjectInfo = IppConnector.getPorjectInfo();
        // ResultData resultData = pmBaseinfoController.syncProjectInfo("E20220408004");
      //   resultData.getData();
-        ResultData<PmBaseinfoDto> byIdForSchedule = pmBaseinfoController.findByIdForSchedule("235C2B6B-1AE1-11ED-BF87-34C93D8809B5");
-        System.out.println(byIdForSchedule.getData());
+      //  ResultData<PmBaseinfoDto> byIdForSchedule = pmBaseinfoController.findByIdForSchedule("235C2B6B-1AE1-11ED-BF87-34C93D8809B5");
+      //  System.out.println(byIdForSchedule.getData());
+      //  pmBaseinfoService.updateProjectInfo();
+        pmBaseinfoService.updateProjectInfo();
+
     }
 
 }

@@ -3,18 +3,26 @@ package com.donlim.pm.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.basic.api.UserApi;
 import com.changhong.sei.basic.dto.FeatureRoleDto;
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageResult;
+import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.test.BaseUnitTest;
+import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.dto.IppProjectInfoDetails;
+import com.donlim.pm.dto.MailDto;
+import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.SmallNodeType;
+import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.webservice.eip.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,18 +38,24 @@ public class HelloControllerTest extends BaseUnitTest {
     private  PmBaseinfoController pmBaseinfoController;
     @Autowired
     private UserApi userApi;
+
+
     @Test
     public void sayHello() {
 
+        MailDto mailDto=new MailDto();
+        mailDto.setAccount("377614");
+        mailDto.setUrl("https://sei.donlim.com/#/user/login");
+        mailDto.setMailID("1234");
+        mailDto.setMailType("ADD");
+        mailDto.setMailSubject("你有一个待办未处理，请登陆项目管理系统尽快处理！");
+        EipConnector.sendNotice(mailDto);
 
-        ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount("admin");
-        if (featureRolesByAccount.getSuccess()) {
-            for(FeatureRoleDto roleDto:featureRolesByAccount.getData()){
-                System.out.println(roleDto);
-            }
+      /*  Search search=new Search();
+        ResultData<PageResult<PmBaseinfoDto>> byPage = pmBaseinfoController.findByPage(search);
+        System.out.println(byPage.getData());*/
 
-
-        }
+    }
       //  pmBaseinfoController.syncProjectInfo("E20220808002");
        // System.out.println( EnumUtils.getEnumItemRemark(LogType.class,LogType.ModifyCodePlan));
        /* String name = "程序员";
@@ -71,5 +85,5 @@ public class HelloControllerTest extends BaseUnitTest {
             }
         }*/
      // IppConnector.getTestResult("E20211008003");
-    }
+
 }

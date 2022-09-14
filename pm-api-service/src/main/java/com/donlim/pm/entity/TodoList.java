@@ -1,6 +1,7 @@
 package com.donlim.pm.entity;
 
 import com.changhong.sei.core.entity.BaseAuditableEntity;
+import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 @Table(name = "todo_list")
 @DynamicInsert
 @DynamicUpdate
+@Data
 public class TodoList extends BaseAuditableEntity implements Serializable {
     private static final long serialVersionUID = 693716441330182047L;
     /**
@@ -86,110 +88,15 @@ public class TodoList extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "tenant_code")
     private String tenantCode;
-
-
-    public String getProjectCode() {
-        return projectCode;
-    }
-
-    public void setProjectCode(String projectCode) {
-        this.projectCode = projectCode;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getTodoList() {
-        return todoList;
-    }
-
-    public void setTodoList(String todoList) {
-        this.todoList = todoList;
-    }
-
-    public String getOndutyCode() {
-        return ondutyCode;
-    }
-
-    public void setOndutyCode(String ondutyCode) {
-        this.ondutyCode = ondutyCode;
-    }
-
-    public String getOndutyName() {
-        return ondutyName;
-    }
-
-    public void setOndutyName(String ondutyName) {
-        this.ondutyName = ondutyName;
-    }
-
-    public String getSubmitCode() {
-        return submitCode;
-    }
-
-    public void setSubmitCode(String submitCode) {
-        this.submitCode = submitCode;
-    }
-
-    public String getSubmitName() {
-        return submitName;
-    }
-
-    public void setSubmitName(String submitName) {
-        this.submitName = submitName;
-    }
-
-    public LocalDate getSubmitDate() {
-        return submitDate;
-    }
-
-    public void setSubmitDate(LocalDate submitDate) {
-        this.submitDate = submitDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public Boolean getIsCompleted() {
-        return isCompleted;
-    }
-
-    public void setIsCompleted(Boolean isCompleted) {
-        this.isCompleted = isCompleted;
-    }
-
-    public Boolean getIsFinished() {
-        return isFinished;
-    }
-
-    public void setIsFinished(Boolean isFinished) {
-        this.isFinished = isFinished;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
+    /**
+     * 是否同步
+     */
+    @Column(name="is_sync")
+    private String isSync;
+    /**
+     * 类型：待办，通知
+     */
+    @Column(name = "type")
+    private String type;
 
 }
