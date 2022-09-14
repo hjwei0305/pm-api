@@ -289,6 +289,9 @@ public class PmBaseinfoDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "流程配置")
     private String proOpt;
+    @ApiModelProperty(value = "项目成员")
+    private String member;
+
 
 
 }

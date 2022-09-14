@@ -5,6 +5,7 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dao.TodoListDao;
 import com.donlim.pm.dto.MailDto;
+import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.entity.TodoList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,10 @@ public class TodoListService extends BaseEntityService<TodoList> {
             }
         }
         save(list);
+
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public void addNotice(PmBaseinfoDto dto){
 
     }
 }

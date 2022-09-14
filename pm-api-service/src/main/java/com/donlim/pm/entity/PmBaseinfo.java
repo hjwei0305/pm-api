@@ -285,7 +285,11 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     /**
      * 流程配置
      */
-    @ApiModelProperty(value = "流程配置")
+    @Column(name = "pro_opt")
     private String proOpt;
-
+    /**
+     * 项目成员
+     */
+    @Column(name = "member")
+    private String member;
 }

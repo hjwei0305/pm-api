@@ -15,8 +15,10 @@ import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
+import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmLogService;
+import com.donlim.pm.service.TodoListService;
 import com.donlim.pm.util.EnumUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +53,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     private DocumentManager documentManager;
     @Autowired
     private UserApi userApi;
-
+    @Autowired
+    private TodoListService todoListService;
     @Override
     public BaseEntityService<PmBaseinfo> getService() {
         return service;
@@ -148,7 +151,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             if (StringUtils.isNotEmpty(dto.getLeader()) && (dto.getLeader().contains(ContextUtil.getUserName()) || ContextUtil.getUserName().equals("admin"))) {
 
             } else {
-                return ResultData.fail("只有主导人才可以修改信息");
+              //  return ResultData.fail("只有主导人才可以修改信息");
             }
             PmBaseinfo pmBaseinfo = service.findOne(dto.getId());
             pmBaseinfoDto = convertToDto(pmBaseinfo);
@@ -170,10 +173,21 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setDeveloper(dto.getDeveloper());
         pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
         pmBaseinfoDto.setProOpt(dto.getProOpt());
+        String member="";
+        String memberStr=pmBaseinfoDto.getLeader()+","+pmBaseinfoDto.getDesigner()+","+pmBaseinfoDto.getDeveloper()+","+pmBaseinfoDto.getImplementer();
+        //去重
+        String[] members = memberStr.split(",");
+        for(String str :members){
+            if(!member.contains(str)){
+                member+=str+",";
+            }
+        }
+        pmBaseinfoDto.setMember(member.substring(0,member.length()-1));
         // 新建项目取项目id
         ResultData<PmBaseinfoDto> result = super.save(pmBaseinfoDto);
         dto.setId(result.getData().getId());
         pmLogService.save(LogType.ModifyProjectInfo,dto);
+        todoListService.addNotice(pmBaseinfoDto);
         return result;
     }
 
