@@ -3,15 +3,20 @@ package com.donlim.pm.service;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.connector.EipConnector;
+import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dao.TodoListDao;
 import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -24,6 +29,8 @@ import java.util.List;
 public class TodoListService extends BaseEntityService<TodoList> {
     @Autowired
     private TodoListDao dao;
+    @Autowired
+    private PmEmployeeDao pmEmployeeDao;
 
     @Override
     protected BaseEntityDao<TodoList> getDao() {
@@ -63,6 +70,24 @@ public class TodoListService extends BaseEntityService<TodoList> {
     }
     @Transactional(rollbackFor = Exception.class)
     public void addNotice(PmBaseinfoDto dto){
-
+        List<TodoList> noticeList = dao.findAllByProjectCodeAndType(dto.getCode(), "通知");
+        List<String> memberNoticeList = noticeList.stream().map(a -> a.getOndutyName()).collect(Collectors.toList());
+        List<TodoList>saveList=new ArrayList<>();
+        for (String member : dto.getMember().split(",")) {
+            if(!memberNoticeList.contains(member)){
+                TodoList todoList=new TodoList();
+                Optional<PmEmployee> allByEmployeeName = pmEmployeeDao.findAllByEmployeeName(member);
+                if(allByEmployeeName.isPresent()){
+                    todoList.setOndutyCode(allByEmployeeName.get().getEmployeeCode());
+                    todoList.setProjectCode(dto.getCode());
+                    todoList.setProjectName(dto.getName());
+                    todoList.setOndutyName(member);
+                    todoList.setType("通知");
+                    todoList.setTodoList("您已经加入["+dto.getName()+"]项目组！");
+                    saveList.add(todoList);
+                }
+            }
+        }
+        save(saveList);
     }
 }

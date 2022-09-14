@@ -4,6 +4,7 @@ import com.changhong.sei.core.dao.BaseEntityDao;
 import com.donlim.pm.entity.PmEmployee;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 
 
 /**
@@ -14,5 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PmEmployeeDao extends BaseEntityDao<PmEmployee> {
+    Optional<PmEmployee> findAllByEmployeeName(String name);
 
 }
