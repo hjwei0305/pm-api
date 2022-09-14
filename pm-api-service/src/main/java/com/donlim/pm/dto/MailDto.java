@@ -18,13 +18,13 @@ public class MailDto {
 
     private String account;
 
-    private String address;
+    //private String address;
 
-    private String createMan;
+    //private String createMan;
 
     private String mailBody;
 
-    private LocalDate approvalDate;
+    //private LocalDate approvalDate;
 
     private String mailID;
 

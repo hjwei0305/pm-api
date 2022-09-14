@@ -17,6 +17,7 @@ import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.SmallNodeType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.service.PmBaseinfoService;
+import com.donlim.pm.service.TodoListService;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.webservice.eip.*;
 import org.junit.Test;
@@ -39,17 +40,12 @@ public class HelloControllerTest extends BaseUnitTest {
     @Autowired
     private UserApi userApi;
 
-
+@Autowired
+private TodoListService todoListService;
     @Test
     public void sayHello() {
+        todoListService.SendEipTask();
 
-        MailDto mailDto=new MailDto();
-        mailDto.setAccount("377614");
-        mailDto.setUrl("https://sei.donlim.com/#/user/login");
-        mailDto.setMailID("1234");
-        mailDto.setMailType("ADD");
-        mailDto.setMailSubject("你有一个待办未处理，请登陆项目管理系统尽快处理！");
-        EipConnector.sendNotice(mailDto);
 
       /*  Search search=new Search();
         ResultData<PageResult<PmBaseinfoDto>> byPage = pmBaseinfoController.findByPage(search);
