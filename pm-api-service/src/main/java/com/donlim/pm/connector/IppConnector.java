@@ -61,10 +61,7 @@ public class IppConnector {
                     PmBaseinfo pmBaseinfo=new PmBaseinfo();
                     pmBaseinfo.setCode(ipp.getProposalID());
                     pmBaseinfo.setName(ipp.getProposalName());
-                    if(StringUtils.isEmpty( ipp.getProjectDate())){
-                        continue;
-                    }
-                    pmBaseinfo.setSubmissionDate(LocalDateTime.parse(ipp.getProjectDate()).toLocalDate());
+                    pmBaseinfo.setSubmissionDate(LocalDate.now());
                     pmBaseinfo.setCurrentDescription(ipp.getCurrentDescription());
                     pmBaseinfo.setRequirementDescription(ipp.getDemandDescription());
                     pmBaseinfo.setImproveBenefits(ipp.getImprovedDescription());
