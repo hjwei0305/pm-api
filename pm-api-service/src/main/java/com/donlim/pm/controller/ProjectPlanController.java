@@ -75,10 +75,13 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
                     pmBaseinfo.setStartDate(first.get().getActualStartDate());
                     pmBaseinfo.setPlanFinishDate(first.get().getPlanEndDate());
                     pmBaseinfo.setFinalFinishDate(first.get().getActualEndDate());
+                    if(first.get().getPlanStartDate()==null || first.get().getPlanEndDate()==null){
+                        return ResultData.fail("序号["+first.get().getSchedureNo()+"]行的[计划开始时间]或[计划结束时间]未填写！！！");
+                    }
                     pmBaseinfo.setProjectDays(first.get().getPlanEndDate().toEpochDay()-first.get().getPlanStartDate().toEpochDay());
                     pmBaseinfoService.save(pmBaseinfo);
                 }else{
-                    return ResultData.fail("序号1必填！！！");
+                    return ResultData.fail("序号[1]必填！！！");
                 }
             } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("1")) {
                 pmLogService.save(LogType.ModifyFrontPlan,pmBaseinfoDto);
