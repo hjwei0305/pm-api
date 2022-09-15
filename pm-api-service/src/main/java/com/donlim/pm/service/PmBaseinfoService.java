@@ -460,7 +460,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 notStartedNum++;
             }if(pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate() )&& pmBaseinfo.getStatus().equals("0")){
                 processingNum++;
-            }if(StringUtils.isNotBlank(pmBaseinfo.getSopDocId()) && pmBaseinfo.getStartDate().getYear()==LocalDate.now().getYear()){
+            }if(StringUtils.isNotBlank(pmBaseinfo.getSopDocId()) && pmBaseinfo.getStartDate() != null && pmBaseinfo.getStartDate().getYear()==LocalDate.now().getYear()){
                 onLineNum++;
             }if(pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isBefore(pmBaseinfo.getPlanFinishDate())){
                 advanceFinishNum++;
