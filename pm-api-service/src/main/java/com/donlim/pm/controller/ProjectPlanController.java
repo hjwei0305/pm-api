@@ -71,7 +71,7 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
             if (pmBaseinfo.getLeader().contains(ContextUtil.getUserName()) && planType.equals("0")) {
                 pmLogService.save(LogType.ModifyMasterPlan,pmBaseinfoDto);
                 //拿出序号1用来计算计划周期
-                Optional<ProjectPlanDto> first = projectPlanDtos.stream().filter(a -> a.getSchedureNo().equals("1")).findFirst();
+                Optional<ProjectPlanDto> first = projectPlanDtos.stream().filter(a ->a.getSchedureNo().trim().equals("1")).findFirst();
                 if(first.isPresent()){
                     pmBaseinfo.setStartDate(first.get().getActualStartDate());
                     pmBaseinfo.setPlanFinishDate(first.get().getPlanEndDate());
