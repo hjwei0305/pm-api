@@ -170,7 +170,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     @Transactional(rollbackFor = Exception.class)
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
-        List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0");
+        List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().filter(a->a.getCode().equals("E20220623005")).collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
             for (IppProjectInfoDetails.TableDTO data : list) {
@@ -195,26 +195,21 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             // 1、验收阶段
             if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
                 pmBaseinfo.setCurrentPeriod("验收");
-                pmBaseinfo.setMasterScheduleRate("100%");
             } else if (null != pmBaseinfo.getTest() && pmBaseinfo.getTest()) {
                 // 2、测试结果
                 pmBaseinfo.setCurrentPeriod("测试");
-                pmBaseinfo.setMasterScheduleRate("80%");
             } else if ((null != pmBaseinfo.getCodeReview() && pmBaseinfo.getTest()) || (null != pmBaseinfo.getWebReview() && pmBaseinfo.getWebReview())) {
                 // 3、前后端
                 pmBaseinfo.setCurrentPeriod("开发");
-                pmBaseinfo.setMasterScheduleRate("60%");
             } else if (null != pmBaseinfo.getUiReview() && pmBaseinfo.getUiReview()) {
                 // 4、UI设计
                 pmBaseinfo.setCurrentPeriod("设计");
-                pmBaseinfo.setMasterScheduleRate("40%");
             } else if (null != pmBaseinfo.getRequireReview() && pmBaseinfo.getRequireReview()) {
                 // 4、需求规划
                 pmBaseinfo.setCurrentPeriod("规划");
-                pmBaseinfo.setMasterScheduleRate("20%");
             } else {
                 pmBaseinfo.setCurrentPeriod("未开始");
-                pmBaseinfo.setMasterScheduleRate("0%");
+
             }
             //计算主计划达成率
             List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);

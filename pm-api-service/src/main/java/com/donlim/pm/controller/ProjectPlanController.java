@@ -68,6 +68,14 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
             PmBaseinfo pmBaseinfo = pmBaseinfoList.get(0);
             PmBaseinfoDto pmBaseinfoDto = dtoModelMapper.map(pmBaseinfo, PmBaseinfoDto.class);
             String planType = projectPlanDtos.get(0).getPlanType();
+            //为没有序号的初始化序号
+            int no=1;
+            for (ProjectPlanDto projectPlanDto : projectPlanDtos) {
+                if(StringUtils.isEmpty(projectPlanDto.getSchedureNo())){
+                    projectPlanDto.setSchedureNo(no+"");
+                    no++;
+                }
+            }
             if (pmBaseinfo.getLeader().contains(ContextUtil.getUserName()) && planType.equals("0")) {
                 pmLogService.save(LogType.ModifyMasterPlan,pmBaseinfoDto);
                 //拿出序号1用来计算计划周期
@@ -82,7 +90,7 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
                     pmBaseinfo.setProjectDays(first.get().getPlanEndDate().toEpochDay()-first.get().getPlanStartDate().toEpochDay());
                     pmBaseinfoService.save(pmBaseinfo);
                 }else{
-                    return ResultData.fail("序号[1]必填！！！");
+                    return ResultData.fail("主计划序号[1]必填！！！");
                 }
             } else if (pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName()) && planType.equals("1")) {
                 pmLogService.save(LogType.ModifyFrontPlan,pmBaseinfoDto);
@@ -94,14 +102,7 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
                 return ResultData.fail("当前用户["+ContextUtil.getUserName()+"],你没有权限操作，请联系项目负责人添加！！！");
             }
         }
-        //为没有序号的初始化序号
-        int no=1;
-        for (ProjectPlanDto projectPlanDto : projectPlanDtos) {
-           if(StringUtils.isEmpty(projectPlanDto.getSchedureNo())){
-               projectPlanDto.setSchedureNo(no+"");
-               no++;
-           }
-        }
+
         projectPlanDtos.stream().parallel().forEach(p -> save(p));
         return ResultData.success("保存成功");
     }
