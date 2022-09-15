@@ -4,6 +4,7 @@ import com.changhong.sei.core.api.BaseEntityApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
 import com.donlim.pm.dto.ProjectPlanDto;
+import com.donlim.pm.dto.upload.PlanDTO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,5 +34,9 @@ public interface ProjectPlanApi extends BaseEntityApi<ProjectPlanDto>, FindByPag
     @PostMapping(path = "saveBatch",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "项目计划批量保存" ,notes = "项目计划批量保存")
     ResultData<String> saveBatch(@RequestBody List<ProjectPlanDto> projectPlanDtos);
+
+    @PostMapping(path = "uploadMasterPlan")
+    @ApiOperation(value = "导入主计划",notes = "导入主计划")
+    ResultData<String> uploadMasterPlan(@RequestBody List<PlanDTO> list) throws IOException;
 
 }
