@@ -15,7 +15,6 @@ import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
-import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.service.TodoListService;
@@ -200,6 +199,24 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData getProjectInfo() throws IllegalAccessException {
         return ResultData.success(service.getProjectInfo());
+    }
+
+    @Override
+    public ResultData findPageByUserName() throws IllegalAccessException {
+        String userName = ContextUtil.getUserName();
+        PageResult<PmBaseinfo> byPage = service.findByPage(new Search());
+        ArrayList<PmBaseinfo> newRows = new ArrayList<>();
+        byPage.getRows().stream().forEach(info -> {
+            if (info.getLeader().contains(userName) || info.getDesigner().contains(userName) || info.getImplementer().contains(userName) || info.getDeveloper().contains(userName)) {
+                if (StringUtils.isNotEmpty(info.getProjectTypes())) {
+                    String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
+                    info.setProjectTypes(enumItemRemark);
+                }
+                newRows.add(info);
+            }
+        });
+        byPage.setRows(newRows);
+        return convertToDtoPageResult(byPage);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.core.utils.ResultDataUtil;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +45,12 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
 
     @Override
     public ResultData<PageResult<TodoListDto>> findByPage(Search search) {
+        String userName = ContextUtil.getUserName();
+        List<SearchFilter> filtersList = search.getFilters();
+        SearchFilter searchFilter = new SearchFilter("ondutyName",userName, SearchFilter.Operator.EQ);
+        filtersList.add(searchFilter);
+        search.setFilters(filtersList);
+
         if(search.getFilters() == null){
             return ResultData.success();
         }
