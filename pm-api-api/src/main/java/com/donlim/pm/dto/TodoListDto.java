@@ -3,6 +3,7 @@ package com.donlim.pm.dto;
 import com.changhong.sei.core.dto.BaseEntityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.time.LocalDate;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
  * @since 2022-07-30 08:16:53
  */
 @ApiModel(description = "代办事项DTO")
+@Data
 public class TodoListDto extends BaseEntityDto {
     private static final long serialVersionUID = 839294833465213816L;
     /**
@@ -80,110 +82,20 @@ public class TodoListDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "租户代码")
     private String tenantCode;
-
-
-    public String getProjectCode() {
-        return projectCode;
-    }
-
-    public void setProjectCode(String projectCode) {
-        this.projectCode = projectCode;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getTodoList() {
-        return todoList;
-    }
-
-    public void setTodoList(String todoList) {
-        this.todoList = todoList;
-    }
-
-    public String getOndutyCode() {
-        return ondutyCode;
-    }
-
-    public void setOndutyCode(String ondutyCode) {
-        this.ondutyCode = ondutyCode;
-    }
-
-    public String getOndutyName() {
-        return ondutyName;
-    }
-
-    public void setOndutyName(String ondutyName) {
-        this.ondutyName = ondutyName;
-    }
-
-    public String getSubmitCode() {
-        return submitCode;
-    }
-
-    public void setSubmitCode(String submitCode) {
-        this.submitCode = submitCode;
-    }
-
-    public String getSubmitName() {
-        return submitName;
-    }
-
-    public void setSubmitName(String submitName) {
-        this.submitName = submitName;
-    }
-
-    public LocalDate getSubmitDate() {
-        return submitDate;
-    }
-
-    public void setSubmitDate(LocalDate submitDate) {
-        this.submitDate = submitDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public Boolean getIsCompleted() {
-        return isCompleted;
-    }
-
-    public void setIsCompleted(Boolean isCompleted) {
-        this.isCompleted = isCompleted;
-    }
-
-    public Boolean getIsFinished() {
-        return isFinished;
-    }
-
-    public void setIsFinished(Boolean isFinished) {
-        this.isFinished = isFinished;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
+    /**
+     * 是否同步
+     */
+    @ApiModelProperty(value = "是否同步")
+    private String isSync;
+    /**
+     * 类型：待办，通知
+     */
+    @ApiModelProperty(value = "类型：待办，通知")
+    private String type;
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty(value = "创建时间")
+    private String createdDate;
 
 }
