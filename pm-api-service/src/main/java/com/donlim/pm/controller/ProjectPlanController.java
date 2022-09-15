@@ -17,6 +17,7 @@ import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.service.ProjectPlanService;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,6 +93,14 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
             }else{
                 return ResultData.fail("当前用户["+ContextUtil.getUserName()+"],你没有权限操作，请联系项目负责人添加！！！");
             }
+        }
+        //为没有序号的初始化序号
+        int no=1;
+        for (ProjectPlanDto projectPlanDto : projectPlanDtos) {
+           if(StringUtils.isEmpty(projectPlanDto.getSchedureNo())){
+               projectPlanDto.setSchedureNo(no+"");
+               no++;
+           }
         }
         projectPlanDtos.stream().parallel().forEach(p -> save(p));
         return ResultData.success("保存成功");
