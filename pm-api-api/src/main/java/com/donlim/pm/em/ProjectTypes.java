@@ -11,7 +11,7 @@ public enum  ProjectTypes {
     @Remark("KPI项目")
     KPI,
     @Remark("年度重点项目")
-    ANNIVER,
+    FOCUS,
     @Remark("其他项目")
     OTHER;
 }

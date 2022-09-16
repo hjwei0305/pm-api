@@ -22,4 +22,6 @@ public interface TodoListDao extends BaseEntityDao<TodoList> {
     List<TodoList>findAllByIsSyncEquals(String sync);
 
     List<TodoList>findAllByProjectCodeAndType(String code,String type);
+
+    List<TodoList> findAllByIsCompleted(Boolean isCompleted);
 }
