@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  */
 @RestController
 @Api(value = "ReportApi", tags = "服务")
-@RequestMapping(path = FileListApi.PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = ReportApi.PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ReportController  implements ReportApi {
     /**
      * 服务对象
@@ -72,7 +72,7 @@ public class ReportController  implements ReportApi {
 
 
             }
-            long count = toDoList.stream().filter(a -> a.getOndutyName().equals(dto.getEmployeeName())).count();
+            long count = toDoList.stream().filter(a ->a.getOndutyName()!=null && a.getOndutyName().equals(dto.getEmployeeName())).count();
             dto.setToDoNum(count);
             dto.setProjectFocusNum(projectFocusNum);
             dto.setProjectTotalNum(projectNum);
