@@ -3,6 +3,8 @@ package com.donlim.pm.api;
 import com.changhong.sei.core.api.BaseEntityApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageResult;
+import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.TodoListDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -33,4 +35,13 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "sendTodoListTask", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "定时推送待办通知", notes = "定时推送待办通知")
     ResultData sendTodoListTask(@RequestBody Map<String, String> params);
+
+    /**
+     * 根据项目编码查找待办
+     * @param
+     * @return
+     */
+    @PostMapping(path = "projFindByPage", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "查找项目待办", notes = "查找项目待办")
+    ResultData<PageResult<TodoListDto>> projFindByPage(@RequestBody Search search);
 }

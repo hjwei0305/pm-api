@@ -45,12 +45,24 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
 
     @Override
     public ResultData<PageResult<TodoListDto>> findByPage(Search search) {
+        // 主页查找个人通知、待办
         String userName = ContextUtil.getUserName();
         List<SearchFilter> filtersList = search.getFilters();
         SearchFilter searchFilter = new SearchFilter("ondutyName",userName, SearchFilter.Operator.EQ);
         filtersList.add(searchFilter);
         search.setFilters(filtersList);
+        if(search.getFilters() == null){
+            return ResultData.success();
+        }
+        return convertToDtoPageResult(service.findByPage(search));
+    }
 
+    @Override
+    public ResultData<PageResult<TodoListDto>> projFindByPage(Search search) {
+        List<SearchFilter> filtersList = search.getFilters();
+        SearchFilter searchFilter = new SearchFilter("type","待办", SearchFilter.Operator.EQ);
+        filtersList.add(searchFilter);
+        search.setFilters(filtersList);
         if(search.getFilters() == null){
             return ResultData.success();
         }

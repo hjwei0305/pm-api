@@ -9,7 +9,6 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.ProjectPlanApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProjectPlanDto;
-import com.donlim.pm.dto.upload.PlanDTO;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
@@ -23,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -108,8 +106,13 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
     }
 
     @Override
-    public ResultData<String> uploadMasterPlan(List<PlanDTO> list) throws IOException {
-        service.uploadMasterPlan(list);
+    public ResultData<String> uploadMasterPlan(List<ProjectPlanDto> list) throws Exception {
+        List<ProjectPlan> plansList = new ArrayList<>();
+        for(ProjectPlanDto dto:list){
+            ProjectPlan entity = entityModelMapper.map(dto,ProjectPlan.class);
+            plansList.add(entity);
+        }
+        service.uploadMasterPlan(plansList);
         return ResultData.success();
     }
 }
