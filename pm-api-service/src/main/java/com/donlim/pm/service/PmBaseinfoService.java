@@ -170,7 +170,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     @Transactional(rollbackFor = Exception.class)
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
-        List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().filter(a->a.getCode().equals("E20220623005")).collect(Collectors.toList());
+        List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
             for (IppProjectInfoDetails.TableDTO data : list) {
@@ -186,31 +186,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
             pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
-            //检查是否逾期，逾期天数
-//            if (StringUtils.isNotEmpty(pmBaseinfo.getProjectTypes())) {
-//                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
-//                pmBaseinfo.setProjectTypes(enumItemRemark);
-//            }
-
-            // 1、验收阶段
-            if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
-                pmBaseinfo.setCurrentPeriod("验收");
-            } else if (null != pmBaseinfo.getTest() && pmBaseinfo.getTest()) {
-                // 2、测试结果
-                pmBaseinfo.setCurrentPeriod("测试");
-            } else if ((null != pmBaseinfo.getCodeReview() && pmBaseinfo.getTest()) || (null != pmBaseinfo.getWebReview() && pmBaseinfo.getWebReview())) {
-                // 3、前后端
-                pmBaseinfo.setCurrentPeriod("开发");
-            } else if (null != pmBaseinfo.getUiReview() && pmBaseinfo.getUiReview()) {
-                // 4、UI设计
-                pmBaseinfo.setCurrentPeriod("设计");
-            } else if (null != pmBaseinfo.getRequireReview() && pmBaseinfo.getRequireReview()) {
-                // 4、需求规划
-                pmBaseinfo.setCurrentPeriod("规划");
-            } else {
-                pmBaseinfo.setCurrentPeriod("未开始");
-
-            }
+            pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
             //计算主计划达成率
             List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
             int finishNum=0;
@@ -258,6 +234,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.Research))) {
                 if (!StringUtils.isEmpty(pmBaseinfoDto.getRequireDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getAcceptStandardDocId())) {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                    pmBaseinfoDto.setCurrentPeriod("需求分析");
                 } else {
                     map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Research), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                     flag = false;
@@ -268,6 +245,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getStartReportDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("需求分析");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.StartMeeting), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -279,6 +257,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getUserRequireDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("需求分析");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.SubmitSystem), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -290,6 +269,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (pmBaseinfoDto.getRequireReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("需求分析");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.RequireReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -301,6 +281,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getDesignerDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getCropDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("UI设计");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIDesigner), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -312,6 +293,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (pmBaseinfoDto.getUiReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("UI设计");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.UIReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -325,6 +307,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     //获取后端开发计划表
                     if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_WEB_PLAN) > 0) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("系统开发");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -334,6 +317,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     //获取前端计划表
                     if (projectPlanDao.countByProjectIdAndPlanType(pmBaseinfoDto.getId(), PROJECT_DEV_PLAN) > 0) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("系统开发");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeDev), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -347,6 +331,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview))) {
                     if (pmBaseinfoDto.getWebReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("系统开发");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.WebReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -355,6 +340,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (proOpt.contains(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview))) {
                     if (pmBaseinfoDto.getCodeReview()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("系统开发");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.CodeReview), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -367,6 +353,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getTestExampleDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getTestReportDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("测试");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.TestSystem), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -378,6 +365,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (pmBaseinfoDto.getTest()) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("测试");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Test), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -389,6 +377,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getSopDocId()) && !StringUtils.isEmpty(pmBaseinfoDto.getQuestionListDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("上线实施");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Online), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -400,6 +389,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if (flag) {
                     if (!StringUtils.isEmpty(pmBaseinfoDto.getCheckListDocId())) {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                        pmBaseinfoDto.setCurrentPeriod("上线实施");
                     } else {
                         map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.Monitor), EnumUtils.getNodeTypeRemark(NodeType.NoPass));
                         flag = false;
@@ -431,9 +421,11 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             //7.3完结
             if (flag) {
                 map.put(EnumUtils.getSmallNodeRemark(SmallNodeType.End), EnumUtils.getNodeTypeRemark(NodeType.Pass));
+                pmBaseinfoDto.setCurrentPeriod("项目结案");
             }
             String gtfJson = JSONObject.toJSONString(map);
             pmBaseinfoDto.setGfxJson(gtfJson);
+
             return pmBaseinfoDto;
         }
         return null;
@@ -472,5 +464,27 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         projectInfoDto.setAdvanceFinishNum(advanceFinishNum);
         projectInfoDto.setOverTimeNum(overTimeNum);
         return projectInfoDto;
+    }
+
+    private  String CurrentPeriod(PmBaseinfo pmBaseinfo){
+        String currentPeriod="未开始";
+        findByIdForSchedule(pmBaseinfo.getId());
+        // 1、验收阶段
+        if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
+
+        } else if (null != pmBaseinfo.getTest() && pmBaseinfo.getTest()) {
+            // 2、测试结果
+
+        } else if ((null != pmBaseinfo.getCodeReview() && pmBaseinfo.getTest()) || (null != pmBaseinfo.getWebReview() && pmBaseinfo.getWebReview())) {
+            // 3、前后端
+
+        } else if (null != pmBaseinfo.getUiReview() && pmBaseinfo.getUiReview()) {
+            // 4、UI设计
+
+        } else if (null != pmBaseinfo.getRequireReview() && pmBaseinfo.getRequireReview()) {
+            // 4、需求规划
+
+        }
+        return currentPeriod;
     }
 }
