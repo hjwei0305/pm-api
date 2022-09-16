@@ -67,7 +67,7 @@ public class ReportController  implements ReportApi {
                    if(pmBaseinfo.getProjectTypes()!=null && pmBaseinfo.getProjectTypes().equals(ProjectTypes.FOCUS)){
                        projectFocusNum++;
                    }
-                   projectNames+=pmBaseinfo.getName()+",";
+                   projectNames+="["+pmBaseinfo.getName()+"],";
                }
 
 
