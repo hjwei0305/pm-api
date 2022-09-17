@@ -1,24 +1,17 @@
 package com.donlim.pm.controller;
 
-import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
-import com.changhong.sei.core.service.BaseEntityService;
-import com.donlim.pm.api.FileListApi;
 import com.donlim.pm.api.ReportApi;
 import com.donlim.pm.dao.TodoListDao;
-import com.donlim.pm.dto.FileListDto;
 import com.donlim.pm.dto.PersonnelProjectStatisticsDto;
 import com.donlim.pm.em.ProjectTypes;
-import com.donlim.pm.entity.FileList;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
-import com.donlim.pm.service.FileListService;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmEmployeeService;
-import com.donlim.pm.service.TodoListService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * (FileList)控制类
@@ -80,7 +73,11 @@ public class ReportController  implements ReportApi {
             list.add(dto);
         }
         PageResult pageResult=new PageResult();
-        pageResult.setRows(list);
+        // 按总项目数排序
+        List<PersonnelProjectStatisticsDto> sortList = list.stream()
+                .sorted(Comparator.comparingInt(PersonnelProjectStatisticsDto::getProjectTotalNum).reversed())
+                .collect(Collectors.toList());
+        pageResult.setRows(sortList);
        return ResultData.success(pageResult);
     }
 }
