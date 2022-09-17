@@ -11,16 +11,20 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.TodoListApi;
 import com.donlim.pm.dto.TodoListDto;
+import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
+import com.donlim.pm.service.PmEmployeeService;
 import com.donlim.pm.service.TodoListService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 代办事项(TodoList)控制类
@@ -37,10 +41,49 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
      */
     @Autowired
     private TodoListService service;
+    @Autowired
+    private PmEmployeeService pmEmployeeService;
 
     @Override
     public BaseEntityService<TodoList> getService() {
         return service;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultData<TodoListDto> save(TodoListDto dto){
+        // 保存工号
+        List<PmEmployee> employeeList = pmEmployeeService.findAll();
+        Optional<PmEmployee> ondutyEmployee = employeeList.stream()
+                .filter(pmEmployee -> pmEmployee.getEmployeeName().equals(dto.getOndutyName()))
+                .findFirst();
+        Optional<PmEmployee> submitEmployee = employeeList.stream()
+                .filter(pmEmployee -> pmEmployee.getEmployeeName().equals(dto.getSubmitName()))
+                .findFirst();
+        if(ondutyEmployee.isPresent()){
+            dto.setOndutyCode(ondutyEmployee.get().getEmployeeCode());
+        }
+        if(submitEmployee.isPresent()){
+            dto.setSubmitCode(submitEmployee.get().getEmployeeCode());
+        }
+        super.save(dto);
+        // 保存结案且已发送过待办 删除EIP待办
+//        if(dto.getOndutyCode().equals("376951")){
+//            if(dto.getIsFinished() && dto.getIsSync().equals("1")){
+//                MailDto mailDto=new MailDto();
+//                mailDto.setMailType(dto.getType());
+//                mailDto.setMailID(dto.getId());
+//                mailDto.setAccount(dto.getOndutyCode());
+//                mailDto.setType("DELETE");
+//                mailDto.setUrl("https://sei.donlim.com/");
+////            mailDto.setUrl("https://sei.donlim.com/api-gateway/sei-auth/sso/login?authType=xbDL&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&userCode="+userName);
+//                String mailTitle="";
+//                mailDto.setMailSubject(mailTitle);
+//                mailDto.setMailBody(mailTitle);
+//                EipConnector.sendNotice(mailDto);
+//            }
+//        }
+        return ResultData.success();
     }
 
     @Override

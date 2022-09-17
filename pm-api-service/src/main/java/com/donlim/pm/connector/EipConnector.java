@@ -4,7 +4,6 @@ import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.webservice.eip.*;
 import com.donlim.pm.webservice.eipcenter.*;
 
-import javax.jws.WebParam;
 import javax.xml.ws.Holder;
 
 
@@ -28,7 +27,7 @@ public class EipConnector {
         svcHdr.setBO("项目管理系统");
         svcHdr.setSOURCEID(sourceId);
         svcHdr.setDESTINATIONID(destinationId);
-        svcHdr.setTYPE("ADD");
+        svcHdr.setTYPE(dto.getType());
         svcHdr.setIPADDRESS(ipAddress);
         AppHdrType appHdrType=new AppHdrType();
         AppBodyType appBodyType=new AppBodyType();

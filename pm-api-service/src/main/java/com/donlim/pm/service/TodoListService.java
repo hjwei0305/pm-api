@@ -1,5 +1,6 @@
 package com.donlim.pm.service;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.connector.EipConnector;
@@ -42,16 +43,19 @@ public class TodoListService extends BaseEntityService<TodoList> {
      */
     @Transactional(rollbackFor = Exception.class)
     public  void SendEipTask(){
+        String userName = ContextUtil.getUserName();
         List<TodoList> list = dao.findAllByIsSyncEquals("0");
         for (TodoList todo:list){
-            if(!todo.getOndutyCode().equals("377614")){
+            if(todo.getOndutyCode() == null || !todo.getOndutyCode().equals("376951")){
                 continue;
             }
             MailDto mailDto=new MailDto();
             mailDto.setMailType(todo.getType());
             mailDto.setMailID(todo.getId());
             mailDto.setAccount(todo.getOndutyCode());
+            mailDto.setType("ADD");
             mailDto.setUrl("https://sei.donlim.com/");
+//            mailDto.setUrl("https://sei.donlim.com/api-gateway/sei-auth/sso/login?authType=xbDL&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&userCode="+userName);
             String mailTitle="";
 
             if(todo.getType().equals("待办")){

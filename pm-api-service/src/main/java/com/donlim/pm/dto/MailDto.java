@@ -2,12 +2,6 @@ package com.donlim.pm.dto;
 
 import lombok.Data;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDate;
-
 /**
  * @Description:
  * @Author: chenzhiquan
@@ -17,6 +11,10 @@ import java.time.LocalDate;
 public class MailDto {
 
     private String account;
+    /**
+     * ADD,UPDATE,DELETE
+     */
+    private String type;
 
     //private String address;
 
