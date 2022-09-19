@@ -10,6 +10,8 @@ import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.TodoListApi;
+import com.donlim.pm.connector.EipConnector;
+import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
@@ -68,21 +70,21 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
         }
         super.save(dto);
         // 保存结案且已发送过待办 删除EIP待办
-//        if(dto.getOndutyCode().equals("376951")){
-//            if(dto.getIsFinished() && dto.getIsSync().equals("1")){
-//                MailDto mailDto=new MailDto();
-//                mailDto.setMailType(dto.getType());
-//                mailDto.setMailID(dto.getId());
-//                mailDto.setAccount(dto.getOndutyCode());
-//                mailDto.setType("DELETE");
-//                mailDto.setUrl("https://sei.donlim.com/");
-////            mailDto.setUrl("https://sei.donlim.com/api-gateway/sei-auth/sso/login?authType=xbDL&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&userCode="+userName);
-//                String mailTitle="";
-//                mailDto.setMailSubject(mailTitle);
-//                mailDto.setMailBody(mailTitle);
-//                EipConnector.sendNotice(mailDto);
-//            }
-//        }
+        if(dto.getOndutyCode().equals("376951")){
+            if(dto.getIsFinished() && dto.getIsSync().equals("1")){
+                MailDto mailDto=new MailDto();
+                mailDto.setMailType(dto.getType());
+                mailDto.setMailID(dto.getId());
+                mailDto.setAccount(dto.getOndutyCode());
+                mailDto.setType("DELETE");
+                mailDto.setUrl("https://sei.donlim.com/");
+//            mailDto.setUrl("https://sei.donlim.com/api-gateway/sei-auth/sso/login?authType=xbDL&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&userCode="+userName);
+                String mailTitle="";
+                mailDto.setMailSubject(mailTitle);
+                mailDto.setMailBody(mailTitle);
+                EipConnector.sendNotice(mailDto);
+            }
+        }
         return ResultData.success();
     }
 
