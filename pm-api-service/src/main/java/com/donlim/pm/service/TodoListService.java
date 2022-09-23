@@ -46,9 +46,9 @@ public class TodoListService extends BaseEntityService<TodoList> {
         String userName = ContextUtil.getUserName();
         List<TodoList> list = dao.findAllByIsSyncEquals("0");
         for (TodoList todo:list){
-            if(todo.getOndutyCode() == null || !todo.getOndutyCode().equals("376951")){
-                continue;
-            }
+//            if(todo.getOndutyCode() == null || !todo.getOndutyCode().equals("376951")){
+//                continue;
+//            }
             MailDto mailDto=new MailDto();
             mailDto.setMailType(todo.getType());
             mailDto.setMailID(todo.getId());

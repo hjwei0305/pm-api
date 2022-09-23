@@ -70,7 +70,7 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
         }
         super.save(dto);
         // 保存结案且已发送过待办 删除EIP待办
-        if(dto.getOndutyCode().equals("376951")){
+//        if(dto.getOndutyCode().equals("376951")){
             if(dto.getIsFinished() && dto.getIsSync().equals("1")){
                 MailDto mailDto=new MailDto();
                 mailDto.setMailType(dto.getType());
@@ -84,7 +84,7 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
                 mailDto.setMailBody(mailTitle);
                 EipConnector.sendNotice(mailDto);
             }
-        }
+//        }
         return ResultData.success();
     }
 
