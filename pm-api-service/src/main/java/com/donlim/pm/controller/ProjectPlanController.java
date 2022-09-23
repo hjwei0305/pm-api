@@ -53,7 +53,9 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
 
     @Override
     public ResultData<PageResult<ProjectPlanDto>> findByPage(Search search) {
-        return convertToDtoPageResult(service.findByPage(search));
+        PageResult pageResult=new PageResult();
+        pageResult.setRows(service.findByFilters(search));
+        return convertToDtoPageResult(pageResult);
     }
 
     @Override
