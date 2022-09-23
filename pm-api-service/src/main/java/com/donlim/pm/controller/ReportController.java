@@ -3,9 +3,12 @@ package com.donlim.pm.controller;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.donlim.pm.api.ReportApi;
+import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dao.TodoListDao;
 import com.donlim.pm.dto.PersonnelProjectStatisticsDto;
+import com.donlim.pm.em.EmpstatidEnum;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.PmEmployee;
@@ -41,13 +44,27 @@ public class ReportController  implements ReportApi {
     @Autowired
     PmBaseinfoService pmBaseinfoService;
     @Autowired
+    PmEmployeeDao pmEmployeeDao;
+    @Autowired
     TodoListDao dao;
     @Override
     public ResultData<PageResult> findPersonnelProjectStatistics(Search search) {
         //取出所有未完成待办
         List<TodoList> toDoList =  dao.findAllByIsCompleted(false).stream().collect(Collectors.toList());
         List<PersonnelProjectStatisticsDto> list=new ArrayList<>();
-        for (PmEmployee pmEmployee : pmEmployeeService.findAll()) {
+
+        List<SearchFilter> filters = new ArrayList<>();
+        SearchFilter searchFilter = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
+        SearchFilter searchFilter2 = new SearchFilter("empstatid", EmpstatidEnum.LEAVE, SearchFilter.Operator.NE);
+        SearchFilter searchFilter3 = new SearchFilter("employeeCode","274735", SearchFilter.Operator.NE);
+        SearchFilter searchFilter4 = new SearchFilter("employeeCode","043660", SearchFilter.Operator.NE);
+        filters.add(searchFilter);
+        filters.add(searchFilter2);
+        filters.add(searchFilter3);
+        filters.add(searchFilter4);
+        search.setFilters(filters);
+        List<PmEmployee> byFilters = pmEmployeeService.findByFilters(search);
+        for (PmEmployee pmEmployee : byFilters) {
             int projectFocusNum=0;
             int projectNum=0;
             String projectNames="";
