@@ -107,6 +107,11 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "tenant_code")
     private String tenantCode;
+    /**
+     * 排序
+     */
+    @Column(name = "order_no")
+    private Integer orderNo;
 
 
     public String getProjectId() {
@@ -245,4 +250,11 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
         this.tenantCode = tenantCode;
     }
 
+    public Integer getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(Integer orderNo) {
+        this.orderNo = orderNo;
+    }
 }

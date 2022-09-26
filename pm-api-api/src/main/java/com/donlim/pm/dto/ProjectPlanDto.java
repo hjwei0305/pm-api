@@ -100,6 +100,11 @@ public class ProjectPlanDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "租户代码")
     private String tenantCode;
+    /**
+     * 排序
+     */
+    @ApiModelProperty(value = "排序")
+    private Integer orderNo;
 
 
     public String getProjectId() {
@@ -238,4 +243,11 @@ public class ProjectPlanDto extends BaseEntityDto {
         this.tenantCode = tenantCode;
     }
 
+    public Integer getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(Integer orderNo) {
+        this.orderNo = orderNo;
+    }
 }

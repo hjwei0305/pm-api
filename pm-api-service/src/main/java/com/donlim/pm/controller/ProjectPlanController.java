@@ -60,7 +60,11 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
 
     @Override
     public ResultData<String> saveBatch(List<ProjectPlanDto> projectPlanDtos) {
+        List<ProjectPlanDto> projectPlanDtosNew = new ArrayList<>();
         if (projectPlanDtos.size() > 0) {
+            // 序号排序
+            projectPlanDtosNew = service.sortNo(projectPlanDtos);
+
             String projectId = projectPlanDtos.get(0).getProjectId();
             List<String> projectList = new ArrayList<>();
             projectList.add(projectId);
@@ -103,7 +107,7 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
             }
         }
 
-        projectPlanDtos.stream().parallel().forEach(p -> save(p));
+        projectPlanDtosNew.stream().parallel().forEach(p -> save(p));
         return ResultData.success("保存成功");
     }
 
