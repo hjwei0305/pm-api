@@ -172,6 +172,14 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setDeveloper(dto.getDeveloper());
         pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
         pmBaseinfoDto.setProOpt(dto.getProOpt());
+        pmBaseinfoDto.setStartDate(dto.getStartDate());
+        pmBaseinfoDto.setPlanFinishDate(dto.getPlanFinishDate());
+        pmBaseinfoDto.setFinalFinishDate(dto.getFinalFinishDate());
+        if(dto.getFinalFinishDate() != null && dto.getStartDate() != null){
+            pmBaseinfoDto.setProjectDays((int)(dto.getFinalFinishDate().toEpochDay()-dto.getStartDate().toEpochDay()));
+        }else {
+            pmBaseinfoDto.setProjectDays(null);
+        }
         String member="";
         String memberStr=pmBaseinfoDto.getLeader()+","+pmBaseinfoDto.getDesigner()+","+pmBaseinfoDto.getDeveloper()+","+pmBaseinfoDto.getImplementer();
         //去重

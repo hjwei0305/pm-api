@@ -85,13 +85,13 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
                 //拿出序号1用来计算计划周期
                 Optional<ProjectPlanDto> first = projectPlanDtos.stream().filter(a ->a.getSchedureNo().trim().equals("1")).findFirst();
                 if(first.isPresent()){
-                    pmBaseinfo.setStartDate(first.get().getActualStartDate());
-                    pmBaseinfo.setPlanFinishDate(first.get().getPlanEndDate());
-                    pmBaseinfo.setFinalFinishDate(first.get().getActualEndDate());
+//                    pmBaseinfo.setStartDate(first.get().getActualStartDate());
+//                    pmBaseinfo.setPlanFinishDate(first.get().getPlanEndDate());
+//                    pmBaseinfo.setFinalFinishDate(first.get().getActualEndDate());
                     if(first.get().getPlanStartDate()==null || first.get().getPlanEndDate()==null){
                         return ResultData.fail("序号["+first.get().getSchedureNo()+"]行的[计划开始时间]或[计划结束时间]未填写！！！");
                     }
-                    pmBaseinfo.setProjectDays(first.get().getPlanEndDate().toEpochDay()-first.get().getPlanStartDate().toEpochDay());
+//                    pmBaseinfo.setProjectDays(first.get().getPlanEndDate().toEpochDay()-first.get().getPlanStartDate().toEpochDay());
                     pmBaseinfoService.save(pmBaseinfo);
                 }else{
                     return ResultData.fail("主计划序号[1]必填！！！");
@@ -103,7 +103,7 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
             } else if (pmBaseinfo.getImplementer().contains(ContextUtil.getUserName()) && planType.equals("3")) {
                 pmLogService.save(LogType.ModifyImplPlan,pmBaseinfoDto);
             }else{
-                return ResultData.fail("当前用户["+ContextUtil.getUserName()+"],你没有权限操作，请联系项目负责人添加！！！");
+//                return ResultData.fail("当前用户["+ContextUtil.getUserName()+"],你没有权限操作，请联系项目负责人添加！！！");
             }
         }
 
