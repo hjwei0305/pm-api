@@ -71,46 +71,45 @@ public class ProjectPlanService extends BaseEntityService<ProjectPlan> {
                 .sorted(Comparator.comparing(ProjectPlanDto::getSchedureNo))
                 .collect(Collectors.groupingBy(item -> item.getSchedureNo().substring(0, item.getSchedureNo().indexOf(".") != -1 ? item.getSchedureNo().indexOf(".") : item.getSchedureNo().length())));
         Set<String> strings = orderMap.keySet();
+        List<Integer> noList = new ArrayList<>();
+        boolean numFlag = true;
         int order = 1;
-        for (String key : strings) {
-            List<ProjectPlanDto> orderList = orderMap.get(key);
-            for (ProjectPlanDto dto : orderList) {
-                if(dto.getSchedureNo().indexOf(".") == -1){
-                    dto.setOrderNo(0);
-                }else {
-                    String sub = dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".")+1);
-                    if(sub.indexOf(".") == -1){
-                        dto.setOrderNo(Integer.valueOf(dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".")+1)));
-                    }else {
-                        flag = false;
-                    }
-                }
+        // 判断序号纯数字或包含"."
+        for (ProjectPlanDto projectPlanDto : projectPlanDtos) {
+            if(projectPlanDto.getSchedureNo().contains(".")){
+                numFlag = false;
+                break;
             }
-            if(flag){
-                orderList.sort(Comparator.comparingInt(ProjectPlanDto::getOrderNo));
+        }
+        if(numFlag){
+            for (String string : strings) {
+                noList.add(Integer.valueOf(string));
+            }
+            noList = noList.stream().sorted().collect(Collectors.toList());
+            for (Integer no : noList) {
+                List<ProjectPlanDto> orderList = orderMap.get(no.toString());
                 for (ProjectPlanDto dto : orderList) {
                     dto.setOrderNo(order);
                     order++;
                 }
                 projectPlanDtosNew.addAll(orderList);
-                orderList.clear();
-            }else {
-                flag = true;
-                Map<String, List<ProjectPlanDto>> secondMap = orderList.stream()
-                        .collect(Collectors.groupingBy(item ->
-                                item.getSchedureNo().substring(item.getSchedureNo().indexOf(".") + 1 ,
-                                        item.getSchedureNo().substring(item.getSchedureNo().indexOf(".") + 1).indexOf(".") != -1 ? item.getSchedureNo().substring(item.getSchedureNo().indexOf(".") + 1).indexOf(".") + item.getSchedureNo().indexOf(".") + 1 : item.getSchedureNo().length())));
-                Set<String> keySet = secondMap.keySet();
-                for (String s : keySet) {
-                    orderList = secondMap.get(s);
-                    for (ProjectPlanDto dto : orderList) {
-                        if(dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".") + 1 ).indexOf(".") == -1){
-                            dto.setOrderNo(0);
+            }
+        }else {
+            for (String key : strings) {
+                List<ProjectPlanDto> orderList = orderMap.get(key);
+                for (ProjectPlanDto dto : orderList) {
+                    if(dto.getSchedureNo().indexOf(".") == -1){
+                        dto.setOrderNo(0);
+                    }else {
+                        String sub = dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".")+1);
+                        if(sub.indexOf(".") == -1){
+                            dto.setOrderNo(Integer.valueOf(dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".")+1)));
                         }else {
-                            String sub = dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".")+1);
-                            dto.setOrderNo(Integer.valueOf(sub.substring(sub.indexOf(".")+1)));
+                            flag = false;
                         }
                     }
+                }
+                if(flag){
                     orderList.sort(Comparator.comparingInt(ProjectPlanDto::getOrderNo));
                     for (ProjectPlanDto dto : orderList) {
                         dto.setOrderNo(order);
@@ -118,6 +117,31 @@ public class ProjectPlanService extends BaseEntityService<ProjectPlan> {
                     }
                     projectPlanDtosNew.addAll(orderList);
                     orderList.clear();
+                }else {
+                    flag = true;
+                    Map<String, List<ProjectPlanDto>> secondMap = orderList.stream()
+                            .collect(Collectors.groupingBy(item ->
+                                    item.getSchedureNo().substring(item.getSchedureNo().indexOf(".") + 1 ,
+                                            item.getSchedureNo().substring(item.getSchedureNo().indexOf(".") + 1).indexOf(".") != -1 ? item.getSchedureNo().substring(item.getSchedureNo().indexOf(".") + 1).indexOf(".") + item.getSchedureNo().indexOf(".") + 1 : item.getSchedureNo().length())));
+                    Set<String> keySet = secondMap.keySet();
+                    for (String s : keySet) {
+                        orderList = secondMap.get(s);
+                        for (ProjectPlanDto dto : orderList) {
+                            if(dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".") + 1 ).indexOf(".") == -1){
+                                dto.setOrderNo(0);
+                            }else {
+                                String sub = dto.getSchedureNo().substring(dto.getSchedureNo().indexOf(".")+1);
+                                dto.setOrderNo(Integer.valueOf(sub.substring(sub.indexOf(".")+1)));
+                            }
+                        }
+                        orderList.sort(Comparator.comparingInt(ProjectPlanDto::getOrderNo));
+                        for (ProjectPlanDto dto : orderList) {
+                            dto.setOrderNo(order);
+                            order++;
+                        }
+                        projectPlanDtosNew.addAll(orderList);
+                        orderList.clear();
+                    }
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.donlim.pm.entity;
 
 import com.changhong.sei.core.entity.BaseAuditableEntity;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -35,6 +34,26 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "name")
     private String name;
+    /**
+     * 系统名称
+     */
+    @Column(name = "sys_name")
+    private String sysName;
+    /**
+     * 组织编码
+     */
+    @Column(name = "orgcode")
+    private String orgcode;
+    /**
+     * 组织名称
+     */
+    @Column(name = "orgname")
+    private String orgname;
+    /**
+     * 组织全称
+     */
+    @Column(name = "extorgname")
+    private String extorgname;
     /**
      * 当前阶段
      */

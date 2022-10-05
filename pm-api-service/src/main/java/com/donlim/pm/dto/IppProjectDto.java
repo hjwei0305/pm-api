@@ -590,6 +590,7 @@ public class IppProjectDto {
         /**
          * systemName
          */
+        @JsonProperty("SystemName")
         private String systemName;
         /**
          * areaName

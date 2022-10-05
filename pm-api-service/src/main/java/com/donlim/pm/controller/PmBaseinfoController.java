@@ -150,7 +150,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             if (StringUtils.isNotEmpty(dto.getLeader()) && (dto.getLeader().contains(ContextUtil.getUserName()) || ContextUtil.getUserName().equals("admin"))) {
 
             } else {
-              //  return ResultData.fail("只有主导人才可以修改信息");
+                return ResultData.fail("只有主导人才可以修改信息");
             }
             PmBaseinfo pmBaseinfo = service.findOne(dto.getId());
             pmBaseinfoDto = convertToDto(pmBaseinfo);
@@ -162,6 +162,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             }
             if(StringUtils.isEmpty(pmBaseinfoDto.getLeader())){
                 return ResultData.fail("项目主导人为空，不能保存。");
+            }
+            if(pmBaseinfoDto.getStartDate() == null || pmBaseinfoDto.getPlanFinishDate() == null){
+                return ResultData.fail("项目开始或计划结案日期为空，不能保存。");
             }
         }
         pmBaseinfoDto.setProjectTypes(dto.getProjectTypes());
@@ -175,6 +178,15 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setStartDate(dto.getStartDate());
         pmBaseinfoDto.setPlanFinishDate(dto.getPlanFinishDate());
         pmBaseinfoDto.setFinalFinishDate(dto.getFinalFinishDate());
+        if(dto.getOrgname() != null){
+            pmBaseinfoDto.setOrgname(dto.getOrgname());
+            pmBaseinfoDto.setOrgcode(dto.getOrgcode());
+            pmBaseinfoDto.setExtorgname(dto.getExtorgname());
+        }else{
+            pmBaseinfoDto.setOrgname(null);
+            pmBaseinfoDto.setOrgcode(null);
+            pmBaseinfoDto.setExtorgname(null);
+        }
         if(dto.getFinalFinishDate() != null && dto.getStartDate() != null){
             pmBaseinfoDto.setProjectDays((int)(dto.getFinalFinishDate().toEpochDay()-dto.getStartDate().toEpochDay()));
         }else {
