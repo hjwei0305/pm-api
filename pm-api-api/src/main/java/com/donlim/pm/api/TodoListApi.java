@@ -12,7 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -44,4 +46,11 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "projFindByPage", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "查找项目待办", notes = "查找项目待办")
     ResultData<PageResult<TodoListDto>> projFindByPage(@RequestBody Search search);
+    /**
+     * 导出
+     *
+     */
+    @PostMapping(path = "exportDept" , consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "待办列表清单导出" , notes = "待办列表清单导出")
+    void exportDept(@RequestBody Search search , HttpServletResponse response) throws IOException;
 }

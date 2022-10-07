@@ -2,6 +2,7 @@ package com.donlim.pm.entity;
 
 import com.changhong.sei.core.entity.BaseAuditableEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 @Table(name = "todo_list")
 @DynamicInsert
 @DynamicUpdate
+@EqualsAndHashCode(callSuper=true)
 @Data
 public class TodoList extends BaseAuditableEntity implements Serializable {
     private static final long serialVersionUID = 693716441330182047L;
@@ -98,5 +100,49 @@ public class TodoList extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "type")
     private String type;
-
+    /**
+     * 要求完成日期
+     */
+    @Column(name = "completion_date")
+    private LocalDate completionDate;
+    /**
+     * 确认人(确认阶段)
+     */
+    @Column(name = "confirmedby1")
+    private String confirmedby1;
+    /**
+     * 建议状态
+     */
+    @Column(name = "proposal_status")
+    private String proposalStatus;
+    /**
+     * 完成情况
+     */
+    @Column(name = "completion")
+    private String completion;
+    /**
+     * 确认人(验证阶段)
+     */
+    @Column(name = "confirmedby2")
+    private String confirmedby2;
+    /**
+     * 确认时间
+     */
+    @Column(name = "confirmation_time")
+    private LocalDate confirmationTime;
+    /**
+     * 结案状态
+     */
+    @Column(name = "closing_status")
+    private String closingStatus;
+    /**
+     * 单据状态
+     */
+    @Column(name = "document_status")
+    private String documentStatus;
+    /**
+     * 来源
+     */
+    @Column(name = "source")
+    private String source;
 }

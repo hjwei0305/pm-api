@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -71,7 +73,7 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
         super.save(dto);
         // 保存结案且已发送过待办 删除EIP待办
 //        if(dto.getOndutyCode().equals("376951")){
-            if(dto.getIsFinished() && dto.getIsSync().equals("1")){
+            if(dto.getId() != null && dto.getIsFinished() && dto.getIsSync().equals("1")){
                 MailDto mailDto=new MailDto();
                 mailDto.setMailType(dto.getType());
                 mailDto.setMailID(dto.getId());
@@ -112,6 +114,11 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
             return ResultData.success();
         }
         return convertToDtoPageResult(service.findByPage(search));
+    }
+
+    @Override
+    public void exportDept(Search search, HttpServletResponse response) throws IOException {
+
     }
 
     @Override

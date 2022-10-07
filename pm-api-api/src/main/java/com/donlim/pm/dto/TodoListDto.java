@@ -4,6 +4,7 @@ import com.changhong.sei.core.dto.BaseEntityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
@@ -14,6 +15,7 @@ import java.time.LocalDate;
  * @since 2022-07-30 08:16:53
  */
 @ApiModel(description = "代办事项DTO")
+@EqualsAndHashCode(callSuper=true)
 @Data
 public class TodoListDto extends BaseEntityDto {
     private static final long serialVersionUID = 839294833465213816L;
@@ -97,5 +99,51 @@ public class TodoListDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "创建时间")
     private String createdDate;
+    /**
+     * 要求完成日期
+     */
+    @ApiModelProperty(value = "要求完成日期")
+    private LocalDate completionDate;
+    /**
+     * 确认人(确认阶段)
+     */
+    @ApiModelProperty(value = "确认人(确认阶段)")
+    private String confirmedby1;
+    /**
+     * 建议状态
+     */
+    @ApiModelProperty(value = "建议状态")
+    private String proposalStatus;
+    /**
+     * 完成情况
+     */
+    @ApiModelProperty(value = "完成情况")
+    private String completion;
+    /**
+     * 确认人(验证阶段)
+     */
+    @ApiModelProperty(value = "确认人(验证阶段)")
+    private String confirmedby2;
+    /**
+     * 确认时间
+     */
+    @ApiModelProperty(value = "确认时间")
+    private LocalDate confirmationTime;
+    /**
+     * 结案状态
+     */
+    @ApiModelProperty(value = "结案状态")
+    private String closingStatus;
+    /**
+     * 单据状态
+     */
+    @ApiModelProperty(value = "结案状态")
+    private String documentStatus;
+    /**
+     * 来源
+     */
+    @ApiModelProperty(value = "来源")
+    private String source;
+
 
 }
