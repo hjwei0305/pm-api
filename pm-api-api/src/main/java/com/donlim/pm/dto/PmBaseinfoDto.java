@@ -34,6 +34,26 @@ public class PmBaseinfoDto extends BaseEntityDto {
     @ApiModelProperty(value = "名称")
     private String name;
     /**
+     * 系统名称
+     */
+    @ApiModelProperty(name = "系统名称")
+    private String sysName;
+    /**
+     * 组织编码
+     */
+    @ApiModelProperty(name = "组织编码")
+    private String orgcode;
+    /**
+     * 组织名称
+     */
+    @ApiModelProperty(name = "组织名称")
+    private String orgname;
+    /**
+     * 组织全称
+     */
+    @ApiModelProperty(name = "组织全称")
+    private String extorgname;
+    /**
      * 主导人
      */
     @ApiModelProperty(value = "主导人")

@@ -5,15 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.donlim.pm.dto.IppProjectDto;
 import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.entity.PmBaseinfo;
-import com.donlim.pm.util.DateUtils;
 import com.donlim.pm.webservice.ipp.DONLIMIMOSQUERYSYNC;
 import com.donlim.pm.webservice.ipp.DONLIMIMOSQUERYSYNC_Service;
 import com.donlim.pm.webservice.ipp.SvcHdrType;
 import com.donlim.pm.webservice.ipp.SvcHdrsType;
-import org.apache.commons.lang.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +58,7 @@ public class IppConnector {
                     PmBaseinfo pmBaseinfo=new PmBaseinfo();
                     pmBaseinfo.setCode(ipp.getProposalID());
                     pmBaseinfo.setName(ipp.getProposalName());
+                    pmBaseinfo.setSysName(ipp.getSystemName());
                     pmBaseinfo.setSubmissionDate(LocalDate.now());
                     pmBaseinfo.setCurrentDescription(ipp.getCurrentDescription());
                     pmBaseinfo.setRequirementDescription(ipp.getDemandDescription());
