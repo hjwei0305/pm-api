@@ -46,6 +46,11 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "projFindByPage", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "查找项目待办", notes = "查找项目待办")
     ResultData<PageResult<TodoListDto>> projFindByPage(@RequestBody Search search);
+
+    @PostMapping(path = "projFindByPage2", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "查找项目待办清单", notes = "查找项目待办清单")
+    ResultData<PageResult<TodoListDto>> projFindByPage2(@RequestBody Search search);
+
     /**
      * 导出
      *

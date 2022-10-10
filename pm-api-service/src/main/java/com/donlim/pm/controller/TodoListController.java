@@ -115,6 +115,17 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
         }
         return convertToDtoPageResult(service.findByPage(search));
     }
+    @Override
+    public ResultData<PageResult<TodoListDto>> projFindByPage2(Search search) {
+        List<SearchFilter> filtersList = search.getFilters();
+        SearchFilter searchFilter = new SearchFilter("type","待办清单", SearchFilter.Operator.EQ);
+        filtersList.add(searchFilter);
+        search.setFilters(filtersList);
+        if(search.getFilters() == null){
+            return ResultData.success();
+        }
+        return convertToDtoPageResult(service.findByPage(search));
+    }
 
     @Override
     public void exportDept(Search search, HttpServletResponse response) throws IOException {

@@ -137,7 +137,7 @@ public class TodoListDto extends BaseEntityDto {
     /**
      * 单据状态
      */
-    @ApiModelProperty(value = "结案状态")
+    @ApiModelProperty(value = "单据状态")
     private String documentStatus;
     /**
      * 来源
