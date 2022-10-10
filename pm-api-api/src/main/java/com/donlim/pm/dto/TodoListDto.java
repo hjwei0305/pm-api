@@ -1,6 +1,7 @@
 package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
+import com.changhong.sei.core.dto.flow.FlowStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -144,6 +145,11 @@ public class TodoListDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "来源")
     private String source;
+    /**
+     * 审批状态
+     */
+    @ApiModelProperty(value = "审批状态")
+    private FlowStatus flowStatus;
 
 
 }

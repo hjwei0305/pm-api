@@ -2,7 +2,6 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
-import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dao.TodoListDao;
@@ -10,6 +9,7 @@ import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
+import com.donlim.pm.flow.BaseFlowEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @since 2022-07-30 08:17:40
  */
 @Service
-public class TodoListService extends BaseEntityService<TodoList> {
+public class TodoListService extends BaseFlowEntityService<TodoList> {
     @Autowired
     private TodoListDao dao;
     @Autowired

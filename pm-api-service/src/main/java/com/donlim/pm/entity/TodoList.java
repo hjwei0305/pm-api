@@ -1,6 +1,6 @@
 package com.donlim.pm.entity;
 
-import com.changhong.sei.core.entity.BaseAuditableEntity;
+import com.donlim.pm.flow.BaseFlowEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @DynamicUpdate
 @EqualsAndHashCode(callSuper=true)
 @Data
-public class TodoList extends BaseAuditableEntity implements Serializable {
+public class TodoList extends BaseFlowEntity implements Serializable {
     private static final long serialVersionUID = 693716441330182047L;
     /**
      * 项目编码

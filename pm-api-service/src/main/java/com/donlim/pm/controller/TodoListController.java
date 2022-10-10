@@ -1,13 +1,11 @@
 package com.donlim.pm.controller;
 
 import com.changhong.sei.core.context.ContextUtil;
-import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.log.LogUtil;
-import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.TodoListApi;
 import com.donlim.pm.connector.EipConnector;
@@ -15,6 +13,8 @@ import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
+import com.donlim.pm.flow.BaseFlowController;
+import com.donlim.pm.flow.BaseFlowEntityService;
 import com.donlim.pm.service.PmEmployeeService;
 import com.donlim.pm.service.TodoListService;
 import io.swagger.annotations.Api;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +40,7 @@ import java.util.Optional;
 @RestController
 @Api(value = "TodoListApi", tags = "代办事项服务")
 @RequestMapping(path = TodoListApi.PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-public class TodoListController extends BaseEntityController<TodoList, TodoListDto> implements TodoListApi {
+public class TodoListController extends BaseFlowController<TodoList, TodoListDto> implements TodoListApi {
     /**
      * 代办事项服务对象
      */
@@ -49,8 +50,40 @@ public class TodoListController extends BaseEntityController<TodoList, TodoListD
     private PmEmployeeService pmEmployeeService;
 
     @Override
-    public BaseEntityService<TodoList> getService() {
+    public BaseFlowEntityService<TodoList> getService() {
         return service;
+    }
+
+    @Override
+    protected void addProperties(Map<String, String> map) {
+        map.put("type", "待办类型");
+    }
+
+    @Override
+    public Map<String, Object> getPropertyValue(TodoList entity) {
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("type", entity.getType());
+        return map;
+    }
+
+    @Override
+    protected void addInitValue(Map<String, Object> map) {
+        map.put("type", "待办清单");
+    }
+
+    @Override
+    protected String getWorkCaption(TodoList todoList) {
+        return null;
+    }
+
+    @Override
+    protected String getFlowName(TodoList todoList) {
+        return null;
+    }
+
+    @Override
+    protected String getBusinessCode(TodoList todoList) {
+        return null;
     }
 
     @Override
