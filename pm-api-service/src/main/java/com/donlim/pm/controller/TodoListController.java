@@ -172,9 +172,9 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         executor.setCode("376951");
         executor.setName("张晓橦");
         Executor executor1 = new Executor();
-        executor.setId("E6710CA0-088E-11ED-BD40-0242AC140011");
-        executor.setCode("380312");
-        executor.setName("卢振杰");
+        executor1.setId("E6710CA0-088E-11ED-BD40-0242AC140011");
+        executor1.setCode("380312");
+        executor1.setName("卢振杰");
         executors.add(executor);
         executors.add(executor1);
         return ResultData.success(executors);
