@@ -63,7 +63,7 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     void exportDept(@RequestBody Search search , HttpServletResponse response) throws IOException;
 
     /**
-     * 流程完成后检查事件
+     * 流程确认阶段指定人
      *
      * @param invokeParams 流程参数
      * @return 处理结果
@@ -71,4 +71,14 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "appointConfirm", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "流程指定确认人", notes = "流程指定确认人")
     ResultData<List<Executor>> appointConfirm(@RequestBody FlowInvokeParams invokeParams);
+
+    /**
+     * 流程确认阶段到达时
+     *
+     * @param invokeParams 流程参数
+     * @return 处理结果
+     */
+    @PostMapping(path = "toConfirm", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "流程指定确认人", notes = "流程指定确认人")
+    ResultData toConfirm(@RequestBody FlowInvokeParams invokeParams);
 }

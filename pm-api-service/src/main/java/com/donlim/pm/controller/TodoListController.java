@@ -72,17 +72,17 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
 
     @Override
     protected String getWorkCaption(TodoList todoList) {
-        return null;
+        return "待办清单审批：" +todoList.getTodoList();
     }
 
     @Override
     protected String getFlowName(TodoList todoList) {
-        return null;
+        return "待办清单审批流程：" +todoList.getTodoList();
     }
 
     @Override
     protected String getBusinessCode(TodoList todoList) {
-        return null;
+        return todoList.getTodoList();
     }
 
     @Override
@@ -178,6 +178,11 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         executors.add(executor);
         executors.add(executor1);
         return ResultData.success(executors);
+    }
+
+    @Override
+    public ResultData toConfirm(FlowInvokeParams invokeParams) {
+        return null;
     }
 
     @Override
