@@ -151,5 +151,14 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "审批状态")
     private FlowStatus flowStatus;
 
+    @ApiModelProperty(value = "组织编码")
+    private String organizationCode;
+
+    @ApiModelProperty(value = "组织id")
+    private String organizationId;
+
+    @ApiModelProperty(value = "组织名称")
+    private String organizationName;
+
 
 }

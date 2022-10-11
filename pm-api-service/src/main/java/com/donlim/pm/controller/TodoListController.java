@@ -2,6 +2,8 @@ package com.donlim.pm.controller;
 
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.flow.Executor;
+import com.changhong.sei.core.dto.flow.FlowInvokeParams;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.dto.serach.SearchFilter;
@@ -26,10 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 代办事项(TodoList)控制类
@@ -163,6 +162,22 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     @Override
     public void exportDept(Search search, HttpServletResponse response) throws IOException {
 
+    }
+
+    @Override
+    public ResultData<List<Executor>> appointConfirm(FlowInvokeParams invokeParams) {
+        List<Executor> executors = new ArrayList<>();
+        Executor executor = new Executor();
+        executor.setId("B0FB4370-0BBB-11ED-BD40-0242AC140011");
+        executor.setCode("376951");
+        executor.setName("张晓橦");
+        Executor executor1 = new Executor();
+        executor.setId("E6710CA0-088E-11ED-BD40-0242AC140011");
+        executor.setCode("380312");
+        executor.setName("卢振杰");
+        executors.add(executor);
+        executors.add(executor1);
+        return ResultData.success(executors);
     }
 
     @Override

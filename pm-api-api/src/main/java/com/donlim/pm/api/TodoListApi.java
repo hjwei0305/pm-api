@@ -3,6 +3,8 @@ package com.donlim.pm.api;
 import com.changhong.sei.core.api.BaseEntityApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.flow.Executor;
+import com.changhong.sei.core.dto.flow.FlowInvokeParams;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.TodoListDto;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,4 +61,14 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "exportDept" , consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "待办列表清单导出" , notes = "待办列表清单导出")
     void exportDept(@RequestBody Search search , HttpServletResponse response) throws IOException;
+
+    /**
+     * 流程完成后检查事件
+     *
+     * @param invokeParams 流程参数
+     * @return 处理结果
+     */
+    @PostMapping(path = "appointConfirm", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "流程指定确认人", notes = "流程指定确认人")
+    ResultData<List<Executor>> appointConfirm(@RequestBody FlowInvokeParams invokeParams);
 }
