@@ -102,7 +102,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         if(submitEmployee.isPresent()){
             dto.setSubmitCode(submitEmployee.get().getEmployeeCode());
         }
-        super.save(dto);
+        ResultData<TodoListDto> saveResultData = super.save(dto);
         // 保存结案且已发送过待办 删除EIP待办
 //        if(dto.getOndutyCode().equals("376951")){
             if(dto.getId() != null && dto.getIsFinished() && dto.getIsSync().equals("1")){
@@ -119,7 +119,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
                 EipConnector.sendNotice(mailDto);
             }
 //        }
-        return ResultData.success();
+        return saveResultData;
     }
 
     @Override
