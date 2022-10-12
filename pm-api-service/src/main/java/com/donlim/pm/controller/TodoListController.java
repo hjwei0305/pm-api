@@ -166,17 +166,13 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
 
     @Override
     public ResultData<List<Executor>> appointConfirm(FlowInvokeParams invokeParams) {
+        TodoList todoList = service.findOne(invokeParams.getId());
         List<Executor> executors = new ArrayList<>();
         Executor executor = new Executor();
-        executor.setId("B0FB4370-0BBB-11ED-BD40-0242AC140011");
-        executor.setCode("376951");
-        executor.setName("张晓橦");
-        Executor executor1 = new Executor();
-        executor1.setId("E6710CA0-088E-11ED-BD40-0242AC140011");
-        executor1.setCode("380312");
-        executor1.setName("卢振杰");
+        executor.setId(todoList.getConfirmedby1());
+        executor.setCode(todoList.getOndutyCode());
+        executor.setName(todoList.getOndutyName());
         executors.add(executor);
-        executors.add(executor1);
         return ResultData.success(executors);
     }
 
