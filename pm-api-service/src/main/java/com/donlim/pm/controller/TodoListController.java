@@ -188,6 +188,10 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
 
     @Override
     public ResultData toConfirm(FlowInvokeParams invokeParams) {
+        if(invokeParams.getAgree() == true){
+            TodoList list = service.findOne(invokeParams.getId());
+            list.setConfirm1Status(true);
+        }
         return null;
     }
 

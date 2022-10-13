@@ -111,6 +111,11 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "确认人(确认阶段)")
     private String confirmedby1;
     /**
+     * 确认阶段状态
+     */
+    @ApiModelProperty(value = "确认阶段状态")
+    private String confirm1Status;
+    /**
      * 建议状态
      */
     @ApiModelProperty(value = "建议状态")

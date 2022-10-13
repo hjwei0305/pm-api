@@ -111,7 +111,12 @@ public class TodoList extends BaseFlowEntity implements Serializable {
     @Column(name = "confirmedby1")
     private String confirmedby1;
     /**
-     * 建议状态
+     * 确认阶段状态
+     */
+    @Column(name = "confirm1_status")
+    private Boolean confirm1Status;
+    /**
+     * 建议状态confirm1_status
      */
     @Column(name = "proposal_status")
     private String proposalStatus;
