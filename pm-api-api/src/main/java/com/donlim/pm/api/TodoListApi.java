@@ -73,14 +73,24 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     ResultData<List<Executor>> appointConfirm(@RequestBody FlowInvokeParams invokeParams);
 
     /**
-     * 流程确认阶段到达时更新确认状态
+     * 流程确认阶段完成时更新确认状态
      *
      * @param invokeParams 流程参数
      * @return 处理结果
      */
     @PostMapping(path = "toConfirm", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "流程确认阶段到达时更新确认状态", notes = "流程确认阶段到达时更新确认状态")
+    @ApiOperation(value = "流程确认阶段完成时更新确认状态", notes = "流程确认阶段完成时更新确认状态")
     ResultData toConfirm(@RequestBody FlowInvokeParams invokeParams);
+
+    /**
+     * 流程确认阶段到达时更新确认状态
+     *
+     * @param invokeParams 流程参数
+     * @return 处理结果
+     */
+    @PostMapping(path = "returnConfirm", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "流程确认阶段到达时更新确认状态", notes = "流程确认阶段到达时更新确认状态")
+    ResultData returnConfirm(@RequestBody FlowInvokeParams invokeParams);
 
     @PostMapping(path = "saveUserId", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "保存确认人ID", notes = "保存确认人ID")
