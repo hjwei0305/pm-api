@@ -224,9 +224,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData findPageByUserName() throws IllegalAccessException {
         String userName = ContextUtil.getUserName();
-        PageResult<PmBaseinfo> byPage = service.findByPage(new Search());
+        List<PmBaseinfo> allProj = service.findAll();
         ArrayList<PmBaseinfo> newRows = new ArrayList<>();
-        byPage.getRows().stream().forEach(info -> {
+        allProj.stream().forEach(info -> {
             if (info.getLeader().contains(userName) || info.getDesigner().contains(userName) || info.getImplementer().contains(userName) || info.getDeveloper().contains(userName)) {
                 if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                     String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
@@ -235,6 +235,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 newRows.add(info);
             }
         });
+        PageResult<PmBaseinfo> byPage = service.findByPage(new Search());
         byPage.setRows(newRows);
         return convertToDtoPageResult(byPage);
     }
