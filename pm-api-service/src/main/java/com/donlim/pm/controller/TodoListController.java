@@ -191,8 +191,10 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         if(invokeParams.getAgree() == true){
             TodoList list = service.findOne(invokeParams.getId());
             list.setConfirm1Status(true);
+            TodoListDto dto = dtoModelMapper.map(list,TodoListDto.class);
+            super.save(dto);
         }
-        return null;
+        return ResultData.success();
     }
 
     @Override
