@@ -95,4 +95,8 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "saveUserId", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "保存确认人ID", notes = "保存确认人ID")
     ResultData<TodoListDto> saveUserId(@RequestBody TodoListDto dto);
+
+    @PostMapping(path = "bindFile", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "保存确认阶段附件", notes = "保存确认阶段附件")
+    ResultData<TodoListDto> bindFile(@RequestBody TodoListDto dto);
 }

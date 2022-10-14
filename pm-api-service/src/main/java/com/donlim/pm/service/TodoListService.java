@@ -2,17 +2,21 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
+import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dao.TodoListDao;
 import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.flow.BaseFlowEntityService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +36,8 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
     private TodoListDao dao;
     @Autowired
     private PmEmployeeDao pmEmployeeDao;
+    @Autowired
+    private DocumentManager documentManager;
 
     @Override
     protected BaseEntityDao<TodoList> getDao() {
@@ -93,5 +99,16 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
             }
         }
         save(saveList);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void bindFile(TodoListDto dto) {
+        if (!StringUtils.isEmpty(dto.getId()) && !CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
+            Optional<TodoList> byId = dao.findById(dto.getId());
+            if (byId.isPresent()) {
+                documentManager.bindBusinessDocuments(dto.getId(), dto.getAttachmentIdList());
+                save(byId.get());
+            }
+        }
     }
 }

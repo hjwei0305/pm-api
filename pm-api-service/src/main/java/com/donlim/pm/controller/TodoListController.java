@@ -96,6 +96,12 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     }
 
     @Override
+    public ResultData<TodoListDto> bindFile(TodoListDto dto) {
+        service.bindFile(dto);
+        return ResultData.success();
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<TodoListDto> save(TodoListDto dto){
         // 保存工号

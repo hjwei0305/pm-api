@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 代办事项(TodoList)DTO类
@@ -165,5 +166,7 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "组织名称")
     private String organizationName;
 
+    @ApiModelProperty(value = "文档ID")
+    private List<String> attachmentIdList;
 
 }
