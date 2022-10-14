@@ -16,7 +16,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +102,7 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
 
     @Transactional(rollbackFor = Exception.class)
     public void bindFile(TodoListDto dto) {
-        if (!StringUtils.isEmpty(dto.getId()) && !CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
+        if (!StringUtils.isEmpty(dto.getId())) {
             Optional<TodoList> byId = dao.findById(dto.getId());
             if (byId.isPresent()) {
                 documentManager.bindBusinessDocuments(dto.getId(), dto.getAttachmentIdList());
