@@ -73,6 +73,16 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     ResultData<List<Executor>> appointConfirm(@RequestBody FlowInvokeParams invokeParams);
 
     /**
+     * 流程验收阶段指定人
+     *
+     * @param invokeParams 流程参数
+     * @return 处理结果
+     */
+    @PostMapping(path = "appointAccept", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "流程指定确认人", notes = "流程指定确认人")
+    ResultData<List<Executor>> appointAccept(@RequestBody FlowInvokeParams invokeParams);
+
+    /**
      * 流程确认阶段完成时更新确认状态
      *
      * @param invokeParams 流程参数

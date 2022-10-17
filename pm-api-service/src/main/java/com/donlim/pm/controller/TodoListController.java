@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 代办事项(TodoList)控制类
@@ -191,6 +192,36 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         executors.add(executor);
         return ResultData.success(executors);
     }
+
+    @Override
+    public ResultData<List<Executor>> appointAccept(FlowInvokeParams invokeParams) {
+        List<Executor> executors = new ArrayList<>();
+        Executor executor = new Executor();
+        TodoList todoList = service.findOne(invokeParams.getId());
+        List<PmEmployee> empList = pmEmployeeService.findAll();
+        String ondutyCode = todoList.getOndutyCode();
+        List<PmEmployee> pmEmployees = empList.stream().filter(emp -> emp.getEmployeeCode().equals(ondutyCode)).collect(Collectors.toList());
+        PmEmployee pmEmployee = new PmEmployee();
+        if(pmEmployees.size() > 0){
+            pmEmployee = pmEmployees.get(0);
+        }
+        if(pmEmployee.getIdpath().startsWith("1,265,266,12318,")){
+            // 运维
+            executor.setId("56760230-237A-11ED-B087-34C93D8809B5");
+            executor.setCode("299100");
+            executor.setName("吴碧华");
+            executors.add(executor);
+        }else if(pmEmployee.getIdpath().startsWith("1,265,266,14090,") || pmEmployee.getIdpath().startsWith("1,265,266,14091,")){
+            // 开发、项目
+            executor.setId("56F2FA70-237A-11ED-B087-34C93D8809B5");
+            executor.setCode("237267");
+            executor.setName("卢彩霞");
+            executors.add(executor);
+        }
+        return ResultData.success(executors);
+    }
+
+
 
     @Override
     public ResultData toConfirm(FlowInvokeParams invokeParams) {
