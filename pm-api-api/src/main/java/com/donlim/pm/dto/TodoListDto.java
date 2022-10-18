@@ -2,6 +2,8 @@ package com.donlim.pm.dto;
 
 import com.changhong.sei.core.dto.BaseEntityDto;
 import com.changhong.sei.core.dto.flow.FlowStatus;
+import com.changhong.sei.util.DateUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -59,11 +61,13 @@ public class TodoListDto extends BaseEntityDto {
     /**
      * 提出时间
      */
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     @ApiModelProperty(value = "提出时间")
     private LocalDate submitDate;
     /**
      * 结案时间
      */
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     @ApiModelProperty(value = "结案时间")
     private LocalDate endDate;
     /**
@@ -96,15 +100,16 @@ public class TodoListDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "类型：待办，通知")
     private String type;
-    /**
-     * 创建时间
-     */
-    @ApiModelProperty(value = "创建时间")
-    private String createdDate;
+//    /**
+//     * 创建时间
+//     */
+//    @ApiModelProperty(value = "创建时间")
+//    private String createdDate;
     /**
      * 要求完成日期
      */
     @ApiModelProperty(value = "要求完成日期")
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     private LocalDate completionDate;
     /**
      * 确认人(确认阶段)
@@ -135,6 +140,7 @@ public class TodoListDto extends BaseEntityDto {
      * 确认时间
      */
     @ApiModelProperty(value = "确认时间")
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     private LocalDate confirmationTime;
     /**
      * 结案状态
