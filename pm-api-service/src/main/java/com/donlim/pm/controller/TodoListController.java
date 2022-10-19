@@ -211,7 +211,8 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
             executor.setCode("299100");
             executor.setName("吴碧华");
             executors.add(executor);
-        }else if(pmEmployee.getIdpath().startsWith("1,265,266,14090,") || pmEmployee.getIdpath().startsWith("1,265,266,14091,")){
+        }else if(pmEmployee.getIdpath().startsWith("1,265,266,14090,") || pmEmployee.getIdpath().startsWith("1,265,266,14091,")
+            || pmEmployee.getIdpath().startsWith("1,265,266,12016,")){
             // 开发、项目
             executor.setId("56F2FA70-237A-11ED-B087-34C93D8809B5");
             executor.setCode("237267");
