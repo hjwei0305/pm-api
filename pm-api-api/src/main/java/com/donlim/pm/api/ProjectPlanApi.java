@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,4 +39,10 @@ public interface ProjectPlanApi extends BaseEntityApi<ProjectPlanDto>, FindByPag
     @ApiOperation(value = "导入计划",notes = "导入计划")
     ResultData<String> uploadMasterPlan(@RequestBody List<ProjectPlanDto> list) throws Exception;
 
+    /**
+     * 导出
+     */
+    @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "导出excel",notes = "导出excel")
+    void export(@RequestBody ColsAndSearch search, HttpServletResponse response) throws IOException;
 }

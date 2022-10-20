@@ -2,14 +2,17 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
+import com.donlim.pm.api.ColsAndSearch;
 import com.donlim.pm.dao.ProjectPlanDao;
 import com.donlim.pm.dto.ProjectPlanDto;
 import com.donlim.pm.entity.ProjectPlan;
+import com.donlim.pm.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -147,4 +150,38 @@ public class ProjectPlanService extends BaseEntityService<ProjectPlan> {
         }
         return projectPlanDtosNew;
     }
+    /**
+     * 导出excel数据
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public List<List<Object>> findByFiltersForExport(ColsAndSearch search, Integer cols){
+        List<ProjectPlan> byFilters = this.findByFilters(search);
+        LocalDate now = LocalDate.now();
+        LocalDate end = now.plusDays(cols);
+        List<List<Object>> result = new ArrayList<>();
+        for (ProjectPlan plan : byFilters) {
+            List<Object> row = new ArrayList<>();
+            row.add(plan.getWorkType());
+            row.add(plan.getWorkTodoList());
+            row.add(DateUtils.LocalDateToString(plan.getPlanStartDate()));
+            row.add(DateUtils.LocalDateToString(plan.getPlanEndDate()));
+            row.add(DateUtils.LocalDateToString(plan.getActualStartDate()));
+            row.add(DateUtils.LocalDateToString(plan.getActualEndDate()));
+            row.add(plan.getSchedureDays());
+            row.add(plan.getSchedureStatus());
+            row.add(plan.getWorkOnduty());
+            row.add(plan.getWorkAssist());
+            row.add(plan.getRemark());
+//            List<ApsPurchasePlanDetail> purchasePlanDetails = plan.getPurchasePlanDetails();
+//            for (ApsPurchasePlanDetail detail : purchasePlanDetails) {
+//                LocalDate planDate = detail.getPlanDate();
+//                if (planDate.isAfter(now) && planDate.isBefore(end)){
+//                    row.add(detail.getPlanQty());
+//                }
+//            }
+            result.add(row);
+        }
+        return result;
+    }
+
 }
