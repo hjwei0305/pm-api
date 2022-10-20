@@ -150,4 +150,9 @@ public class TodoList extends BaseFlowEntity implements Serializable {
      */
     @Column(name = "source")
     private String source;
+    /**
+     * 是否上传
+     */
+    @Column(name = "is_upload")
+    private String isUpload;
 }
