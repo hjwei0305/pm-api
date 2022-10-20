@@ -174,5 +174,9 @@ public class TodoListDto extends BaseEntityDto {
 
     @ApiModelProperty(value = "文档ID")
     private List<String> attachmentIdList;
-
+    /**
+     * 是否上传
+     */
+    @ApiModelProperty(value = "是否上传")
+    private String isUpload;
 }

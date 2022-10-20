@@ -106,7 +106,13 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
             Optional<TodoList> byId = dao.findById(dto.getId());
             if (byId.isPresent()) {
                 documentManager.bindBusinessDocuments(dto.getId(), dto.getAttachmentIdList());
-                save(byId.get());
+                TodoList todoList = byId.get();
+                if(dto.getAttachmentIdList().size() > 0){
+                    todoList.setIsUpload("1");
+                }else {
+                    todoList.setIsUpload("0");
+                }
+                save(todoList);
             }
         }
     }
