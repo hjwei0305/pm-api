@@ -226,12 +226,13 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
 
     @Override
     public ResultData toConfirm(FlowInvokeParams invokeParams) {
-        if(invokeParams.getAgree() == true){
+//        if(invokeParams.getAgree() == true){
+        // 普通任务只能执行下一步触发，不需要agree
             TodoList list = service.findOne(invokeParams.getId());
             list.setConfirm1Status(true);
             TodoListDto dto = dtoModelMapper.map(list,TodoListDto.class);
             super.save(dto);
-        }
+//        }
         return ResultData.success();
     }
 
