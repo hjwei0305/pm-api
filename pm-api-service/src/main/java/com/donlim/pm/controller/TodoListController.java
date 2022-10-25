@@ -218,11 +218,11 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
             executor.setCode("237267");
             executor.setName("卢彩霞");
             executors.add(executor);
-            Executor executor2 = new Executor();
-            executor2.setId("1DE14F77-2442-11ED-B32F-34C93D8809B5");
-            executor2.setCode("380825");
-            executor2.setName("吴婷婷");
-            executors.add(executor2);
+//            Executor executor2 = new Executor();
+//            executor2.setId("1DE14F77-2442-11ED-B32F-34C93D8809B5");
+//            executor2.setCode("380825");
+//            executor2.setName("吴婷婷");
+//            executors.add(executor2);
         }
         return ResultData.success(executors);
     }
@@ -249,14 +249,6 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         super.save(dto);
         return ResultData.success();
     }
-
-//    @Override
-//    public ResultData<TodoListDto> saveConfirm2(FlowInvokeParams invokeParams) {
-//        TodoList list = service.findOne(invokeParams.getId());
-//        Map<String, List<String>> nextNodeUserInfo = invokeParams.getNextNodeUserInfo();
-//
-//        return null;
-//    }
 
     @Override
     public ResultData sendTodoListTask(Map<String, String> params) {
