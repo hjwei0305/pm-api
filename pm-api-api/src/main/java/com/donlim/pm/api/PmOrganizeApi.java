@@ -44,4 +44,12 @@ public interface PmOrganizeApi extends BaseTreeApi<PmOrganizeDto>, FindByPageApi
     @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "导出组织一览表" ,notes = "导出组织一览表")
     ResultData<List<PmOrganizeExcelDto>> export(@RequestBody Search search);
+
+    /**
+     * 查找科室
+     * @return
+     */
+    @PostMapping(path = "findClass")
+    @ApiOperation(value = "查找科室" ,notes = "查找科室")
+    ResultData findClass();
 }

@@ -34,6 +34,11 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "项目名称")
     private String projectName;
     /**
+     * 科室名称
+     */
+    @ApiModelProperty(value = "科室名称")
+    private String orgname;
+    /**
      * 代办事项
      */
     @ApiModelProperty(value = "代办事项")
@@ -132,16 +137,27 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "完成情况")
     private String completion;
     /**
+     * 最新进度说明
+     */
+    @ApiModelProperty(value = "最新进度说明")
+    private String newestProgress;
+    /**
      * 确认人(验证阶段)
      */
     @ApiModelProperty(value = "确认人(验证阶段)")
     private String confirmedby2;
     /**
-     * 确认时间
+     * 验证时间
      */
-    @ApiModelProperty(value = "确认时间")
+    @ApiModelProperty(value = "验证时间")
     @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
     private LocalDate confirmationTime;
+    /**
+     * 确认时间
+     */
+    @ApiModelProperty(value = "验证时间")
+    @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
+    private LocalDate confir1Time;
     /**
      * 结案状态
      */

@@ -36,6 +36,11 @@ public class TodoList extends BaseFlowEntity implements Serializable {
     @Column(name = "project_name")
     private String projectName;
     /**
+     * 科室名称
+     */
+    @Column(name = "orgname")
+    private String orgname;
+    /**
      * 代办事项
      */
     @Column(name = "todo_list")
@@ -126,15 +131,25 @@ public class TodoList extends BaseFlowEntity implements Serializable {
     @Column(name = "completion")
     private String completion;
     /**
+     * 最新进度说明
+     */
+    @Column(name = "newest_progress")
+    private String newestProgress;
+    /**
      * 确认人(验证阶段)
      */
     @Column(name = "confirmedby2")
     private String confirmedby2;
     /**
-     * 确认时间
+     * 验证时间
      */
     @Column(name = "confirmation_time")
     private LocalDate confirmationTime;
+    /**
+     * 确认时间
+     */
+    @Column(name = "confir1_time")
+    private LocalDate confir1Time;
     /**
      * 结案状态
      */
