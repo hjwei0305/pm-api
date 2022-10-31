@@ -103,6 +103,12 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     }
 
     @Override
+    public ResultData<String> deleteEipTodo(TodoListDto dto) {
+        String flag = EipConnector.deleteEipMall(dto.getProjectCode());
+        return ResultData.success(flag);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<TodoListDto> save(TodoListDto dto){
         // 保存工号
