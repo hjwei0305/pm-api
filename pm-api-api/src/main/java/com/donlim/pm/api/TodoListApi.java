@@ -8,6 +8,7 @@ import com.changhong.sei.core.dto.flow.FlowInvokeParams;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.TodoListDto;
+import com.donlim.pm.dto.excel.TodoListExcelDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -58,9 +59,9 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
      * 导出
      *
      */
-    @PostMapping(path = "exportDept" , consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "export" , consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "待办列表清单导出" , notes = "待办列表清单导出")
-    void exportDept(@RequestBody Search search , HttpServletResponse response) throws IOException;
+    ResultData<List<TodoListExcelDto>> export(@RequestBody Search search , HttpServletResponse response) throws IOException;
 
     /**
      * 流程确认阶段指定人

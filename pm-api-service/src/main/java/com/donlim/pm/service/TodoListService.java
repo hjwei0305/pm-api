@@ -2,6 +2,8 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
+import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dao.PmEmployeeDao;
@@ -9,16 +11,20 @@ import com.donlim.pm.dao.TodoListDao;
 import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.TodoListDto;
+import com.donlim.pm.dto.excel.TodoListExcelDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.flow.BaseFlowEntityService;
 import org.apache.commons.lang.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -115,5 +121,34 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
                 save(todoList);
             }
         }
+    }
+
+    public List<TodoListExcelDto> export(Search search) {
+        List<SearchFilter> filters = search.getFilters();
+        filters.add(new SearchFilter("type","待办清单", SearchFilter.Operator.EQ));
+        search.setFilters(filters);
+        List<TodoList> allOrders = findByFilters(search);
+        ModelMapper dtoModelMapper = new ModelMapper();
+        TypeMap<TodoList, TodoListExcelDto> typeMap = dtoModelMapper.typeMap(TodoList.class, TodoListExcelDto.class);
+        List<TodoListExcelDto> collect = allOrders.stream().map(typeMap::map).collect(Collectors.toList());
+        collect.stream().forEach(c ->{
+            if(Objects.nonNull(c.getOndutyName())){
+                c.setOndutyName1(c.getOndutyName());
+            }
+        });
+        collect.stream().forEach(c ->{
+            if(Objects.nonNull(c.getFlowStatus())){
+                if(c.getFlowStatus().equals("INIT")){
+                    c.setFlowStatus("起草");
+                }else if(c.getFlowStatus().equals("INPROCESS")){
+                    c.setFlowStatus("流程中");
+                }else{
+                    c.setFlowStatus("已完成");
+                }
+            }else {
+                c.setFlowStatus("起草");
+            }
+        });
+        return collect;
     }
 }

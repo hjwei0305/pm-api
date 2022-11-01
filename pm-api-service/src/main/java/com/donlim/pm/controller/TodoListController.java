@@ -14,6 +14,7 @@ import com.donlim.pm.api.TodoListApi;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.TodoListDto;
+import com.donlim.pm.dto.excel.TodoListExcelDto;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.flow.BaseFlowController;
@@ -194,8 +195,9 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     }
 
     @Override
-    public void exportDept(Search search, HttpServletResponse response) throws IOException {
-
+    public ResultData<List<TodoListExcelDto>> export(Search search, HttpServletResponse response) throws IOException {
+        List<TodoListExcelDto> exportList = service.export(search);
+        return ResultData.success(exportList);
     }
 
     @Override
