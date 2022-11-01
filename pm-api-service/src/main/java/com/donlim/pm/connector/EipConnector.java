@@ -5,7 +5,6 @@ import com.donlim.pm.webservice.eip.*;
 import com.donlim.pm.webservice.eipcenter.*;
 
 import javax.xml.ws.Holder;
-import java.util.HashMap;
 
 
 /**
@@ -61,7 +60,7 @@ public class EipConnector {
         }
     }
 
-    public static String deleteEipMall(String mailId){
+    public static SvcHdrTypes deleteEipMall(String mailId){
         svcHdr.setSOURCEID(sourceId);
         svcHdr.setDESTINATIONID(destinationId);
         svcHdr.setTYPE("DELETE");
@@ -73,7 +72,7 @@ public class EipConnector {
         notice.setSystemSort(systemSort);
         appBody.setAddNotice(notice);
         sync.donlimESAGENCYNOTICEINFOSYNC086(svcHdr, appHdr, appBody,svcHdrs,appHdrs,appBodys);
-        return svcHdrs.value.toString();
+        return svcHdrs.value;
     }
 
 
