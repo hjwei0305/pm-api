@@ -4,6 +4,7 @@ import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.flow.Executor;
 import com.changhong.sei.core.dto.flow.FlowInvokeParams;
+import com.changhong.sei.core.dto.flow.FlowStatus;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.dto.serach.SearchFilter;
@@ -125,6 +126,14 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         }
         if(submitEmployee.isPresent()){
             dto.setSubmitCode(submitEmployee.get().getEmployeeCode());
+        }
+        //检查type=待办清单,防止重复提交流程
+        if(dto.getType().equals("待办清单") && dto.getId() != null){
+            TodoList checkFlowStatus = service.findOne(dto.getId());
+            if((checkFlowStatus.getFlowStatus() != null && dto.getFlowStatus() == null)
+                    || (checkFlowStatus.getFlowStatus().equals(FlowStatus.INPROCESS) && dto.getFlowStatus().equals(FlowStatus.INIT))){
+                return ResultData.fail("单据已提交，请勿重复！");
+            }
         }
         ResultData<TodoListDto> saveResultData = super.save(dto);
         // 保存结案且已发送过待办 删除EIP待办
