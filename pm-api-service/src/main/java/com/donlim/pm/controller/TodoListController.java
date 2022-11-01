@@ -130,9 +130,10 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         //检查type=待办清单,防止重复提交流程
         if(dto.getType().equals("待办清单") && dto.getId() != null){
             TodoList checkFlowStatus = service.findOne(dto.getId());
-            if((checkFlowStatus.getFlowStatus() != null && dto.getFlowStatus() == null)
-                    || (checkFlowStatus.getFlowStatus().equals(FlowStatus.INPROCESS) && dto.getFlowStatus().equals(FlowStatus.INIT))){
-                return ResultData.fail("单据已提交，请勿重复！");
+            if(checkFlowStatus.getFlowStatus() != null){
+                if(dto.getFlowStatus() == null || (checkFlowStatus.getFlowStatus().equals(FlowStatus.INPROCESS) && dto.getFlowStatus().equals(FlowStatus.INIT))){
+                    return ResultData.fail("单据已提交，请勿重复！");
+                }
             }
         }
         ResultData<TodoListDto> saveResultData = super.save(dto);
