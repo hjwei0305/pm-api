@@ -5,6 +5,7 @@ import com.donlim.pm.webservice.eip.*;
 import com.donlim.pm.webservice.eipcenter.*;
 
 import javax.xml.ws.Holder;
+import java.util.HashMap;
 
 
 /**
@@ -14,14 +15,22 @@ import javax.xml.ws.Holder;
  */
 public class EipConnector {
 
-    private static final SvcHdrType svcHdr = new SvcHdrType();
-    private static SvcHdrTypes svcHdrs = new SvcHdrTypes();
-    private static final DONLIMESAGENCYNOTICEINFOSYNC086_Service service = new DONLIMESAGENCYNOTICEINFOSYNC086_Service();
-    private static  final DONLIMESAGENCYNOTICEINFOSYNC086 sync=service.getDONLIMESAGENCYNOTICEINFOSYNC086SOAP();
-    private static final String sourceId = "SPM";
-    private static final String destinationId = "EIP";
-    private static final String ipAddress = "127.0.0.1";
-    private static String mailId="1234";
+    public static final SvcHdrType svcHdr = new SvcHdrType();
+    public static final AppHdrType appHdr = new AppHdrType();
+    public static final AppBodyType appBody = new AppBodyType();
+    public static final Holder<SvcHdrTypes> svcHdrs = new Holder<>();
+    public static final Holder<AppHdrTypes> appHdrs = new Holder<>();
+    public static final Holder<AppBodyTypes> appBodys = new Holder<>();
+    public static final DONLIMESAGENCYNOTICEINFOSYNC086_Service service = new DONLIMESAGENCYNOTICEINFOSYNC086_Service();
+    public static final DONLIMESAGENCYNOTICEINFOSYNC086 sync = service.getDONLIMESAGENCYNOTICEINFOSYNC086SOAP();
+    public static final AddNoticeType notice = new AddNoticeType();
+    public static final String sourceId = "SEIPROD";
+    public static final String destinationId = "EIP";
+    public static final String ipAddress = "127.0.0.1";
+    public static final String bo = "待办通知信息同步";
+    public static final String systemName = "出门管理平台系统";
+    public static final String systemSort = "A13";
+    public static final String mailType = "待办";
     public  static boolean sendNotice(MailDto dto){
         //type ADD,UPDATE,DELETE
         svcHdr.setBO("项目管理系统");
@@ -50,6 +59,21 @@ public class EipConnector {
         }else{
             return false;
         }
+    }
+
+    public static String deleteEipMall(String mailId){
+        svcHdr.setSOURCEID(sourceId);
+        svcHdr.setDESTINATIONID(destinationId);
+        svcHdr.setTYPE("DELETE");
+        svcHdr.setBO(bo);
+        svcHdr.setIPADDRESS(ipAddress);
+        notice.setMailID(mailId);
+        notice.setMailType(mailType);
+        notice.setSystemName(systemName);
+        notice.setSystemSort(systemSort);
+        appBody.setAddNotice(notice);
+        sync.donlimESAGENCYNOTICEINFOSYNC086(svcHdr, appHdr, appBody,svcHdrs,appHdrs,appBodys);
+        return svcHdrs.value.toString();
     }
 
 

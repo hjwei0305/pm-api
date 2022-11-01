@@ -20,6 +20,7 @@ import com.donlim.pm.flow.BaseFlowController;
 import com.donlim.pm.flow.BaseFlowEntityService;
 import com.donlim.pm.service.PmEmployeeService;
 import com.donlim.pm.service.TodoListService;
+import com.donlim.pm.webservice.eipcenter.SvcHdrTypes;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -101,6 +102,12 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     public ResultData<TodoListDto> bindFile(TodoListDto dto) {
         service.bindFile(dto);
         return ResultData.success();
+    }
+
+    @Override
+    public ResultData<String> deleteEipTodo(TodoListDto dto) {
+        SvcHdrTypes flag = EipConnector.deleteEipMall(dto.getProjectCode());
+        return ResultData.success(flag.getESBCODE()+","+flag.getRCODE()+","+flag.getRDESC());
     }
 
     @Override
