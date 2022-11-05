@@ -66,6 +66,16 @@ public class TodoList extends BaseFlowEntity implements Serializable {
     @Column(name = "submit_name")
     private String submitName;
     /**
+     * 待办清单提出人姓名
+     */
+    @Column(name = "advisor")
+    private String advisor;
+    /**
+     * 待办清单提出人工号
+     */
+    @Column(name = "advisor_code")
+    private String advisorCode;
+    /**
      * 提出时间
      */
     @Column(name = "submit_date")

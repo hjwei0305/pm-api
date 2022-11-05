@@ -122,11 +122,17 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         Optional<PmEmployee> submitEmployee = employeeList.stream()
                 .filter(pmEmployee -> pmEmployee.getEmployeeName().equals(dto.getSubmitName()))
                 .findFirst();
+        Optional<PmEmployee> advisor = employeeList.stream()
+                .filter(pmEmployee -> pmEmployee.getEmployeeName().equals(dto.getAdvisor()))
+                .findFirst();
         if(ondutyEmployee.isPresent()){
             dto.setOndutyCode(ondutyEmployee.get().getEmployeeCode());
         }
         if(submitEmployee.isPresent()){
             dto.setSubmitCode(submitEmployee.get().getEmployeeCode());
+        }
+        if(advisor.isPresent()){
+            dto.setAdvisorCode(advisor.get().getEmployeeCode());
         }
         //检查type=待办清单,防止重复提交流程
         if(dto.getType().equals("待办清单") && dto.getId() != null){

@@ -12,6 +12,8 @@ import java.time.LocalDate;
  */
 public class TodoListExcelDto {
     private static final long serialVersionUID = -47355896084772616L;
+    @ApiModelProperty(value = "提出人")
+    private String advisor;
     @ApiModelProperty(value = "提出日期")
     private LocalDate submitDate;
 
@@ -186,5 +188,13 @@ public class TodoListExcelDto {
 
     public void setFlowStatus(String flowStatus) {
         this.flowStatus = flowStatus;
+    }
+
+    public String getAdvisor() {
+        return advisor;
+    }
+
+    public void setAdvisor(String advisor) {
+        this.advisor = advisor;
     }
 }

@@ -64,6 +64,16 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "提出人姓名")
     private String submitName;
     /**
+     * 待办清单提出人工号
+     */
+    @ApiModelProperty(value = "待办清单提出人工号")
+    private String advisorCode;
+    /**
+     * 待办清单提出人姓名
+     */
+    @ApiModelProperty(value = "待办清单提出人姓名")
+    private String advisor;
+    /**
      * 提出时间
      */
     @JsonFormat(pattern = DateUtils.DEFAULT_DATE_FORMAT)
