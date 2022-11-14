@@ -76,12 +76,12 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
 
     @Override
     protected String getWorkCaption(TodoList todoList) {
-        return "待办清单审批：" +todoList.getTodoList();
+        return "项目管理系统待办清单审批：" +todoList.getTodoList();
     }
 
     @Override
     protected String getFlowName(TodoList todoList) {
-        return "待办清单审批流程：" +todoList.getTodoList();
+        return "项目管理系统待办清单审批流程：" +todoList.getTodoList();
     }
 
     @Override

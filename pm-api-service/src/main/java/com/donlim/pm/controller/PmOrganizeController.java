@@ -73,7 +73,7 @@ public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrgan
     @Override
     public ResultData findClass() {
         List<PmOrganize> byFilter = service.findByFilters(new Search());
-        List<PmOrganize> classList = byFilter.stream().filter(a -> a.getIdpath().startsWith("1,265,266,12318,1")
+        List<PmOrganize> classList = byFilter.stream().filter(a -> a.getIdpath().startsWith("1,265,266,12318")
                 || a.getIdpath().startsWith("1,265,266,14090,1")
                 || a.getIdpath().startsWith("1,265,266,14091,1"))
                 .collect(Collectors.toList());
