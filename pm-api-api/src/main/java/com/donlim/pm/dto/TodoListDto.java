@@ -54,6 +54,21 @@ public class TodoListDto extends BaseEntityDto {
     @ApiModelProperty(value = "责任人姓名")
     private String ondutyName;
     /**
+     * 协助人科室名称
+     */
+    @ApiModelProperty(value = "协助人科室名称")
+    private String assistOrgname;
+    /**
+     * 协助人工号
+     */
+    @ApiModelProperty(value = "协助人工号")
+    private String assistCode;
+    /**
+     * 协助人姓名
+     */
+    @ApiModelProperty(value = "协助人姓名")
+    private String assistName;
+    /**
      * 提出人工号
      */
     @ApiModelProperty(value = "提出人工号")
