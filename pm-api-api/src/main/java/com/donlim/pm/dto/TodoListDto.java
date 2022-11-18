@@ -220,4 +220,10 @@ public class TodoListDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "是否上传")
     private String isUpload;
+
+    /**
+     * 逾期天数
+     */
+    @ApiModelProperty(value = "逾期天数")
+    private Long overedDays;
 }

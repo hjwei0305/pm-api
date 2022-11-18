@@ -195,4 +195,10 @@ public class TodoList extends BaseFlowEntity implements Serializable {
      */
     @Column(name = "is_upload")
     private String isUpload;
+
+    /**
+     * 逾期天数
+     */
+    @Column(name = "overed_days")
+    private Long overedDays;
 }

@@ -114,4 +114,13 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
     @PostMapping(path = "deleteEipTodo", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "删除EIP待办", notes = "删除EIP待办")
     ResultData<String> deleteEipTodo(@RequestBody TodoListDto dto);
+
+    /**
+     * 定时计算逾期天数
+     * @param params
+     * @return
+     */
+    @PostMapping(path = "calcOverdueDay", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "定时计算逾期天数", notes = "定时计算逾期天数")
+    ResultData calcOverdueDay(@RequestBody Map<String, String> params);
 }

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -150,5 +151,24 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
             }
         });
         return collect;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void calcOverdueDay() {
+        List<TodoList> list = dao.findAllByType("待办清单");
+        for (TodoList todoList : list) {
+            long day = 0L;
+            if(todoList.getClosingStatus() != null && todoList.getClosingStatus().equals("合格")){
+                long completeDay = todoList.getCompletionDate().toEpochDay();
+                day = todoList.getConfirmationTime().toEpochDay();
+                long overDay = (day - completeDay) > 0 ? (day - completeDay) : 0;
+                todoList.setOveredDays(overDay);
+            }else{
+                long nowDay = LocalDate.now().toEpochDay();
+                day = todoList.getCompletionDate().toEpochDay();
+                long overDay = (nowDay - day) > 0 ? (nowDay - day) : 0;
+                todoList.setOveredDays(overDay);
+            }
+        }
     }
 }
