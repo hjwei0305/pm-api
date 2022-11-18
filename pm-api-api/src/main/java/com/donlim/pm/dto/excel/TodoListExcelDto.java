@@ -29,6 +29,12 @@ public class TodoListExcelDto {
     @ApiModelProperty(value = "科室")
     private String orgname;
 
+    @ApiModelProperty(value = "协助人")
+    private String assistName;
+
+    @ApiModelProperty(value = "协助人科室")
+    private String assistOrgname;
+
     @ApiModelProperty(value = "要求完成日期")
     private LocalDate completionDate;
 
@@ -55,6 +61,9 @@ public class TodoListExcelDto {
 
     @ApiModelProperty(value = "结案状态")
     private String closingStatus;
+
+    @ApiModelProperty(value = "逾期天数")
+    private String overedDays;
 
     @ApiModelProperty(value = "单据状态")
     private String flowStatus;
@@ -196,5 +205,29 @@ public class TodoListExcelDto {
 
     public void setAdvisor(String advisor) {
         this.advisor = advisor;
+    }
+
+    public String getAssistName() {
+        return assistName;
+    }
+
+    public void setAssistName(String assistName) {
+        this.assistName = assistName;
+    }
+
+    public String getAssistOrgname() {
+        return assistOrgname;
+    }
+
+    public void setAssistOrgname(String assistOrgname) {
+        this.assistOrgname = assistOrgname;
+    }
+
+    public String getOveredDays() {
+        return overedDays;
+    }
+
+    public void setOveredDays(String overedDays) {
+        this.overedDays = overedDays;
     }
 }
