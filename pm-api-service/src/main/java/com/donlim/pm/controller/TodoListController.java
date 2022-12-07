@@ -60,12 +60,22 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     @Override
     protected void addProperties(Map<String, String> map) {
         map.put("type", "待办类型");
+        map.put("type", "待办类型");
     }
 
     @Override
     public Map<String, Object> getPropertyValue(TodoList entity) {
         Map<String, Object> map = new HashMap<>(1);
         map.put("type", entity.getType());
+        // 返回责任人idpath是否运维部门
+        List<PmEmployee> empList = pmEmployeeService.findAll();
+        String ondutyCode = entity.getOndutyCode();
+        List<PmEmployee> pmEmployees = empList.stream().filter(emp -> emp.getEmployeeCode().equals(ondutyCode)).collect(Collectors.toList());
+        PmEmployee pmEmployee = new PmEmployee();
+        if(pmEmployees.size() > 0){
+            pmEmployee = pmEmployees.get(0);
+        }
+        map.put("idpath", pmEmployee.getIdpath().startsWith("1,265,266,12318,"));
         return map;
     }
 
@@ -249,11 +259,11 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
             executor.setCode("237267");
             executor.setName("卢彩霞");
             executors.add(executor);
-            Executor executor2 = new Executor();
-            executor2.setId("1DE14F77-2442-11ED-B32F-34C93D8809B5");
-            executor2.setCode("380825");
-            executor2.setName("吴婷婷");
-            executors.add(executor2);
+//            Executor executor2 = new Executor();
+//            executor2.setId("1DE14F77-2442-11ED-B32F-34C93D8809B5");
+//            executor2.setCode("380825");
+//            executor2.setName("吴婷婷");
+//            executors.add(executor2);
         }
         return ResultData.success(executors);
     }
