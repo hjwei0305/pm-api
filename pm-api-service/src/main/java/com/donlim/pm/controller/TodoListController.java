@@ -60,7 +60,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     @Override
     protected void addProperties(Map<String, String> map) {
         map.put("type", "待办类型");
-        map.put("type", "待办类型");
+        map.put("idpath", "是否运维部门");
     }
 
     @Override
