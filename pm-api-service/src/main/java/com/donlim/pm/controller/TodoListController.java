@@ -67,6 +67,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     public Map<String, Object> getPropertyValue(TodoList entity) {
         Map<String, Object> map = new HashMap<>(1);
         map.put("type", entity.getType());
+        map.put("idpath", "0");
         // 返回责任人idpath是否运维部门
         List<PmEmployee> empList = pmEmployeeService.findAll();
         String ondutyCode = entity.getOndutyCode();
@@ -77,8 +78,6 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         }
         if (pmEmployee.getIdpath().startsWith("1,265,266,12318,")){
             map.put("idpath", "1");
-        }else {
-            map.put("idpath", "0");
         }
         return map;
     }
