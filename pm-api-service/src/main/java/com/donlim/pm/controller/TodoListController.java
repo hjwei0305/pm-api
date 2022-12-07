@@ -85,6 +85,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     @Override
     protected void addInitValue(Map<String, Object> map) {
         map.put("type", "待办清单");
+        map.put("idpath", "0");
     }
 
     @Override
