@@ -67,7 +67,9 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
             mailDto.setAccount(todo.getOndutyCode());
             mailDto.setType("ADD");
 //            mailDto.setUrl("https://sei.donlim.com/");
-            mailDto.setUrl("https://sei.donlim.com/api-gateway/sei-auth/sso/login?authType=xbDL&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&userCode="+userName);
+//            mailDto.setUrl("https://seiprod.donlim.com/api-gateway/sei-auth/sso/login?authType=xbDL&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&userCode="+ todo.getOndutyCode());
+            mailDto.setUrl("https://seiprod.donlim.com/api-gateway/sei-auth/sso/login?authType=xbAG&LoginType=SSO&ClientIP=127.0.0.1&tenant=DONLIM&code="+ todo.getOndutyCode());
+
             String mailTitle="";
 
             if(todo.getType().equals("待办")){
