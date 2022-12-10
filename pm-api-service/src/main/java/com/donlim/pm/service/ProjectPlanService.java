@@ -1,5 +1,6 @@
 package com.donlim.pm.service;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.ColsAndSearch;
@@ -45,7 +46,7 @@ public class ProjectPlanService extends BaseEntityService<ProjectPlan> {
         if(plansList.size() > 0){
             ProjectPlan projectPlan = plansList.get(0);
             List<String> idCollect = dao.getAllByProjectIdAndPlanType(projectPlan.getProjectId(), projectPlan.getPlanType())
-                    .stream()
+                    .stream().filter(c->c.getCreatorAccount().equals(ContextUtil.getUserAccount()))
                     .map(ProjectPlan::getId)
                     .collect(Collectors.toList());
             // 清除项目相关计划
