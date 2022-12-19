@@ -3,7 +3,9 @@ package com.donlim.pm.api;
 import com.changhong.sei.core.api.BaseEntityApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.excel.PmBaseinfoExcelDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,5 +93,13 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     @PostMapping(path = "findPageByUserName")
     @ApiOperation(value = "根据username查询自己的项目", notes = "根据username查询自己的项目")
     ResultData findPageByUserName() throws IllegalAccessException;
+
+    /**
+     * 订单一览表导出excel
+     * @param search 查询条件
+     */
+    @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "导出项目" ,notes = "导出项目")
+    ResultData<List<PmBaseinfoExcelDto>> export(@RequestBody Search search);
 
 }

@@ -12,6 +12,7 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.api.PmBaseinfoApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.excel.PmBaseinfoExcelDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
@@ -21,6 +22,8 @@ import com.donlim.pm.service.TodoListService;
 import com.donlim.pm.util.EnumUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 基础资料(PmBaseinfo)控制类
@@ -238,6 +242,15 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         PageResult<PmBaseinfo> byPage = service.findByPage(new Search());
         byPage.setRows(newRows);
         return convertToDtoPageResult(byPage);
+    }
+
+    @Override
+    public ResultData<List<PmBaseinfoExcelDto>> export(Search search) {
+        List<PmBaseinfo> pmBaseinfoList = service.findByFilters(search);
+        ModelMapper modelMapper = new ModelMapper();
+        TypeMap<PmBaseinfo, PmBaseinfoExcelDto> typeMap = modelMapper.typeMap(PmBaseinfo.class, PmBaseinfoExcelDto.class);
+        List<PmBaseinfoExcelDto> collect = pmBaseinfoList.stream().map(typeMap::map).collect(Collectors.toList());
+        return ResultData.success(collect);
     }
 
     @Override
