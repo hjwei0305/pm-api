@@ -101,9 +101,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                     switch (key){
                         case 0: progress += "主计划：";
                             break;
-                        case 1: progress += "前端计划：";
+                        case 1: progress += "后端计划：";
                             break;
-                        case 2: progress += "后端计划：";
+                        case 2: progress += "前端计划：";
                             break;
                         case 3: progress += "实施计划：";
                             break;

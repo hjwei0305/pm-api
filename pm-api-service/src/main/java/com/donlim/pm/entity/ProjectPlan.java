@@ -28,7 +28,7 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
     @Column(name = "project_id")
     private String projectId;
     /**
-     * 计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划)
+     * 计划类型(0:主计划，1:后端计划，2:前端计划，3:实施计划)
      */
     @Column(name = "plan_type")
     private String planType;
