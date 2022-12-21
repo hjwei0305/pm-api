@@ -1,16 +1,10 @@
 package com.donlim.pm.dto.excel;
 
-import com.changhong.sei.core.dto.BaseEntityDto;
-import com.changhong.sei.core.dto.serializer.EnumJsonSerializer;
-import com.donlim.pm.em.BigNodeType;
-import com.donlim.pm.em.SmallNodeType;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 /**
@@ -88,6 +82,8 @@ public class PmBaseinfoExcelDto {
     private String leader;
     @ApiModelProperty(value = "项目成员")
     private String member;
+    @ApiModelProperty(value = "项目进度")
+    private String remark;
 
 
 

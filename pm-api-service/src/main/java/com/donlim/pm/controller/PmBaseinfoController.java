@@ -16,8 +16,10 @@ import com.donlim.pm.dto.excel.PmBaseinfoExcelDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
+import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmLogService;
+import com.donlim.pm.service.ProjectPlanService;
 import com.donlim.pm.service.TodoListService;
 import com.donlim.pm.util.EnumUtils;
 import io.swagger.annotations.Api;
@@ -58,6 +60,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     private UserApi userApi;
     @Autowired
     private TodoListService todoListService;
+    @Autowired
+    private ProjectPlanService projectPlanService;
     @Override
     public BaseEntityService<PmBaseinfo> getService() {
         return service;
@@ -87,6 +91,36 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                 info.setProjectTypes(enumItemRemark);
+                List<ProjectPlan> projectPlanList = projectPlanService.findListByProperty("projectId", info.getId());
+                Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
+                        .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
+                        .collect(Collectors.groupingBy(ProjectPlan::getPlanType));
+                String progress = "";
+                for (Map.Entry<String, List<ProjectPlan>> entry : doingList.entrySet()) {
+                    Integer key = Integer.valueOf(entry.getKey());
+                    switch (key){
+                        case 0: progress += "主计划：";
+                            break;
+                        case 1: progress += "前端计划：";
+                            break;
+                        case 2: progress += "后端计划：";
+                            break;
+                        case 3: progress += "实施计划：";
+                            break;
+                    }
+                    int index = 1;
+                    for (ProjectPlan projectPlan : entry.getValue()) {
+                        progress += projectPlan.getWorkTodoList();
+                        if(index < entry.getValue().size()){
+                            progress += "，";
+                        }
+                        if(index == entry.getValue().size()){
+                            progress += "；";
+                        }
+                        index++;
+                    }
+                }
+                info.setRemark(progress);
             }
         });
         if(true || ContextUtil.getUserAccount().equals("admin")){
@@ -247,6 +281,39 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData<List<PmBaseinfoExcelDto>> export(Search search) {
         List<PmBaseinfo> pmBaseinfoList = service.findByFilters(search);
+
+        pmBaseinfoList.stream().forEach(info ->{
+            List<ProjectPlan> projectPlanList = projectPlanService.findListByProperty("projectId", info.getId());
+            Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
+                    .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
+                    .collect(Collectors.groupingBy(ProjectPlan::getPlanType));
+            String progress = "";
+            for (Map.Entry<String, List<ProjectPlan>> entry : doingList.entrySet()) {
+                Integer key = Integer.valueOf(entry.getKey());
+                switch (key){
+                    case 0: progress += "主计划：";
+                        break;
+                    case 1: progress += "前端计划：";
+                        break;
+                    case 2: progress += "后端计划：";
+                        break;
+                    case 3: progress += "实施计划：";
+                        break;
+                }
+                int index = 1;
+                for (ProjectPlan projectPlan : entry.getValue()) {
+                    progress += projectPlan.getWorkTodoList();
+                    if(index < entry.getValue().size()){
+                        progress += "，";
+                    }
+                    if(index == entry.getValue().size()){
+                        progress += "；";
+                    }
+                    index++;
+                }
+            }
+            info.setRemark(progress);
+        });
         ModelMapper modelMapper = new ModelMapper();
         TypeMap<PmBaseinfo, PmBaseinfoExcelDto> typeMap = modelMapper.typeMap(PmBaseinfo.class, PmBaseinfoExcelDto.class);
         List<PmBaseinfoExcelDto> collect = pmBaseinfoList.stream().map(typeMap::map).collect(Collectors.toList());
