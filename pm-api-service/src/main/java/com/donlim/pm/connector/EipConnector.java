@@ -27,8 +27,8 @@ public class EipConnector {
     public static final String destinationId = "EIP";
     public static final String ipAddress = "127.0.0.1";
     public static final String bo = "待办通知信息同步";
-    public static final String systemName = "出门管理平台系统";
-    public static final String systemSort = "A13";
+    public static final String systemName = "软件项目管理系统";
+    public static final String systemSort = "IMPMS";
     public static final String mailType = "待办";
     public  static boolean sendNotice(MailDto dto){
         //type ADD,UPDATE,DELETE
@@ -45,8 +45,8 @@ public class EipConnector {
         addNoticeType.setMailType(dto.getMailType());
         addNoticeType.setMailBody(dto.getMailBody());
         addNoticeType.setMailSubject(dto.getMailSubject());
-        addNoticeType.setSystemName("软件项目管理系统");
-        addNoticeType.setSystemSort("A99");
+        addNoticeType.setSystemName(systemName);
+        addNoticeType.setSystemSort(systemSort);
         addNoticeType.setUrl(dto.getUrl());
         appBodyType.setAddNotice(addNoticeType);
         Holder<SvcHdrTypes> svcHdrTypesHolder=new Holder<>();
