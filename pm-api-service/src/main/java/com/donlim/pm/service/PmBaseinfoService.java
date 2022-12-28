@@ -171,7 +171,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
-        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(a->a.getCode().equals("E20220608002")).collect(Collectors.toList());
+        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
             for (IppProjectInfoDetails.TableDTO data : list) {
