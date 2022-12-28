@@ -171,7 +171,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
-        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
+        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(a->a.getCode().equals("E20220608002")).collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
             for (IppProjectInfoDetails.TableDTO data : list) {
@@ -185,8 +185,12 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     pmBaseinfo.setCodeReview(true);
                 }
             }
-            pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
-            pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
+            if(!pmBaseinfo.getTest()){
+                pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
+            }
+            if(pmBaseinfo.equals("0")){
+                pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
+            }
             pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
             //计算主计划达成率
             List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
