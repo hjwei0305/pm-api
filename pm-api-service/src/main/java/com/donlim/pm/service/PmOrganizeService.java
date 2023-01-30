@@ -51,7 +51,7 @@ public class PmOrganizeService extends BaseTreeService<PmOrganize> {
             if(pmOrganizes.size()>0){
                 // 更新
                 PmOrganize pmOrganize  = pmOrganizes.get(0);
-                pmOrganize.setFrozen(dataDTO.getUsable());
+                pmOrganize.setFrozen(false);
                 saveList.add(pmOrganize);
             }else {
                 // 新增
@@ -62,7 +62,14 @@ public class PmOrganizeService extends BaseTreeService<PmOrganize> {
                 pmOrganize.setExtorgname(dataDTO.getExtorgname());
                 pmOrganize.setSuperid(dataDTO.getSuperid());
                 pmOrganize.setIdpath(dataDTO.getIdpath());
+                pmOrganize.setFrozen(false);
                 saveList.add(pmOrganize);
+            }
+        }
+        for (PmOrganize org : allList) {
+            if(saveList.stream().filter(o -> org.getCode().equals(o.getCode())).collect(Collectors.toList()).size() == 0 ){
+                org.setFrozen(true);
+                saveList.add(org);
             }
         }
         save(saveList);

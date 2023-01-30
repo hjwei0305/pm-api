@@ -18,8 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -73,10 +72,20 @@ public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrgan
     @Override
     public ResultData findClass() {
         List<PmOrganize> byFilter = service.findByFilters(new Search());
-        List<PmOrganize> classList = byFilter.stream().filter(a -> a.getIdpath().startsWith("1,265,266,12318")
-                || a.getIdpath().startsWith("1,265,266,14090,1")
-                || a.getIdpath().startsWith("1,265,266,14091,1"))
-                .collect(Collectors.toList());
-        return ResultData.success(classList);
+        Map<String, List<PmOrganize>> OrgMap = byFilter.stream().filter(a ->
+                a.getIdpath().startsWith("1,265,266,12318") // 信息化管理中心/系统运维管理部
+                        || a.getIdpath().startsWith("1,265,266,14090,1") // 信息化管理中心/系统项目管理部
+                        || a.getIdpath().startsWith("1,265,266,14091,1") // 信息化管理中心/系统开发管理部
+                        || a.getIdpath().startsWith("1,265,18038,18042,") // 数字化管理中心/系统运维管理部
+                        || a.getIdpath().startsWith("1,265,18038,18040,1") // 数字化管理中心/系统开发管理部
+                        || a.getIdpath().startsWith("1,265,18038,18043,1") // 联席项目系统推广管理部/运营策略科
+                        || a.getIdpath().startsWith("1,265,18038,18041,1") // 技术与数据研究部/架构策略科
+                        || a.getIdpath().startsWith("1,265,18038,18039,1") // 系统项目管理部/配件智造科
+        ).collect(Collectors.groupingBy(PmOrganize::getName));
+        ArrayList<PmOrganize> resultList = new ArrayList<>();
+        for(String name : OrgMap.keySet()){
+            resultList.add(OrgMap.get(name).get(0));
+        }
+        return ResultData.success(resultList);
     }
 }

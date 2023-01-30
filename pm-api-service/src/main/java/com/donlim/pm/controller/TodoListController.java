@@ -76,7 +76,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         if(pmEmployees.size() > 0){
             pmEmployee = pmEmployees.get(0);
         }
-        if (pmEmployee.getIdpath().startsWith("1,265,266,12318,")){
+        if (pmEmployee.getIdpath().startsWith("1,265,266,12318,") || pmEmployee.getIdpath().startsWith("1,265,18038,18042,")){
             map.put("idpath", "1");
         }
         return map;
