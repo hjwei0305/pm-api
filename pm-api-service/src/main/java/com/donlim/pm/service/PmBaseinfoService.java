@@ -188,7 +188,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if(!pmBaseinfo.getTest()){
                 pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
             }
-            if(pmBaseinfo.equals("0")){
+            if(pmBaseinfo.getStatus().equals("0")){
                 pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
             }
             pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
