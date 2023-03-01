@@ -250,7 +250,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         if(pmEmployees.size() > 0){
             pmEmployee = pmEmployees.get(0);
         }
-        if(pmEmployee.getIdpath().startsWith("1,265,266,12318,") || pmEmployee.getIdpath().startsWith("1,265,18038,18043,")){
+        if(pmEmployee.getIdpath().startsWith("1,265,266,12318,") || pmEmployee.getIdpath().startsWith("1,265,18038,18042,")){
             // 运维
             executor.setId("56760230-237A-11ED-B087-34C93D8809B5");
             executor.setCode("299100");
