@@ -336,12 +336,13 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     public ResultData syncProjectInfo(String code) {
         PmBaseinfo pmBaseinfo = service.syncIppInfo(code);
         if (pmBaseinfo != null) {
-            if(pmBaseinfo.getId()!=null){
+            if (pmBaseinfo.getId() != null) {
                 return ResultData.fail("该单号数据已经建档，请联系管理员。");
-            }else{
+            }else if(pmBaseinfo.getRemark() != null){
+                return ResultData.fail(pmBaseinfo.getRemark());
+            }else {
                 return ResultData.success(convertToDto(pmBaseinfo));
             }
-
         } else {
             return ResultData.fail("同步失败！！！该单号数据不存在。");
         }
