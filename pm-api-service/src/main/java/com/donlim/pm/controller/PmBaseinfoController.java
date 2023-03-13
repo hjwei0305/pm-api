@@ -191,7 +191,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 return ResultData.fail("只有主导人才可以修改信息");
             }
             PmBaseinfo pmBaseinfo = service.findOne(dto.getId());
-            pmBaseinfoDto = convertToDto(pmBaseinfo);
+//            pmBaseinfoDto = convertToDto(pmBaseinfo);
+            pmBaseinfoDto = dto;
+            pmBaseinfoDto.setId(pmBaseinfo.getId());
         } else {
             pmBaseinfoDto = dto;
             pmBaseinfoDto.setId(null);
@@ -200,6 +202,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             }
             if(StringUtils.isEmpty(pmBaseinfoDto.getLeader())){
                 return ResultData.fail("项目主导人为空，不能保存。");
+            }
+            if(StringUtils.isEmpty(pmBaseinfoDto.getSysName())){
+                return ResultData.fail("系统名称为空，不能保存。");
             }
         }
         if(dto.getStartDate() == null || dto.getPlanFinishDate() == null){
