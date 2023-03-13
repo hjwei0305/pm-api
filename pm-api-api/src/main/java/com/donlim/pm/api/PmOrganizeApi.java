@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -52,4 +53,12 @@ public interface PmOrganizeApi extends BaseTreeApi<PmOrganizeDto>, FindByPageApi
     @PostMapping(path = "findClass")
     @ApiOperation(value = "查找科室" ,notes = "查找科室")
     ResultData findClass();
+
+    /**
+     * 同步组织
+     * @param
+     */
+    @PostMapping(path = "synOrg",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "同步组织" ,notes = "同步组织")
+    ResultData synOrg(@RequestBody Map<String, String> params);
 }

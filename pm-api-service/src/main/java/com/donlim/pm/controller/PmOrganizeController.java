@@ -1,10 +1,13 @@
 package com.donlim.pm.controller;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.controller.BaseTreeController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseTreeService;
+import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.PmOrganizeApi;
 import com.donlim.pm.dto.PmOrganizeDto;
 import com.donlim.pm.dto.excel.PmOrganizeExcelDto;
@@ -87,5 +90,12 @@ public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrgan
             resultList.add(OrgMap.get(name).get(0));
         }
         return ResultData.success(resultList);
+    }
+
+    @Override
+    public ResultData synOrg(Map<String, String> params) {
+        LogUtil.bizLog("后台任务由【{}】执行完成！", ContextUtil.getSessionUser());
+        service.synOrg();
+        return ResultDataUtil.success("执行成功");
     }
 }

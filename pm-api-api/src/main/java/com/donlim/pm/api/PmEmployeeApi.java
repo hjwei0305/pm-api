@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -43,4 +44,12 @@ public interface PmEmployeeApi extends BaseEntityApi<PmEmployeeDto>, FindByPageA
     @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "导出人员一览表" ,notes = "导出人员一览表")
     ResultData<List<PmEmployeeExcelDto>> export(@RequestBody Search search);
+
+    /**
+     * 同步人员
+     * @param
+     */
+    @PostMapping(path = "synEmp",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "同步人员" ,notes = "同步人员")
+    ResultData synEmp(@RequestBody Map<String, String> params);
 }

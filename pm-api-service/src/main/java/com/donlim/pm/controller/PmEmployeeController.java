@@ -1,11 +1,14 @@
 package com.donlim.pm.controller;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.dto.serach.SearchFilter;
+import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
+import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.util.EnumUtils;
 import com.donlim.pm.api.PmEmployeeApi;
 import com.donlim.pm.dto.PmEmployeeDto;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -82,5 +86,12 @@ public class PmEmployeeController extends BaseEntityController<PmEmployee, PmEmp
             }
         });
         return ResultData.success(collect);
+    }
+
+    @Override
+    public ResultData synEmp(Map<String, String> params) {
+        LogUtil.bizLog("后台任务由【{}】执行完成！", ContextUtil.getSessionUser());
+        service.synEmp();
+        return ResultDataUtil.success("执行成功");
     }
 }
