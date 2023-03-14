@@ -154,7 +154,7 @@ public class TodoList extends BaseFlowEntity implements Serializable {
      * 完成情况
      */
     @Column(name = "completion")
-    private String completion;
+    private Integer completion;
     /**
      * 最新进度说明
      */
