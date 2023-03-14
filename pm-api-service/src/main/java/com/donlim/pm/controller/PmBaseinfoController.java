@@ -200,6 +200,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             if(StringUtils.isEmpty(pmBaseinfoDto.getName())){
                 return ResultData.fail("项目名称为空，不能保存。");
             }
+            if(StringUtils.isEmpty(pmBaseinfoDto.getProjectTypes())){
+                return ResultData.fail("项目类型为空，不能保存。");
+            }
             if(StringUtils.isEmpty(pmBaseinfoDto.getLeader())){
                 return ResultData.fail("项目主导人为空，不能保存。");
             }
@@ -221,6 +224,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setStartDate(dto.getStartDate());
         pmBaseinfoDto.setPlanFinishDate(dto.getPlanFinishDate());
         pmBaseinfoDto.setFinalFinishDate(dto.getFinalFinishDate());
+        pmBaseinfoDto.setStatus(null != dto.getStatus() ? dto.getStatus() : "0");
         if(dto.getOrgname() != null){
             pmBaseinfoDto.setOrgname(dto.getOrgname());
             pmBaseinfoDto.setOrgcode(dto.getOrgcode());

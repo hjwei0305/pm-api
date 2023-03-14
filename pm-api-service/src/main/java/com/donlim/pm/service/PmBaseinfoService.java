@@ -173,51 +173,53 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
         List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
-            List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
-            for (IppProjectInfoDetails.TableDTO data : list) {
-                if (data.getDevelopWay().equals(IppConstant.UI)) {
-                    pmBaseinfo.setUiReview(true);
-                } else if (data.getDevelopWay().equals(IppConstant.REQUIRE_REVIEW)) {
-                    pmBaseinfo.setRequireReview(true);
-                } else if (data.getDevelopWay().equals(IppConstant.WEB_REVIEW)) {
-                    pmBaseinfo.setWebReview(true);
-                } else if (data.getDevelopWay().equals(IppConstant.CODE_REVIEW)) {
-                    pmBaseinfo.setCodeReview(true);
-                }
-            }
-            if(!pmBaseinfo.getTest()){
-                pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
-            }
-            if(pmBaseinfo.getStatus().equals("0")){
-                pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
-            }
-            pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
-            //计算主计划达成率
-            List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
-            int finishNum=0;
-            for (ProjectPlan projectPlan :planList){
-                if(projectPlan.getSchedureNo().equals("1")){
-                    if (projectPlan.getPlanEndDate() != null) {
-                        long daydiff = LocalDate.now().toEpochDay() - projectPlan.getPlanEndDate().toEpochDay();
-                        if (daydiff > 0) {
-                            pmBaseinfo.setIsOverdue(true);
-                            pmBaseinfo.setOveredDays(daydiff);
-                        } else {
-                            pmBaseinfo.setIsOverdue(false);
-                        }
+            if (null != pmBaseinfo.getCode()) {
+                List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
+                for (IppProjectInfoDetails.TableDTO data : list) {
+                    if (data.getDevelopWay().equals(IppConstant.UI)) {
+                        pmBaseinfo.setUiReview(true);
+                    } else if (data.getDevelopWay().equals(IppConstant.REQUIRE_REVIEW)) {
+                        pmBaseinfo.setRequireReview(true);
+                    } else if (data.getDevelopWay().equals(IppConstant.WEB_REVIEW)) {
+                        pmBaseinfo.setWebReview(true);
+                    } else if (data.getDevelopWay().equals(IppConstant.CODE_REVIEW)) {
+                        pmBaseinfo.setCodeReview(true);
                     }
                 }
-                if(projectPlan.getActualEndDate()!=null){
-                    finishNum++;
+                if (!pmBaseinfo.getTest()) {
+                    pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
                 }
+                if (pmBaseinfo.getStatus().equals("0")) {
+                    pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
+                }
+                pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
+                //计算主计划达成率
+                List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
+                int finishNum = 0;
+                for (ProjectPlan projectPlan : planList) {
+                    if (projectPlan.getSchedureNo().equals("1")) {
+                        if (projectPlan.getPlanEndDate() != null) {
+                            long daydiff = LocalDate.now().toEpochDay() - projectPlan.getPlanEndDate().toEpochDay();
+                            if (daydiff > 0) {
+                                pmBaseinfo.setIsOverdue(true);
+                                pmBaseinfo.setOveredDays(daydiff);
+                            } else {
+                                pmBaseinfo.setIsOverdue(false);
+                            }
+                        }
+                    }
+                    if (projectPlan.getActualEndDate() != null) {
+                        finishNum++;
+                    }
+                }
+                String scheduleRatePercent = "0%";
+                if (planList.size() > 0) {
+                    scheduleRatePercent = Math.round(finishNum * 100 / planList.size()) + "%";
+                }
+                pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
             }
-            String scheduleRatePercent="0%";
-            if(planList.size()>0){
-                scheduleRatePercent=  Math.round(finishNum*100/planList.size())+"%";
-            }
-            pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
+            save(pmBaseinfoList);
         }
-        save(pmBaseinfoList);
     }
     /**
      * 获取项目详细信息供进度图使用
