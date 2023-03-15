@@ -129,7 +129,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             List<PmBaseinfo>newRows=new ArrayList<>();
             ArrayList<PmBaseinfo> rows = byPage.getRows();
             for(PmBaseinfo pmBaseinfo :rows){
-                if(pmBaseinfo.getLeader().contains(ContextUtil.getUserName())||pmBaseinfo.getDesigner().contains(ContextUtil.getUserName())||pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName())||pmBaseinfo.getImplementer().contains(ContextUtil.getUserName())){
+                if(pmBaseinfo.getLeader().contains(ContextUtil.getUserName())
+                        ||pmBaseinfo.getAssist().contains(ContextUtil.getUserName())
+                        ||pmBaseinfo.getDesigner().contains(ContextUtil.getUserName())
+                        ||pmBaseinfo.getDeveloper().contains(ContextUtil.getUserName())
+                        ||pmBaseinfo.getImplementer().contains(ContextUtil.getUserName())){
                     newRows.add(pmBaseinfo);
                 }
             }
@@ -216,6 +220,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         pmBaseinfoDto.setProjectTypes(dto.getProjectTypes());
         pmBaseinfoDto.setCurrentPeriod(dto.getCurrentPeriod());
         pmBaseinfoDto.setLeader(dto.getLeader());
+        pmBaseinfoDto.setAssist(dto.getAssist());
         pmBaseinfoDto.setDesigner(dto.getDesigner());
         pmBaseinfoDto.setImplementer(dto.getImplementer());
         pmBaseinfoDto.setDeveloper(dto.getDeveloper());
@@ -238,7 +243,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             pmBaseinfoDto.setProjectDays(null);
         }
         String member="";
-        String memberStr=pmBaseinfoDto.getLeader()+","+pmBaseinfoDto.getDesigner()+","+pmBaseinfoDto.getDeveloper()+","+pmBaseinfoDto.getImplementer();
+        String memberStr=pmBaseinfoDto.getLeader()+","+pmBaseinfoDto.getAssist()+","+pmBaseinfoDto.getDesigner()
+                +","+pmBaseinfoDto.getDeveloper()+","+pmBaseinfoDto.getImplementer();
         //去重
         String[] members = memberStr.split(",");
         for(String str :members){
@@ -272,7 +278,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         List<PmBaseinfo> allProj = service.findAll();
         ArrayList<PmBaseinfo> newRows = new ArrayList<>();
         allProj.stream().forEach(info -> {
-            if (info.getLeader().contains(userName) || info.getDesigner().contains(userName) || info.getImplementer().contains(userName) || info.getDeveloper().contains(userName)) {
+            if (info.getLeader().contains(userName) || info.getAssist().contains(userName)|| info.getDesigner().contains(userName)
+                    || info.getImplementer().contains(userName) || info.getDeveloper().contains(userName)) {
                 if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                     String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                     info.setProjectTypes(enumItemRemark);

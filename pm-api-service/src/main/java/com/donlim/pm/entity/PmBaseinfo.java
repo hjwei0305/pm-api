@@ -287,6 +287,11 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     @Column(name = "leader")
     private String leader;
     /**
+     * 协助人
+     */
+    @Column(name = "assist")
+    private String assist;
+    /**
      *设计人员
      */
     @Column(name = "designer")
