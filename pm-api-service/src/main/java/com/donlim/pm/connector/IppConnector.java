@@ -11,7 +11,6 @@ import com.donlim.pm.webservice.ipp.SvcHdrType;
 import com.donlim.pm.webservice.ipp.SvcHdrsType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,9 +56,6 @@ public class IppConnector {
             if (ippProjectDto.getTable().size() > 0) {
                 for (IppProjectDto.TableDTO ipp : ippProjectDto.getTable()) {
                     PmBaseinfo pmBaseinfo=new PmBaseinfo();
-                    if((LocalDateTime.parse(ipp.getProjectDate()).plusYears(1).compareTo(LocalDateTime.now()) <= 0)){
-                        pmBaseinfo.setRemark("提案单已过期！请在项目提报系统进行核对（有效期为一年）");
-                    }
                     pmBaseinfo.setCode(ipp.getProposalID());
                     pmBaseinfo.setName(ipp.getProposalName());
                     pmBaseinfo.setSysName(ipp.getSystemName());
