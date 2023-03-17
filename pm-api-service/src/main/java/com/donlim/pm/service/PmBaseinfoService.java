@@ -3,6 +3,7 @@ package com.donlim.pm.service;
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
+import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -441,15 +442,20 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     /**获取个人的项目概况
      * @return
      */
-    public ProjectInfoDto getProjectInfo() {
+    public ProjectInfoDto getProjectInfo(Search search) {
         String userName= ContextUtil.getUserName();
         ProjectInfoDto projectInfoDto = new ProjectInfoDto();
+        //未开始数
         int notStartedNum = 0;
+        //进行中数
         int processingNum = 0;
+        //已上线数
         int onLineNum = 0;
+        //提前完成数
         int advanceFinishNum = 0;
+        //逾期数
         int overTimeNum = 0;
-        for (PmBaseinfo pmBaseinfo : dao.findAll()) {
+        for (PmBaseinfo pmBaseinfo : dao.findByFilters(search)) {
             if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate())&& pmBaseinfo.getStatus().equals("0")) {
                 notStartedNum++;
             }if(pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate() )&& pmBaseinfo.getStatus().equals("0")){

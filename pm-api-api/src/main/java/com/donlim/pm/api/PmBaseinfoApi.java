@@ -82,7 +82,7 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
      */
     @PostMapping(path = "getProjectInfo")
     @ApiOperation(value = "获取各阶段项目数量", notes = "获取各阶段项目数量")
-    ResultData getProjectInfo() throws IllegalAccessException;
+    ResultData getProjectInfo(@RequestBody Search search)throws IllegalAccessException;
 
     /**
      * 根据username查询自己的项目

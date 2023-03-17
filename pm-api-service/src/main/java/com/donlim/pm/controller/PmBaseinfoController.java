@@ -268,12 +268,12 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     }
 
     @Override
-    public ResultData getProjectInfo() throws IllegalAccessException {
-        return ResultData.success(service.getProjectInfo());
+    public ResultData getProjectInfo(Search search)  {
+        return ResultData.success(service.getProjectInfo(search));
     }
 
     @Override
-    public ResultData findPageByUserName() throws IllegalAccessException {
+    public ResultData findPageByUserName() {
         String userName = ContextUtil.getUserName();
         List<PmBaseinfo> allProj = service.findAll();
         ArrayList<PmBaseinfo> newRows = new ArrayList<>();
