@@ -515,7 +515,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getPlanFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
                 overTimeDay += Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays();
             }
-            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getPlanFinishDate() == null && pmBaseinfo.getPlanFinishDate().isBefore(LocalDate.now())){
+            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate().isBefore(LocalDate.now())){
                if( Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays()<7){
                    preOverTimeNum ++;
                }
