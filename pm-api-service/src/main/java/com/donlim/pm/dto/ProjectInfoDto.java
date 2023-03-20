@@ -18,9 +18,9 @@ public class ProjectInfoDto {
      */
     private Integer processingNum;
     /**
-     * 在线
+     * 总数
      */
-    private Integer onLineNum;
+    private Integer sumNum;
     /**
      * 提前完成
      */

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -460,6 +461,11 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
      * @return
      */
     public ProjectInfoDto getProjectInfo(Search search) {
+      //  List<SearchFilter> filters = search.getFilters();
+       // SearchFilter searchFilter = new SearchFilter("startDate","2023-01-01", SearchFilter.Operator.GE);
+
+       // filters.add(searchFilter);
+     //   search.setFilters(filters);
         String userName= ContextUtil.getUserName();
         ProjectInfoDto projectInfoDto = new ProjectInfoDto();
         //未开始数
@@ -472,13 +478,12 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         int advanceFinishNum = 0;
         //逾期数
         int overTimeNum = 0;
-        for (PmBaseinfo pmBaseinfo : dao.findByFilters(search)) {
+        List<PmBaseinfo> PmBaseinfoList = dao.findByFilters(search);
+        for (PmBaseinfo pmBaseinfo :PmBaseinfoList) {
             if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate())&& pmBaseinfo.getStatus().equals("0")) {
                 notStartedNum++;
             }if(pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate() )&& pmBaseinfo.getStatus().equals("0")){
                 processingNum++;
-            }if(StringUtils.isNotBlank(pmBaseinfo.getSopDocId()) && pmBaseinfo.getStartDate() != null && pmBaseinfo.getStartDate().getYear()==LocalDate.now().getYear()){
-                onLineNum++;
             }if(pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isBefore(pmBaseinfo.getPlanFinishDate())){
                 advanceFinishNum++;
             }
@@ -490,7 +495,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         }
         projectInfoDto.setNotStartedNum(notStartedNum);
         projectInfoDto.setProcessingNum(processingNum);
-        projectInfoDto.setOnLineNum(onLineNum);
+        projectInfoDto.setSumNum(PmBaseinfoList.size());
         projectInfoDto.setAdvanceFinishNum(advanceFinishNum);
         projectInfoDto.setOverTimeNum(overTimeNum);
         return projectInfoDto;
