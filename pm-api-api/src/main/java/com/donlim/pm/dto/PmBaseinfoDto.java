@@ -84,6 +84,11 @@ public class PmBaseinfoDto extends BaseEntityDto {
     @ApiModelProperty(value = "实际结案日期")
     private LocalDate finalFinishDate;
     /**
+     * 日期是否改过
+     */
+    @ApiModelProperty(value = "日期是否改过")
+    private Boolean dateModified;
+    /**
      * 项目天数
      */
     @ApiModelProperty(value = "项目天数")

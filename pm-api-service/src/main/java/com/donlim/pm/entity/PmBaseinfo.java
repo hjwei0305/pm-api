@@ -80,6 +80,11 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     @Column(name = "final_finish_date")
     private LocalDate finalFinishDate;
     /**
+     * 日期是否改过
+     */
+    @Column(name = "date_modified")
+    private Boolean dateModified;
+    /**
      * 项目天数
      */
     @Column(name = "project_days")
