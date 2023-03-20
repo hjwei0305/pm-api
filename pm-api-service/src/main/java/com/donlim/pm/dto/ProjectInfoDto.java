@@ -26,9 +26,13 @@ public class ProjectInfoDto {
      */
     private Integer advanceFinishNum;
     /**
-     * 逾期
+     * 逾期项目数
      */
     private Integer overTimeNum;
+    /**
+     * 即将逾期项目数
+     */
+    private Integer preOverTimeNum;
     /**
      * 科室人数
      */
@@ -38,7 +42,7 @@ public class ProjectInfoDto {
      */
     private Integer advanceDay;
     /**
-     *
+     *逾期天数
      */
     private Integer overTimeDay;
 

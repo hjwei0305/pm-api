@@ -486,6 +486,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         int advanceDay = 0;
         //逾期天数
         int overTimeDay=0;
+        //即将逾期项目数
+        int preOverTimeNum=0;
         List<PmBaseinfo> PmBaseinfoList = dao.findByFilters(search);
         for (PmBaseinfo pmBaseinfo : PmBaseinfoList) {
             if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate()) && pmBaseinfo.getStatus().equals("0")) {
@@ -513,6 +515,12 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getPlanFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
                 overTimeDay += Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays();
             }
+            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getPlanFinishDate() == null && pmBaseinfo.getPlanFinishDate().isBefore(LocalDate.now())){
+               if( Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays()<7){
+                   preOverTimeNum ++;
+               }
+            }
+
 
         }
         projectInfoDto.setNotStartedNum(notStartedNum);
@@ -522,6 +530,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         projectInfoDto.setOverTimeNum(overTimeNum);
         projectInfoDto.setAdvanceDay(advanceDay);
         projectInfoDto.setOverTimeDay(overTimeDay);
+        projectInfoDto.setPreOverTimeNum(preOverTimeNum);
         return projectInfoDto;
     }
 
