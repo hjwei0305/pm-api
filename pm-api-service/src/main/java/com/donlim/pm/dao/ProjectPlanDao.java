@@ -34,6 +34,14 @@ public interface ProjectPlanDao extends BaseEntityDao<ProjectPlan> {
     List<ProjectPlan> getAllByProjectIdAndPlanType(String ProjectId, String planType);
 
     /**
+     * 获取计划列表不包含某类型
+     * @param ProjectId 项目ID
+     * @param planType 计划类型
+     * @return
+     */
+    List<ProjectPlan> getAllByProjectIdAndPlanTypeNot(String ProjectId, String planType);
+
+    /**
      * 取出所有主计划的第N项
      * @param planType
      * @param schedureNo

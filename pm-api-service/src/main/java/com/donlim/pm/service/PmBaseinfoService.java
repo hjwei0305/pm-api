@@ -32,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -121,15 +122,15 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if (byId.isPresent()) {
                 for (com.changhong.sei.util.EnumUtils.EnumEntity enumEntity : enumDataList) {
                     String fieldName = enumEntity.getName().substring(0, 1).toLowerCase() + enumEntity.getName().substring(1) + "Id";
-                    if(!ObjectUtils.isEmpty(ReflectUtils.getFieldValue(byId.get(), fieldName)) &&
-                            !dto.getAttachmentIdList().contains(ReflectUtils.getFieldValue(byId.get(), fieldName))){
+                    if (!ObjectUtils.isEmpty(ReflectUtils.getFieldValue(byId.get(), fieldName)) &&
+                            !dto.getAttachmentIdList().contains(ReflectUtils.getFieldValue(byId.get(), fieldName))) {
                         ReflectUtils.setFieldValue(byId.get(), fieldName, null);
                     }
                 }
                 documentManager.bindBusinessDocuments(dto.getId(), dto.getAttachmentIdList());
                 save(byId.get());
             }
-        }else if(!StringUtils.isEmpty(dto.getId()) && CollectionUtils.isEmpty(dto.getAttachmentIdList())){
+        } else if (!StringUtils.isEmpty(dto.getId()) && CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
             // 附件list为空，清空绑定
             documentManager.deleteBusinessInfos(dto.getId());
             // 清除附件绑定
@@ -200,17 +201,17 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 int finishNum = 0;
                 // 是否逾期
                 long daydiff = 0;
-                if(ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())){
+                if (ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())) {
                     // 实际结案日期空， 当天 > 计划结案
                     daydiff = LocalDate.now().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
                 } else {
                     // 实际结案 > 计划结案
                     daydiff = pmBaseinfo.getFinalFinishDate().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
                 }
-                if(daydiff > 0){
+                if (daydiff > 0) {
                     pmBaseinfo.setIsOverdue(true);
                     pmBaseinfo.setOveredDays(daydiff);
-                }else {
+                } else {
                     pmBaseinfo.setIsOverdue(false);
                     pmBaseinfo.setOveredDays(0L);
                 }
@@ -240,6 +241,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             save(pmBaseinfoList);
         }
     }
+
     /**
      * 获取项目详细信息供进度图使用
      *
@@ -457,16 +459,18 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         return null;
     }
 
-    /**获取个人的项目概况
+    /**
+     * 获取个人的项目概况
+     *
      * @return
      */
     public ProjectInfoDto getProjectInfo(Search search) {
-      //  List<SearchFilter> filters = search.getFilters();
-       // SearchFilter searchFilter = new SearchFilter("startDate","2023-01-01", SearchFilter.Operator.GE);
+        //  List<SearchFilter> filters = search.getFilters();
+        // SearchFilter searchFilter = new SearchFilter("startDate","2023-01-01", SearchFilter.Operator.GE);
 
-       // filters.add(searchFilter);
-     //   search.setFilters(filters);
-        String userName= ContextUtil.getUserName();
+        // filters.add(searchFilter);
+        //   search.setFilters(filters);
+        String userName = ContextUtil.getUserName();
         ProjectInfoDto projectInfoDto = new ProjectInfoDto();
         //未开始数
         int notStartedNum = 0;
@@ -478,31 +482,51 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         int advanceFinishNum = 0;
         //逾期数
         int overTimeNum = 0;
+        //提前天数
+        int advanceDay = 0;
+        //逾期天数
+        int overTimeDay=0;
         List<PmBaseinfo> PmBaseinfoList = dao.findByFilters(search);
-        for (PmBaseinfo pmBaseinfo :PmBaseinfoList) {
-            if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate())&& pmBaseinfo.getStatus().equals("0")) {
+        for (PmBaseinfo pmBaseinfo : PmBaseinfoList) {
+            if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate()) && pmBaseinfo.getStatus().equals("0")) {
                 notStartedNum++;
-            }if(pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate() )&& pmBaseinfo.getStatus().equals("0")){
+            }
+            if (pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate()) && pmBaseinfo.getStatus().equals("0")) {
                 processingNum++;
-            }if(pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isBefore(pmBaseinfo.getPlanFinishDate())){
+            }
+            if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isBefore(pmBaseinfo.getPlanFinishDate())) {
                 advanceFinishNum++;
             }
-            if(pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
+            if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())) {
                 overTimeNum++;
-            }else if (pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate() != null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
+            } else if (pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate() != null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())) {
                 overTimeNum++;
             }
+            if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
+                if(pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
+                    overTimeDay+=Period.between(pmBaseinfo.getPlanFinishDate(), pmBaseinfo.getFinalFinishDate()).getDays();
+                }else{
+                    advanceDay += Period.between(pmBaseinfo.getFinalFinishDate(), pmBaseinfo.getPlanFinishDate()).getDays();
+                }
+
+            }
+            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getPlanFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
+                overTimeDay += Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays();
+            }
+
         }
         projectInfoDto.setNotStartedNum(notStartedNum);
         projectInfoDto.setProcessingNum(processingNum);
         projectInfoDto.setSumNum(PmBaseinfoList.size());
         projectInfoDto.setAdvanceFinishNum(advanceFinishNum);
         projectInfoDto.setOverTimeNum(overTimeNum);
+        projectInfoDto.setAdvanceDay(advanceDay);
+        projectInfoDto.setOverTimeDay(overTimeDay);
         return projectInfoDto;
     }
 
-    private  String CurrentPeriod(PmBaseinfo pmBaseinfo){
-        String currentPeriod="未开始";
+    private String CurrentPeriod(PmBaseinfo pmBaseinfo) {
+        String currentPeriod = "未开始";
         findByIdForSchedule(pmBaseinfo.getId());
         // 1、验收阶段
         if (null != pmBaseinfo.getStatus() && pmBaseinfo.getStatus().equals("1")) {
