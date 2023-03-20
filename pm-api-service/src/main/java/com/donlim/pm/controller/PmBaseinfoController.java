@@ -208,18 +208,18 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         } else {
             pmBaseinfoDto = dto;
             pmBaseinfoDto.setId(null);
-            if(StringUtils.isEmpty(pmBaseinfoDto.getName())){
-                return ResultData.fail("项目名称为空，不能保存。");
-            }
-            if(StringUtils.isEmpty(pmBaseinfoDto.getProjectTypes())){
-                return ResultData.fail("项目类型为空，不能保存。");
-            }
-            if(StringUtils.isEmpty(pmBaseinfoDto.getLeader())){
-                return ResultData.fail("项目主导人为空，不能保存。");
-            }
-            if(StringUtils.isEmpty(pmBaseinfoDto.getSysName())){
-                return ResultData.fail("系统名称为空，不能保存。");
-            }
+        }
+        if(StringUtils.isEmpty(pmBaseinfoDto.getName())){
+            return ResultData.fail("项目名称为空，不能保存。");
+        }
+        if(StringUtils.isEmpty(pmBaseinfoDto.getProjectTypes())){
+            return ResultData.fail("项目类型为空，不能保存。");
+        }
+        if(StringUtils.isEmpty(pmBaseinfoDto.getLeader())){
+            return ResultData.fail("项目主导人为空，不能保存。");
+        }
+        if(StringUtils.isEmpty(pmBaseinfoDto.getSysName())){
+            return ResultData.fail("系统名称为空，不能保存。");
         }
         if(dto.getStartDate() == null || dto.getPlanFinishDate() == null){
             return ResultData.fail("项目开始或计划结案日期为空，不能保存。");
