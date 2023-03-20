@@ -63,6 +63,11 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
     public ResultData<String> saveBatch(List<ProjectPlanDto> projectPlanDtos) {
         List<ProjectPlanDto> projectPlanDtosNew = new ArrayList<>();
         if (projectPlanDtos.size() > 0) {
+            // 判断主要任务/关键步骤>=5字符
+            ResultData resultData = service.limtWorkTodoList(projectPlanDtos);
+            if(Optional.ofNullable(resultData).isPresent()){
+                return resultData;
+            }
             // 序号排序
             projectPlanDtosNew = service.sortNo(projectPlanDtos);
 

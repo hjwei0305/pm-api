@@ -2,6 +2,7 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
+import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.ColsAndSearch;
 import com.donlim.pm.dao.ProjectPlanDao;
@@ -183,6 +184,24 @@ public class ProjectPlanService extends BaseEntityService<ProjectPlan> {
             result.add(row);
         }
         return result;
+    }
+
+    /**
+     * 判断主要任务/关键步骤>=5字符
+     * @param projectPlanDtos
+     * @return
+     */
+    public ResultData limtWorkTodoList(List<ProjectPlanDto> projectPlanDtos) {
+        String errSchedureNo = "";
+        List<ProjectPlanDto> errList = projectPlanDtos.stream()
+                .filter(p -> null == p.getWorkTodoList() || p.getWorkTodoList().length() < 5).collect(Collectors.toList());
+        for (ProjectPlanDto err : errList) {
+            errSchedureNo += err.getSchedureNo() + ",";
+        }
+        if(!"".equals(errSchedureNo)){
+            return ResultData.fail("序号："+ errSchedureNo.substring(0,errSchedureNo.length() - 1) +"，主要任务/关键步骤不可低于5个字符！！！");
+        }
+        return null;
     }
 
 }
