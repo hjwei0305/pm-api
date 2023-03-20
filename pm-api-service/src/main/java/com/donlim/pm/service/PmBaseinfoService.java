@@ -198,18 +198,35 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 //计算主计划达成率
                 List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
                 int finishNum = 0;
+                // 是否逾期
+                long daydiff = 0;
+                if(ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())){
+                    // 实际结案日期空， 当天 > 计划结案
+                    daydiff = LocalDate.now().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                } else {
+                    // 实际结案 > 计划结案
+                    daydiff = pmBaseinfo.getFinalFinishDate().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                }
+                if(daydiff > 0){
+                    pmBaseinfo.setIsOverdue(true);
+                    pmBaseinfo.setOveredDays(daydiff);
+                }else {
+                    pmBaseinfo.setIsOverdue(false);
+                    pmBaseinfo.setOveredDays(0L);
+                }
                 for (ProjectPlan projectPlan : planList) {
-                    if (projectPlan.getSchedureNo().equals("1")) {
-                        if (projectPlan.getPlanEndDate() != null) {
-                            long daydiff = LocalDate.now().toEpochDay() - projectPlan.getPlanEndDate().toEpochDay();
-                            if (daydiff > 0) {
-                                pmBaseinfo.setIsOverdue(true);
-                                pmBaseinfo.setOveredDays(daydiff);
-                            } else {
-                                pmBaseinfo.setIsOverdue(false);
-                            }
-                        }
-                    }
+                    // 按主计划序号1计算是否逾期
+//                    if (projectPlan.getSchedureNo().equals("1")) {
+//                        if (projectPlan.getPlanEndDate() != null) {
+//                            long daydiff = LocalDate.now().toEpochDay() - projectPlan.getPlanEndDate().toEpochDay();
+//                            if (daydiff > 0) {
+//                                pmBaseinfo.setIsOverdue(true);
+//                                pmBaseinfo.setOveredDays(daydiff);
+//                            } else {
+//                                pmBaseinfo.setIsOverdue(false);
+//                            }
+//                        }
+//                    }
                     if (projectPlan.getActualEndDate() != null) {
                         finishNum++;
                     }
