@@ -461,7 +461,7 @@ public class IppProjectDto {
         /**
          * hardwareNeedDescription
          */
-        @JsonProperty("hardwareNeedDescription")
+        @JsonProperty("HardwareNeedDescription")
         private String hardwareNeedDescription;
         /**
          * isOnlyImplement
