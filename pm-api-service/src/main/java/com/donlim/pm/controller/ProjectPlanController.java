@@ -10,6 +10,7 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.ProjectPlanApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProjectPlanDto;
+import com.donlim.pm.dto.excel.ProjectPlanExcelDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
@@ -18,14 +19,18 @@ import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.service.ProjectPlanService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 项目计划表(ProjectPlan)控制类
@@ -46,6 +51,8 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
     private PmLogService pmLogService;
     @Autowired
     private PmBaseinfoService pmBaseinfoService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public BaseEntityService<ProjectPlan> getService() {
@@ -128,22 +135,12 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
         return ResultData.success();
     }
 
-//    @Override
-//    public void export(ColsAndSearch search, HttpServletResponse response) throws IOException {
-//        try {
-//            response.setContentType("application/octet-stream;charset=UTF-8");
-//            response.setCharacterEncoding("utf-8");
-//            String fileName = URLEncoder.encode("计划表", "utf-8").replace("\\+", "%20");
-//            response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-//            List<List<Object>> exportData = service.findByFiltersForExport(search, search.getCols());
-//            List<List<String>> exportHeader = ColumnUtils.easyExcelHeaderWithDynamicColsGenerator(new String[]{
-//                    "任务类型", "主要任务/关键步骤", "计划开始日期", "计划完成日期", "实际开始日期", "实际完成日期", "实际天数", "开发状态", "执行人", "协助人", "备注"
-//            }, search.getCols());
-//            EasyExcel.write(response.getOutputStream()).head(exportHeader).autoCloseStream(false).sheet("sheet1").doWrite(exportData);
-//        }catch (Exception e){
-//            response.reset();
-//            response.setCharacterEncoding("utf-8");
-//            response.getWriter().println(JSON.toJSONString(ResultData.fail("导出Excel失败,"+e.getMessage())));
-//        }
-//    }
+    @Override
+    public ResultData<List<ProjectPlanExcelDto>> export(Search search) {
+        List<ProjectPlan> planList = service.findByFilters(search).stream().sorted(Comparator.comparing(ProjectPlan::getOrderNo)).collect(Collectors.toList());
+        TypeMap<ProjectPlan, ProjectPlanExcelDto> typeMap = modelMapper.typeMap(ProjectPlan.class, ProjectPlanExcelDto.class);
+        List<ProjectPlanExcelDto> collect = planList.stream().map(typeMap::map).collect(Collectors.toList());
+        return ResultData.success(collect);
+    }
+
 }

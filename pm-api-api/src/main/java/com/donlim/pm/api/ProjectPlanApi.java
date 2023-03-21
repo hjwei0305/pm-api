@@ -3,7 +3,9 @@ package com.donlim.pm.api;
 import com.changhong.sei.core.api.BaseEntityApi;
 import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.ProjectPlanDto;
+import com.donlim.pm.dto.excel.ProjectPlanExcelDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -38,9 +40,10 @@ public interface ProjectPlanApi extends BaseEntityApi<ProjectPlanDto>, FindByPag
     ResultData<String> uploadMasterPlan(@RequestBody List<ProjectPlanDto> list) throws Exception;
 
     /**
-     * 导出
-//     */
-//    @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ApiOperation(value = "导出excel",notes = "导出excel")
-//    void export(@RequestBody ColsAndSearch search, HttpServletResponse response) throws IOException;
+     * 计划表导出excel
+     * @param search 查询条件
+     */
+    @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "计划表导出excel" ,notes = "计划表导出excel")
+    ResultData<List<ProjectPlanExcelDto>> export(@RequestBody Search search);
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.dto.serach.Search;
-import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -201,12 +200,14 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 int finishNum = 0;
                 // 是否逾期
                 long daydiff = 0;
-                if (ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())) {
-                    // 实际结案日期空， 当天 > 计划结案
-                    daydiff = LocalDate.now().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
-                } else {
-                    // 实际结案 > 计划结案
-                    daydiff = pmBaseinfo.getFinalFinishDate().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                if(!ObjectUtils.isEmpty(pmBaseinfo.getPlanFinishDate())){
+                    if (ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())) {
+                        // 实际结案日期空， 当天 > 计划结案
+                        daydiff = LocalDate.now().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                    } else {
+                        // 实际结案 > 计划结案
+                        daydiff = pmBaseinfo.getFinalFinishDate().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                    }
                 }
                 if (daydiff > 0) {
                     pmBaseinfo.setIsOverdue(true);
