@@ -7,11 +7,13 @@ import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.service.BaseEntityService;
+import com.changhong.sei.util.EnumUtils;
 import com.donlim.pm.api.ProjectPlanApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProjectPlanDto;
 import com.donlim.pm.dto.excel.ProjectPlanExcelDto;
 import com.donlim.pm.em.LogType;
+import com.donlim.pm.em.SchedureStatus;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.service.PmBaseinfoService;
@@ -26,10 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -140,6 +139,11 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
         List<ProjectPlan> planList = service.findByFilters(search).stream().sorted(Comparator.comparing(ProjectPlan::getOrderNo)).collect(Collectors.toList());
         TypeMap<ProjectPlan, ProjectPlanExcelDto> typeMap = modelMapper.typeMap(ProjectPlan.class, ProjectPlanExcelDto.class);
         List<ProjectPlanExcelDto> collect = planList.stream().map(typeMap::map).collect(Collectors.toList());
+        collect.stream().forEach(c ->{
+            if(Objects.nonNull(c.getSchedureStatus())){
+                c.setSchedureStatus(EnumUtils.getEnumItemRemark(SchedureStatus.class,EnumUtils.getEnum(SchedureStatus.class,c.getSchedureStatus())));
+            }
+        });
         return ResultData.success(collect);
     }
 
