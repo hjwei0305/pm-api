@@ -331,4 +331,24 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "member")
     private String member;
+    /**
+     * 本周计划
+     */
+    @Column(name = "week_plan")
+    private String weekPlan;
+    /**
+     * 下周计划
+     */
+    @Column(name = "next_week_plan")
+    private String nextWeekPlan;
+    /**
+     * 工作风险
+     */
+    @Column(name = "work_risk")
+    private String workRisk;
+    /**
+     * 双周计划更新时间
+     */
+    @Column(name = "week_plan_update")
+    private LocalDate weekPlanUpdate;
 }

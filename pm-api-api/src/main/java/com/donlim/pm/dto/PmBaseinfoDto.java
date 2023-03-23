@@ -329,7 +329,12 @@ public class PmBaseinfoDto extends BaseEntityDto {
     private String proOpt;
     @ApiModelProperty(value = "项目成员")
     private String member;
-
-
-
+    @ApiModelProperty(value = "本周计划")
+    private String weekPlan;
+    @ApiModelProperty(value = "下周计划")
+    private String nextWeekPlan;
+    @ApiModelProperty(value = "工作风险")
+    private String workRisk;
+    @ApiModelProperty(value = "双周计划更新时间")
+    private LocalDate weekPlanUpdate;
 }

@@ -6,7 +6,6 @@ import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
-import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.dto.serach.SearchOrder;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +71,6 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
-
         //非管理员只显示自己的项目
         boolean isAdmin=false;
       /*  ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
@@ -241,6 +238,18 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         } else {
             pmBaseinfoDto = dto;
             pmBaseinfoDto.setId(null);
+        }
+        if(pmBaseinfoDto.getWeekPlanUpdate().compareTo(LocalDate.now()) >= 0){
+            if(StringUtils.isBlank(pmBaseinfoDto.getWeekPlan()) || pmBaseinfoDto.getWeekPlan().length() <5){
+                return ResultData.fail("本周计划字数不能少于5个。");
+            }
+            if(StringUtils.isBlank(pmBaseinfoDto.getNextWeekPlan()) ||pmBaseinfoDto.getNextWeekPlan().length() <5){
+                return ResultData.fail("下周计划字数不能少于5个。");
+            }
+            if(StringUtils.isBlank(pmBaseinfoDto.getWorkRisk())){
+                return ResultData.fail("工作风险点不能为空。");
+            }
+            pmLogService.save(LogType.ModifyWeekPlan,pmBaseinfoDto);
         }
         if(StringUtils.isEmpty(pmBaseinfoDto.getName())){
             return ResultData.fail("项目名称为空，不能保存。");
