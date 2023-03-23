@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -468,7 +469,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public ProjectInfoDto getProjectInfo(Search search) {
         //  List<SearchFilter> filters = search.getFilters();
         // SearchFilter searchFilter = new SearchFilter("startDate","2023-01-01", SearchFilter.Operator.GE);
-
+      //  search.addFilter(new SearchFilter("orgname","运营策略科", SearchFilter.Operator.EQ));
         // filters.add(searchFilter);
         //   search.setFilters(filters);
         String userName = ContextUtil.getUserName();
@@ -508,15 +509,15 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
                 if(pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
                     if(LocalDate.now().isAfter(pmBaseinfo.getFinalFinishDate())){
-                        overTimeDay =pmBaseinfo.getFinalFinishDate().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+                        overTimeDay +=pmBaseinfo.getFinalFinishDate().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
                     }
                 }else{
-                    advanceDay =pmBaseinfo.getPlanFinishDate().toEpochDay()- pmBaseinfo.getFinalFinishDate().toEpochDay();
+                    advanceDay+=pmBaseinfo.getPlanFinishDate().toEpochDay()- pmBaseinfo.getFinalFinishDate().toEpochDay();
                 }
 
             }
             if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
-                overTimeDay =LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+                overTimeDay +=LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
             }
             if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate().isBefore(LocalDate.now())){
                if(pmBaseinfo.getPlanFinishDate().toEpochDay()-LocalDate.now().toEpochDay()<7){

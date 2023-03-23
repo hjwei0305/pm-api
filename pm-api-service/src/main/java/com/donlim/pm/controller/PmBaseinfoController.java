@@ -6,6 +6,7 @@ import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.dto.serach.SearchOrder;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
@@ -72,6 +73,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
     @Override
     public ResultData<PageResult<PmBaseinfoDto>> findByPage(Search search) {
+
         //非管理员只显示自己的项目
         boolean isAdmin=false;
       /*  ResultData<List<FeatureRoleDto>> featureRolesByAccount = userApi.getFeatureRolesByAccount(ContextUtil.getUserAccount());
@@ -93,6 +95,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         List<SearchOrder>searchOrderList=new ArrayList<>();
         searchOrderList.add(searchOrder);
         search.setSortOrders(searchOrderList);
+      //  search.addFilter(new SearchFilter("orgname","运营策略科", SearchFilter.Operator.EQ));
         PageResult<PmBaseinfo> byPage = service.findByPage(search);
         byPage.getRows().stream().forEach(info -> {
             long overTimeDay=0;
