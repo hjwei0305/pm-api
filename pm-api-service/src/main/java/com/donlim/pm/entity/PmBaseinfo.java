@@ -100,6 +100,16 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     @Column(name = "overed_days")
     private Long overedDays;
     /**
+     * 是否提前
+     */
+    @Column(name = "is_advance")
+    private Boolean isAdvance;
+    /**
+     * 逾期天数
+     */
+    @Column(name = "advance_days")
+    private Long advanceDays;
+    /**
      * 参与人数
      */
     @Column(name = "attendance_memberr_count")

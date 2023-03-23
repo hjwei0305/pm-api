@@ -199,7 +199,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
                 int finishNum = 0;
                 // 是否逾期
-                long daydiff = 0;
+         /*       long daydiff = 0;
                 if(!ObjectUtils.isEmpty(pmBaseinfo.getPlanFinishDate())){
                     if (ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())) {
                         // 实际结案日期空， 当天 > 计划结案
@@ -215,7 +215,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 } else {
                     pmBaseinfo.setIsOverdue(false);
                     pmBaseinfo.setOveredDays(0L);
-                }
+                }*/
                 for (ProjectPlan projectPlan : planList) {
                     // 按主计划序号1计算是否逾期
 //                    if (projectPlan.getSchedureNo().equals("1")) {
@@ -484,9 +484,9 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         //逾期数
         int overTimeNum = 0;
         //提前天数
-        int advanceDay = 0;
+        long advanceDay = 0;
         //逾期天数
-        int overTimeDay=0;
+        long overTimeDay=0;
         //即将逾期项目数
         int preOverTimeNum=0;
         List<PmBaseinfo> PmBaseinfoList = dao.findByFilters(search);
@@ -507,17 +507,19 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
             if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
                 if(pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
-                    overTimeDay+=Period.between(pmBaseinfo.getPlanFinishDate(), pmBaseinfo.getFinalFinishDate()).getDays();
+                    if(LocalDate.now().isAfter(pmBaseinfo.getFinalFinishDate())){
+                        overTimeDay =pmBaseinfo.getFinalFinishDate().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+                    }
                 }else{
-                    advanceDay += Period.between(pmBaseinfo.getFinalFinishDate(), pmBaseinfo.getPlanFinishDate()).getDays();
+                    advanceDay =pmBaseinfo.getPlanFinishDate().toEpochDay()- pmBaseinfo.getFinalFinishDate().toEpochDay();
                 }
 
             }
-            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getPlanFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
-                overTimeDay += Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays();
+            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
+                overTimeDay =LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
             }
             if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate().isBefore(LocalDate.now())){
-               if( Period.between(pmBaseinfo.getPlanFinishDate(), LocalDate.now()).getDays()<7){
+               if(pmBaseinfo.getPlanFinishDate().toEpochDay()-LocalDate.now().toEpochDay()<7){
                    preOverTimeNum ++;
                }
             }

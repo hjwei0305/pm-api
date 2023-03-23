@@ -40,11 +40,11 @@ public class ProjectInfoDto {
     /**
      * 提前天数
      */
-    private Integer advanceDay;
+    private long advanceDay;
     /**
      *逾期天数
      */
-    private Integer overTimeDay;
+    private long overTimeDay;
 
 
 

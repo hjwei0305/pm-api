@@ -103,6 +103,17 @@ public class PmBaseinfoDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "逾期天数")
     private Integer overedDays;
+
+    /**
+     * 是否提前
+     */
+    @ApiModelProperty(value = "是否提前")
+    private Boolean isAdvance;
+    /**
+     * 提前天数
+     */
+    @ApiModelProperty(value = "提前天数")
+    private Long advanceDays;
     /**
      * 参与人数
      */
