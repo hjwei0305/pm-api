@@ -30,6 +30,7 @@ import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -239,7 +240,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             pmBaseinfoDto = dto;
             pmBaseinfoDto.setId(null);
         }
-        if(pmBaseinfoDto.getWeekPlanUpdate().compareTo(LocalDate.now()) >= 0){
+        if(!ObjectUtils.isEmpty(pmBaseinfoDto.getWeekPlanUpdate()) && pmBaseinfoDto.getWeekPlanUpdate().compareTo(LocalDate.now()) >= 0){
             if(StringUtils.isBlank(pmBaseinfoDto.getWeekPlan()) || pmBaseinfoDto.getWeekPlan().length() <5){
                 return ResultData.fail("本周计划字数不能少于5个。");
             }
