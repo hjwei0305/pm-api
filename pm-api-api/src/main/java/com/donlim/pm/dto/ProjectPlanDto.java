@@ -21,9 +21,9 @@ public class ProjectPlanDto extends BaseEntityDto {
     @ApiModelProperty(value = "项目ID")
     private String projectId;
     /**
-     * 计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划)
+     * 计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划，4:UI计划)
      */
-    @ApiModelProperty(value = "计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划)")
+    @ApiModelProperty(value = "计划类型(0:主计划，1:前端计划，2:后端计划，3:实施计划，4:UI计划)")
     private String planType;
     /**
      * 项目编码

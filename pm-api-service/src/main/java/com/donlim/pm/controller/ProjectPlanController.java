@@ -115,6 +115,8 @@ public class ProjectPlanController extends BaseEntityController<ProjectPlan, Pro
                 pmLogService.save(LogType.ModifyFrontPlan,pmBaseinfoDto);
             } else if (pmBaseinfo.getImplementer().contains(ContextUtil.getUserName()) && planType.equals("3")) {
                 pmLogService.save(LogType.ModifyImplPlan,pmBaseinfoDto);
+            }else if (pmBaseinfo.getDesigner().contains(ContextUtil.getUserName()) && planType.equals("4")) {
+                pmLogService.save(LogType.ModifyUIPlan,pmBaseinfoDto);
             }else{
                 return ResultData.fail("当前用户["+ContextUtil.getUserName()+"],你没有权限操作，请联系项目负责人添加！！！");
             }

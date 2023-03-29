@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.dto.serach.Search;
-import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -32,7 +31,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +74,10 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
      * 实施计划
      */
     private static final String PROJECT_IMPL_PLAN = "3";
+    /**
+     * UI计划
+     */
+    private static final String UI_PLAN = "4";
 
     /**
      * 绑定上传附件关系

@@ -18,6 +18,8 @@ public enum  LogType {
     ModifyCodePlan,
     @Remark("修改实施计划")
     ModifyImplPlan,
+    @Remark("修改UI计划")
+    ModifyUIPlan,
     @Remark("修改双周计划")
     ModifyWeekPlan
 

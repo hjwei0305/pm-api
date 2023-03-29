@@ -143,6 +143,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                             break;
                         case 3: progress += "实施计划：";
                             break;
+                        case 4: progress += "UI计划：";
+                            break;
                     }
                     int index = 1;
                     for (ProjectPlan projectPlan : entry.getValue()) {
@@ -362,6 +364,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                     case 2: progress += "后端计划：";
                         break;
                     case 3: progress += "实施计划：";
+                        break;
+                    case 4: progress += "UI计划：";
                         break;
                 }
                 int index = 1;
