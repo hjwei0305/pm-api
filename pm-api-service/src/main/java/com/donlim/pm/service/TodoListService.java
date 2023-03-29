@@ -135,11 +135,6 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
         TypeMap<TodoList, TodoListExcelDto> typeMap = dtoModelMapper.typeMap(TodoList.class, TodoListExcelDto.class);
         List<TodoListExcelDto> collect = allOrders.stream().map(typeMap::map).collect(Collectors.toList());
         collect.stream().forEach(c ->{
-            if(Objects.nonNull(c.getOndutyName())){
-                c.setOndutyName1(c.getOndutyName());
-            }
-        });
-        collect.stream().forEach(c ->{
             if(Objects.nonNull(c.getFlowStatus())){
                 if(c.getFlowStatus().equals("INIT")){
                     c.setFlowStatus("起草");

@@ -12,79 +12,47 @@ import java.time.LocalDate;
  */
 public class TodoListExcelDto {
     private static final long serialVersionUID = -47355896084772616L;
+    @ApiModelProperty(value = "待办事项")
+    private String todoList;
+    @ApiModelProperty(value = "责任人")
+    private String ondutyName;
+    @ApiModelProperty(value = "科室")
+    private String orgname;
+    @ApiModelProperty(value = "要求完成日期")
+    private LocalDate completionDate;
+    @ApiModelProperty(value = "结案状态")
+    private String closingStatus;
+    @ApiModelProperty(value = "最新确认时间")
+    private LocalDate confir1Time;
+    @ApiModelProperty(value = "最新进度说明")
+    private String newestProgress;
+    @ApiModelProperty(value = "建议状态")
+    private String proposalStatus;
+    @ApiModelProperty(value = "完成比率")
+    private String completion;
+    @ApiModelProperty(value = "验证人")
+    private String confirmedby2;
+    @ApiModelProperty(value = "验证时间")
+    private LocalDate confirmationTime;
+    @ApiModelProperty(value = "逾期天数")
+    private String overedDays;
+    @ApiModelProperty(value = "单据状态")
+    private String flowStatus;
+    @ApiModelProperty(value = "备注")
+    private String remark;
     @ApiModelProperty(value = "提出人")
     private String advisor;
     @ApiModelProperty(value = "提出日期")
     private LocalDate submitDate;
-
     @ApiModelProperty(value = "起草人")
     private String submitName;
-
-    @ApiModelProperty(value = "待办事项")
-    private String todoList;
-
-    @ApiModelProperty(value = "责任人")
-    private String ondutyName;
-
-    @ApiModelProperty(value = "科室")
-    private String orgname;
-
     @ApiModelProperty(value = "协助人")
     private String assistName;
-
     @ApiModelProperty(value = "协助人科室")
     private String assistOrgname;
 
-    @ApiModelProperty(value = "要求完成日期")
-    private LocalDate completionDate;
-
-    @ApiModelProperty(value = "确认人")
-    private String ondutyName1;
-
-    @ApiModelProperty(value = "最新确认时间")
-    private LocalDate confir1Time;
-
-    @ApiModelProperty(value = "最新进度说明")
-    private String newestProgress;
-
-    @ApiModelProperty(value = "建议状态")
-    private String proposalStatus;
-
-    @ApiModelProperty(value = "当前完成比率（%）")
-    private String completion;
-
-    @ApiModelProperty(value = "验证人")
-    private String confirmedby2;
-
-    @ApiModelProperty(value = "验证时间")
-    private LocalDate confirmationTime;
-
-    @ApiModelProperty(value = "结案状态")
-    private String closingStatus;
-
-    @ApiModelProperty(value = "逾期天数")
-    private String overedDays;
-
-    @ApiModelProperty(value = "单据状态")
-    private String flowStatus;
-
-    @ApiModelProperty(value = "备注")
-    private String remark;
-
-    public LocalDate getSubmitDate() {
-        return submitDate;
-    }
-
-    public void setSubmitDate(LocalDate submitDate) {
-        this.submitDate = submitDate;
-    }
-
-    public String getSubmitName() {
-        return submitName;
-    }
-
-    public void setSubmitName(String submitName) {
-        this.submitName = submitName;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getTodoList() {
@@ -119,12 +87,12 @@ public class TodoListExcelDto {
         this.completionDate = completionDate;
     }
 
-    public String getOndutyName1() {
-        return ondutyName1;
+    public String getClosingStatus() {
+        return closingStatus;
     }
 
-    public void setOndutyName1(String ondutyName1) {
-        this.ondutyName1 = ondutyName1;
+    public void setClosingStatus(String closingStatus) {
+        this.closingStatus = closingStatus;
     }
 
     public LocalDate getConfir1Time() {
@@ -175,20 +143,12 @@ public class TodoListExcelDto {
         this.confirmationTime = confirmationTime;
     }
 
-    public String getClosingStatus() {
-        return closingStatus;
+    public String getOveredDays() {
+        return overedDays;
     }
 
-    public void setClosingStatus(String closingStatus) {
-        this.closingStatus = closingStatus;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setOveredDays(String overedDays) {
+        this.overedDays = overedDays;
     }
 
     public String getFlowStatus() {
@@ -199,12 +159,36 @@ public class TodoListExcelDto {
         this.flowStatus = flowStatus;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public String getAdvisor() {
         return advisor;
     }
 
     public void setAdvisor(String advisor) {
         this.advisor = advisor;
+    }
+
+    public LocalDate getSubmitDate() {
+        return submitDate;
+    }
+
+    public void setSubmitDate(LocalDate submitDate) {
+        this.submitDate = submitDate;
+    }
+
+    public String getSubmitName() {
+        return submitName;
+    }
+
+    public void setSubmitName(String submitName) {
+        this.submitName = submitName;
     }
 
     public String getAssistName() {
@@ -221,13 +205,5 @@ public class TodoListExcelDto {
 
     public void setAssistOrgname(String assistOrgname) {
         this.assistOrgname = assistOrgname;
-    }
-
-    public String getOveredDays() {
-        return overedDays;
-    }
-
-    public void setOveredDays(String overedDays) {
-        this.overedDays = overedDays;
     }
 }
