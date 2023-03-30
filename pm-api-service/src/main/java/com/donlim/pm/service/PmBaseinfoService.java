@@ -176,7 +176,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
-        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
+        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(a -> a.getCode().equals("E20220509006")).collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             if (null != pmBaseinfo.getCode()) {
                 List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
@@ -199,7 +199,9 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
                 pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
                 //计算主计划达成率
-                List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
+//                List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
+                // 除主计划外，其他计划表
+                List<ProjectPlan> otherPlanList = projectPlanDao.getAllByProjectIdAndPlanTypeNot(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
                 int finishNum = 0;
                 // 是否逾期
          /*       long daydiff = 0;
@@ -219,7 +221,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     pmBaseinfo.setIsOverdue(false);
                     pmBaseinfo.setOveredDays(0L);
                 }*/
-                for (ProjectPlan projectPlan : planList) {
+                for (ProjectPlan projectPlan : otherPlanList) {
                     // 按主计划序号1计算是否逾期
 //                    if (projectPlan.getSchedureNo().equals("1")) {
 //                        if (projectPlan.getPlanEndDate() != null) {
@@ -237,8 +239,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     }
                 }
                 String scheduleRatePercent = "0%";
-                if (planList.size() > 0) {
-                    scheduleRatePercent = Math.round(finishNum * 100 / planList.size()) + "%";
+                if (otherPlanList.size() > 0) {
+                    scheduleRatePercent = Math.round(finishNum * 100 / otherPlanList.size()) + "%";
                 }
                 pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
             }

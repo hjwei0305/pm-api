@@ -337,4 +337,6 @@ public class PmBaseinfoDto extends BaseEntityDto {
     private String workRisk;
     @ApiModelProperty(value = "双周计划更新时间")
     private LocalDate weekPlanUpdate;
+    @ApiModelProperty(value = "是否暂停")
+    private Boolean isPause;
 }

@@ -351,4 +351,9 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "week_plan_update")
     private LocalDate weekPlanUpdate;
+    /**
+     * 是否暂停
+     */
+    @Column(name = "is_pause")
+    private Boolean isPause;
 }
