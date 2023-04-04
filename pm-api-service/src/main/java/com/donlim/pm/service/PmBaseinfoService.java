@@ -22,6 +22,7 @@ import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.util.ReflectUtils;
+import com.donlim.pm.webservice.eip.APPBODYS;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -176,7 +178,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
-        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(a -> a.getCode().equals("E20220509006")).collect(Collectors.toList());
+        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             if (null != pmBaseinfo.getCode()) {
                 List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
@@ -195,7 +197,11 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
                 }
                 if (pmBaseinfo.getStatus().equals("0")) {
-                    pmBaseinfo.setStatus(EipConnector.isFinish(pmBaseinfo.getCode()) ? "1" : "0");
+                    APPBODYS finish = EipConnector.isFinish(pmBaseinfo.getCode());
+                    if(!ObjectUtils.isEmpty(finish)){
+                        pmBaseinfo.setStatus(finish.isRESULT() ? "1" : "0");
+                        pmBaseinfo.setFinalFinishDate(LocalDate.parse(finish.getCHECKDATE(), DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+                    }
                 }
                 pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
                 //计算主计划达成率

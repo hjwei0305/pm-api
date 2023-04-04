@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>APPBODYS complex typeµÄ Java Àà¡£
- * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖÐµÄÔ¤ÆÚÄÚÈÝ¡£
- * 
+ * <p>APPBODYS complex typeï¿½ï¿½ Java ï¿½à¡£
+ *
+ * <p>ï¿½ï¿½ï¿½ï¿½Ä£Ê½Æ¬ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½
+ *
  * <pre>
  * &lt;complexType name="APPBODYS">
  *   &lt;complexContent>
@@ -28,12 +28,13 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "APPBODYS", propOrder = {
     "result",
+    "checkdate",
     "user01",
     "user02",
     "user03",
@@ -44,6 +45,8 @@ public class APPBODYS {
 
     @XmlElement(name = "RESULT")
     protected boolean result;
+    @XmlElement(name = "CHECKDATE")
+    protected String checkdate;
     @XmlElement(name = "USER01", required = true)
     protected String user01;
     @XmlElement(name = "USER02", required = true)
@@ -55,137 +58,145 @@ public class APPBODYS {
     @XmlElement(name = "USER05", required = true)
     protected String user05;
 
+    public String getCHECKDATE() {
+        return checkdate;
+    }
+
+
+    public void setCHECKDATE(String value) {
+        this.checkdate = value;
+    }
     /**
-     * »ñÈ¡resultÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½È¡resultï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      */
     public boolean isRESULT() {
         return result;
     }
 
     /**
-     * ÉèÖÃresultÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½ï¿½ï¿½resultï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      */
     public void setRESULT(boolean value) {
         this.result = value;
     }
 
     /**
-     * »ñÈ¡user01ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½È¡user01ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getUSER01() {
         return user01;
     }
 
     /**
-     * ÉèÖÃuser01ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½ï¿½ï¿½user01ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setUSER01(String value) {
         this.user01 = value;
     }
 
     /**
-     * »ñÈ¡user02ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½È¡user02ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getUSER02() {
         return user02;
     }
 
     /**
-     * ÉèÖÃuser02ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½ï¿½ï¿½user02ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setUSER02(String value) {
         this.user02 = value;
     }
 
     /**
-     * »ñÈ¡user03ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½È¡user03ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getUSER03() {
         return user03;
     }
 
     /**
-     * ÉèÖÃuser03ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½ï¿½ï¿½user03ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setUSER03(String value) {
         this.user03 = value;
     }
 
     /**
-     * »ñÈ¡user04ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½È¡user04ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getUSER04() {
         return user04;
     }
 
     /**
-     * ÉèÖÃuser04ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½ï¿½ï¿½user04ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setUSER04(String value) {
         this.user04 = value;
     }
 
     /**
-     * »ñÈ¡user05ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½È¡user05ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getUSER05() {
         return user05;
     }
 
     /**
-     * ÉèÖÃuser05ÊôÐÔµÄÖµ¡£
-     * 
+     * ï¿½ï¿½ï¿½ï¿½user05ï¿½ï¿½ï¿½Ôµï¿½Öµï¿½ï¿½
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setUSER05(String value) {
         this.user05 = value;

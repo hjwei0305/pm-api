@@ -81,7 +81,7 @@ public class EipConnector {
      * @param code
      * @return 是否结案
      */
-    public static boolean isFinish(String code) {
+    public static APPBODYS isFinish(String code) {
         APPHDR appHdr = new APPHDR();
         APPBODY appBody = new APPBODY();
         appBody.setPROJECTNO(code);
@@ -89,9 +89,9 @@ public class EipConnector {
         CheckSearchSevice checkSearchSevice = new CheckSearchSevice();
         SVCBODYS svcbodys = checkSearchSevice.getDomino().synchecksearch(svcHdr, appHdr, appBody);
         if ("S".equals(svcbodys.getOSVCHDRS().getRCODE())) {
-            return svcbodys.getOAPPBODYS().isRESULT();
+            return svcbodys.getOAPPBODYS();
         }
-        return false;
+        return null;
     }
 
 }
