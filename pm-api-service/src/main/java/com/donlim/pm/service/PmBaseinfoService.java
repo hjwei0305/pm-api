@@ -198,7 +198,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 }
                 if (pmBaseinfo.getStatus().equals("0")) {
                     APPBODYS finish = EipConnector.isFinish(pmBaseinfo.getCode());
-                    if(!ObjectUtils.isEmpty(finish)){
+                    if(!ObjectUtils.isEmpty(finish) && !StringUtils.isBlank(finish.getCHECKDATE())){
                         pmBaseinfo.setStatus(finish.isRESULT() ? "1" : "0");
                         pmBaseinfo.setFinalFinishDate(LocalDate.parse(finish.getCHECKDATE(), DateTimeFormatter.ofPattern("yyyy/MM/dd")));
                     }
