@@ -193,7 +193,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                         pmBaseinfo.setCodeReview(true);
                     }
                 }
-                if (!ObjectUtils.isEmpty(pmBaseinfo.getTest())) {
+                if (ObjectUtils.isEmpty(pmBaseinfo.getTest()) || pmBaseinfo.getTest() == false) {
                     pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
                 }
                 if (pmBaseinfo.getStatus().equals("0")) {
