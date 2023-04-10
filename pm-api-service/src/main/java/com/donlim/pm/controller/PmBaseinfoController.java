@@ -406,8 +406,6 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         if (pmBaseinfo != null) {
             if (pmBaseinfo.getId() != null) {
                 return ResultData.fail("该单号数据已经建档，请联系管理员。");
-            }else if(pmBaseinfo.getRemark() != null){
-                return ResultData.fail(pmBaseinfo.getRemark());
             }else {
                 return ResultData.success(convertToDto(pmBaseinfo));
             }
