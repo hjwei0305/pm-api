@@ -89,41 +89,42 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 info.setProjectTypes(enumItemRemark);
             }
         });*/
-        SearchOrder searchOrder=new SearchOrder("overedDays", SearchOrder.Direction.ASC);
+        SearchOrder searchOrder=new SearchOrder("overedDays", SearchOrder.Direction.DESC);
         List<SearchOrder>searchOrderList=new ArrayList<>();
         searchOrderList.add(searchOrder);
+        searchOrderList.add(new SearchOrder("advanceDays", SearchOrder.Direction.ASC));
         search.setSortOrders(searchOrderList);
       //  search.addFilter(new SearchFilter("orgname","运营策略科", SearchFilter.Operator.EQ));
         PageResult<PmBaseinfo> byPage = service.findByPage(search);
         byPage.getRows().stream().forEach(info -> {
-            long overTimeDay=0;
-            long advanceDay=0;
-            //计算是否逾期，逾期天数
-            if (info.getFinalFinishDate() != null && info.getPlanFinishDate() != null) {
-                if(info.getFinalFinishDate().isAfter(info.getPlanFinishDate())){
-                    if(LocalDate.now().isAfter(info.getFinalFinishDate())){
-                        overTimeDay =info.getFinalFinishDate().toEpochDay()- info.getPlanFinishDate().toEpochDay();
-                    }
-                }else{
-                    advanceDay =info.getPlanFinishDate().toEpochDay()- info.getFinalFinishDate().toEpochDay();
-                }
-
-            }
-            if(info.getPlanFinishDate() != null &&  info.getFinalFinishDate() == null && LocalDate.now().isAfter(info.getPlanFinishDate())){
-                overTimeDay =LocalDate.now().toEpochDay()- info.getPlanFinishDate().toEpochDay();
-            }
-            info.setOveredDays(overTimeDay);
-            info.setAdvanceDays(advanceDay);
-            if(overTimeDay>0){
-                info.setIsOverdue(true);
-            }else{
-                info.setIsOverdue(false);
-            }
-            if(advanceDay>0){
-                info.setIsAdvance(true);
-            }else{
-                info.setIsAdvance(false);
-            }
+//            long overTimeDay=0;
+//            long advanceDay=0;
+//            //计算是否逾期，逾期天数
+//            if (info.getFinalFinishDate() != null && info.getPlanFinishDate() != null) {
+//                if(info.getFinalFinishDate().isAfter(info.getPlanFinishDate())){
+//                    if(LocalDate.now().isAfter(info.getFinalFinishDate())){
+//                        overTimeDay =info.getFinalFinishDate().toEpochDay()- info.getPlanFinishDate().toEpochDay();
+//                    }
+//                }else{
+//                    advanceDay =info.getPlanFinishDate().toEpochDay()- info.getFinalFinishDate().toEpochDay();
+//                }
+//
+//            }
+//            if(info.getPlanFinishDate() != null &&  info.getFinalFinishDate() == null && LocalDate.now().isAfter(info.getPlanFinishDate())){
+//                overTimeDay =LocalDate.now().toEpochDay()- info.getPlanFinishDate().toEpochDay();
+//            }
+//            info.setOveredDays(overTimeDay);
+//            info.setAdvanceDays(advanceDay);
+//            if(overTimeDay>0){
+//                info.setIsOverdue(true);
+//            }else{
+//                info.setIsOverdue(false);
+//            }
+//            if(advanceDay>0){
+//                info.setIsAdvance(true);
+//            }else{
+//                info.setIsAdvance(false);
+//            }
             if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                 info.setProjectTypes(enumItemRemark);

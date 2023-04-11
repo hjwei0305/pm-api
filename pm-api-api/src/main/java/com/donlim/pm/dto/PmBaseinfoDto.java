@@ -23,6 +23,9 @@ import java.util.List;
 @Data
 public class PmBaseinfoDto extends BaseEntityDto {
     private static final long serialVersionUID = 417621879606687300L;
+
+    private String pmProjectOptionProName;
+    private String pmProjectOptionProOpt;
     /**
      * 编码
      */
@@ -327,6 +330,11 @@ public class PmBaseinfoDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "流程配置")
     private String proOpt;
+    /**
+     * 流程配置id
+     */
+    @ApiModelProperty(value = "流程配置id")
+    private String proOptId;
     @ApiModelProperty(value = "项目成员")
     private String member;
     @ApiModelProperty(value = "本周计划")

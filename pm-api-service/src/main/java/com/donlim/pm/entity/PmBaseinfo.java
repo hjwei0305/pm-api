@@ -5,9 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -321,6 +319,15 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "implementer")
     private String implementer;
+    /**
+     * 流程配置
+     */
+    @Column(name = "pro_opt_id")
+    private String proOptId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pro_opt_id",insertable = false,updatable = false)
+    private PmProjectOption pmProjectOption;
     /**
      * 流程配置
      */

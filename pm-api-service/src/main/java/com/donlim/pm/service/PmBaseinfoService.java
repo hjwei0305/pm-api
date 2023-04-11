@@ -209,24 +209,36 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 // 除主计划外，其他计划表
                 List<ProjectPlan> otherPlanList = projectPlanDao.getAllByProjectIdAndPlanTypeNot(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
                 int finishNum = 0;
-                // 是否逾期
-         /*       long daydiff = 0;
-                if(!ObjectUtils.isEmpty(pmBaseinfo.getPlanFinishDate())){
-                    if (ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())) {
-                        // 实际结案日期空， 当天 > 计划结案
-                        daydiff = LocalDate.now().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
-                    } else {
-                        // 实际结案 > 计划结案
-                        daydiff = pmBaseinfo.getFinalFinishDate().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                // 是否逾期 \ 提前
+                long overTimeDay=0;
+                long advanceDay=0;
+                //计算是否逾期，逾期天数
+                if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
+                    if(pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
+                        if(LocalDate.now().isAfter(pmBaseinfo.getFinalFinishDate())){
+                            overTimeDay =pmBaseinfo.getFinalFinishDate().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+                        }
+                    }else{
+                        advanceDay =pmBaseinfo.getPlanFinishDate().toEpochDay()- pmBaseinfo.getFinalFinishDate().toEpochDay();
                     }
+
                 }
-                if (daydiff > 0) {
+                if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
+                    overTimeDay =LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+                }
+                pmBaseinfo.setOveredDays(overTimeDay);
+                pmBaseinfo.setAdvanceDays(advanceDay);
+                if(overTimeDay>0){
                     pmBaseinfo.setIsOverdue(true);
-                    pmBaseinfo.setOveredDays(daydiff);
-                } else {
+                }else{
                     pmBaseinfo.setIsOverdue(false);
-                    pmBaseinfo.setOveredDays(0L);
-                }*/
+                }
+                if(advanceDay>0){
+                    pmBaseinfo.setIsAdvance(true);
+                }else{
+                    pmBaseinfo.setIsAdvance(false);
+                }
+
                 for (ProjectPlan projectPlan : otherPlanList) {
                     // 按主计划序号1计算是否逾期
 //                    if (projectPlan.getSchedureNo().equals("1")) {
@@ -266,7 +278,9 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             PmBaseinfo pmBaseinfo = byId.get();
             ModelMapper dtoModelMapper = new ModelMapper();
             PmBaseinfoDto pmBaseinfoDto = dtoModelMapper.map(pmBaseinfo, PmBaseinfoDto.class);
-            String proOpt = pmBaseinfoDto.getProOpt();
+//            String proOpt = pmBaseinfoDto.getProOpt();
+            // 改配置流程
+            String proOpt = Optional.ofNullable(pmBaseinfoDto.getPmProjectOptionProOpt()).orElse(pmBaseinfoDto.getProOpt());
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
             boolean flag = true;
             //2.1调研
