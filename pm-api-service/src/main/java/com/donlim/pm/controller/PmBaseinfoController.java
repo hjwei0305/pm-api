@@ -6,6 +6,7 @@ import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.dto.serach.SearchOrder;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
@@ -34,6 +35,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,10 +127,31 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 //            }else{
 //                info.setIsAdvance(false);
 //            }
+
             if (StringUtils.isNotEmpty(info.getProjectTypes())) {
                 String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
                 info.setProjectTypes(enumItemRemark);
                 List<ProjectPlan> projectPlanList = projectPlanService.findListByProperty("projectId", info.getId());
+                // 汇报人人天
+                String member = null;
+                BigDecimal personDay = BigDecimal.ZERO;
+                for (SearchFilter filter : search.getFilters()) {
+                    if("member".equals(filter.getFieldName())){
+                        member = filter.getValue().toString();
+                    }
+                }
+                Map<String, List<ProjectPlan>> finishMap = projectPlanList.stream()
+                        .filter(p -> null != p.getSchedureDays() && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
+                        .collect(Collectors.groupingBy(ProjectPlan::getWorkOnduty));
+                if (null != member && finishMap.keySet().contains(member)){
+                    personDay = finishMap.get(member).stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add);
+                }else if(null == member){
+                    for (Map.Entry<String, List<ProjectPlan>> e : finishMap.entrySet()) {
+                        personDay = personDay.add(e.getValue().stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add));
+                    }
+                }
+                info.setPersonDay(personDay);
+                // 进行中计划备注中显示
                 Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
                         .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
                         .collect(Collectors.groupingBy(ProjectPlan::getPlanType));

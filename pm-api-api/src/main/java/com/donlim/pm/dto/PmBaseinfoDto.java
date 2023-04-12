@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -347,4 +348,6 @@ public class PmBaseinfoDto extends BaseEntityDto {
     private LocalDate weekPlanUpdate;
     @ApiModelProperty(value = "是否暂停")
     private Boolean isPause;
+    @ApiModelProperty(value = "人天")
+    private BigDecimal personDay;
 }

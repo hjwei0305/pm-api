@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -363,4 +364,9 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "is_pause")
     private Boolean isPause;
+    /**
+     * 人天
+     */
+    @Transient
+    private BigDecimal personDay;
 }
