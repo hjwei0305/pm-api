@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -39,6 +40,11 @@ public class PmBaseinfoExcelDto {
      */
     @ApiModelProperty(value = "计划结案日期")
     private LocalDate planFinishDate;
+    /**
+     * 人天
+     */
+    @ApiModelProperty(value = "人天")
+    private BigDecimal personDay;
     /**
      * 本周计划
      */
@@ -109,4 +115,10 @@ public class PmBaseinfoExcelDto {
      */
     @ApiModelProperty(value = "项目天数")
     private Integer projectDays;
+
+    /**
+     * 是否暂停
+     */
+    @ApiModelProperty(value = "是否暂停")
+    private Boolean isPause;
 }

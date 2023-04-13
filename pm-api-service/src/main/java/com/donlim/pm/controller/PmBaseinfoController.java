@@ -374,6 +374,26 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 
         pmBaseinfoList.stream().forEach(info ->{
             List<ProjectPlan> projectPlanList = projectPlanService.findListByProperty("projectId", info.getId());
+            // 汇报人人天
+            String member = null;
+            BigDecimal personDay = BigDecimal.ZERO;
+            for (SearchFilter filter : search.getFilters()) {
+                if("member".equals(filter.getFieldName())){
+                    member = filter.getValue().toString();
+                }
+            }
+            Map<String, List<ProjectPlan>> finishMap = projectPlanList.stream()
+                    .filter(p -> null != p.getSchedureDays() && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
+                    .collect(Collectors.groupingBy(ProjectPlan::getWorkOnduty));
+            if (null != member && finishMap.keySet().contains(member)){
+                personDay = finishMap.get(member).stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add);
+            }else if(null == member){
+                for (Map.Entry<String, List<ProjectPlan>> e : finishMap.entrySet()) {
+                    personDay = personDay.add(e.getValue().stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add));
+                }
+            }
+            info.setPersonDay(personDay);
+
             Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
                     .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
                     .collect(Collectors.groupingBy(ProjectPlan::getPlanType));
