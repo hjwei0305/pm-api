@@ -141,7 +141,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                     }
                 }
                 Map<String, List<ProjectPlan>> finishMap = projectPlanList.stream()
-                        .filter(p -> null != p.getSchedureDays() && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
+                        .filter(p -> StringUtils.isNotBlank(p.getSchedureDays()) && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
                         .collect(Collectors.groupingBy(ProjectPlan::getWorkOnduty));
                 if (null != member && finishMap.keySet().contains(member)){
                     personDay = finishMap.get(member).stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -383,7 +383,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 }
             }
             Map<String, List<ProjectPlan>> finishMap = projectPlanList.stream()
-                    .filter(p -> null != p.getSchedureDays() && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
+                    .filter(p -> StringUtils.isNotBlank(p.getSchedureDays()) && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
                     .collect(Collectors.groupingBy(ProjectPlan::getWorkOnduty));
             if (null != member && finishMap.keySet().contains(member)){
                 personDay = finishMap.get(member).stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add);
