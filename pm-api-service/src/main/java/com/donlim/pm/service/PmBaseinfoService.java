@@ -14,10 +14,9 @@ import com.donlim.pm.dao.PmBaseinfoDao;
 import com.donlim.pm.dao.ProjectPlanDao;
 import com.donlim.pm.dto.IppProjectInfoDetails;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.ProScheduleReportDTO;
 import com.donlim.pm.dto.ProjectInfoDto;
-import com.donlim.pm.em.FileType;
-import com.donlim.pm.em.NodeType;
-import com.donlim.pm.em.SmallNodeType;
+import com.donlim.pm.em.*;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
@@ -31,11 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -53,6 +51,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     private DocumentManager documentManager;
     @Autowired
     private ProjectPlanDao projectPlanDao;
+    @Autowired
+    private ModelMapper dtoModelMapper;
 
     @Override
     protected BaseEntityDao<PmBaseinfo> getDao() {
@@ -257,7 +257,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     }
                 }
                 String scheduleRatePercent = "0%";
-                if (otherPlanList.size() > 0) {
+                // 规定计划总数 > 6
+                if (otherPlanList.size() >=7) {
                     scheduleRatePercent = Math.round(finishNum * 100 / otherPlanList.size()) + "%";
                 }
                 pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
@@ -582,5 +583,133 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
 
         }
         return currentPeriod;
+    }
+
+    /**
+     * 项目进度表统计
+     * @param search
+     * @return
+     */
+    public List<ProScheduleReportDTO> getProScheduleReport(Search search) {
+        List<ProScheduleReportDTO> proScheduleReportDTOS = new ArrayList<>();
+        List<PmBaseinfo> proScheduleReport = findByFilters(search);
+        for (PmBaseinfo pmBaseinfo : proScheduleReport) {
+            ProScheduleReportDTO reportDto = dtoModelMapper.map(pmBaseinfo, ProScheduleReportDTO.class);
+            // 项目类型转换
+            if(StringUtils.isNotBlank(reportDto.getProjectTypes())){
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(reportDto.getProjectTypes()));
+                reportDto.setProjectTypes(enumItemRemark);
+            }
+            // 判断项目进度
+            reportDto.setProStart("1");
+            String proOpt = null;
+            if(StringUtils.isBlank(pmBaseinfo.getProOptId())){
+                if(StringUtils.isBlank(pmBaseinfo.getProOpt())){
+                    reportDto.setRequirement("/");
+                    reportDto.setDevelopment("/");
+                    reportDto.setTest("/");
+                    reportDto.setPromote("/");
+                    reportDto.setFinish("/");
+                    reportDto.setCompletionRate(BigDecimal.valueOf(100));
+                }else {
+                    proOpt = pmBaseinfo.getProOpt();
+                    dealWithProgress(proOpt,pmBaseinfo,reportDto);
+                }
+            }else {
+                proOpt = pmBaseinfo.getPmProjectOption().getProOpt();
+                dealWithProgress(proOpt,pmBaseinfo,reportDto);
+            }
+            proScheduleReportDTOS.add(reportDto);
+        }
+        // 合计列
+        ProScheduleReportDTO sumDTO = new ProScheduleReportDTO();
+        List<Integer> requireMentList = proScheduleReportDTOS.stream().filter(a -> !a.getRequirement().equals("/")).map(a -> Integer.valueOf(a.getRequirement())).collect(Collectors.toList());
+        List<Integer> developList = proScheduleReportDTOS.stream().filter(a -> !a.getDevelopment().equals("/")).map(a -> Integer.valueOf(a.getDevelopment())).collect(Collectors.toList());
+        List<Integer> testList = proScheduleReportDTOS.stream().filter(a -> !a.getTest().equals("/")).map(a -> Integer.valueOf(a.getTest())).collect(Collectors.toList());
+        List<Integer> promoteList = proScheduleReportDTOS.stream().filter(a -> !a.getPromote().equals("/")).map(a -> Integer.valueOf(a.getPromote())).collect(Collectors.toList());
+        List<Integer> finishList = proScheduleReportDTOS.stream().filter(a -> !a.getFinish().equals("/")).map(a -> Integer.valueOf(a.getFinish())).collect(Collectors.toList());
+        BigDecimal req = requireMentList.size() == 0 ? BigDecimal.ZERO :BigDecimal.valueOf(requireMentList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(requireMentList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal dev = developList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(developList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(developList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal tes = testList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(testList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(testList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal pro = promoteList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(promoteList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(promoteList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal fin = finishList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(finishList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(finishList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        sumDTO.setId("sum");
+        sumDTO.setProStart("100%");
+        sumDTO.setRequirement(req + "%");
+        sumDTO.setDevelopment(dev + "%");
+        sumDTO.setTest(tes + "%");
+        sumDTO.setPromote(pro + "%");
+        sumDTO.setFinish(fin + "%");
+        sumDTO.setCompletionRate((fin.add(pro).add(tes).add(dev).add(req).add(BigDecimal.valueOf(100))).divide(BigDecimal.valueOf(6),2,BigDecimal.ROUND_HALF_UP));
+        proScheduleReportDTOS.add(sumDTO);
+        return proScheduleReportDTOS;
+    }
+
+    /**
+     * 项目进度表：处理项目进度显示
+     * @param proOpt 流程配置
+     * @param pmBaseinfo 项目信息
+     * @param reportDto 返回dto
+     */
+    private void dealWithProgress(String proOpt,PmBaseinfo pmBaseinfo,ProScheduleReportDTO reportDto){
+        Map<String, List<String>> proOptMap = Arrays.asList(proOpt.split(",")).stream().collect(Collectors.groupingBy(a -> a.substring(0,1)));
+        ProjectProgress anEnum = null;
+        if(StringUtils.isNotBlank(pmBaseinfo.getCurrentPeriod())){
+            anEnum = EnumUtils.getEnumByRemark(ProjectProgress.class, "UI设计".equals(pmBaseinfo.getCurrentPeriod()) ? "需求分析" : pmBaseinfo.getCurrentPeriod());
+        }
+        // 项目提案默认完成
+        BigDecimal finishNum = BigDecimal.ONE;
+        BigDecimal allNum = BigDecimal.ONE;
+
+        for (int i = 2;i <= 6 ;i++) {
+            if(!proOptMap.containsKey(String.valueOf(i))){
+                switch (i){
+                    case 2:
+                        reportDto.setRequirement("/");
+                        break;
+                    case 3:
+                        reportDto.setDevelopment("/");
+                        break;
+                    case 4:
+                        reportDto.setTest("/");
+                        break;
+                    case 5:
+                        reportDto.setPromote("/");
+                        break;
+                    case 6:
+                        reportDto.setFinish("/");
+                        break;
+                }
+            }else {
+                String result;
+                if(ObjectUtils.isEmpty(anEnum)){
+                    result = "0";
+                }else {
+                    result = anEnum.ordinal() >= i ? "1" : "0";
+                    allNum = allNum.add(BigDecimal.ONE);
+                    if("1".equals(result)){
+                        finishNum = finishNum.add(BigDecimal.ONE);
+                    }
+                }
+                switch (i){
+                    case 2:
+                        reportDto.setRequirement(result);
+                        break;
+                    case 3:
+                        reportDto.setDevelopment(result);
+                        break;
+                    case 4:
+                        reportDto.setTest(result);
+                        break;
+                    case 5:
+                        reportDto.setPromote(result);
+                        break;
+                    case 6:
+                        reportDto.setFinish(result);
+                        break;
+                }
+            }
+        }
+        reportDto.setCompletionRate(finishNum.multiply(BigDecimal.valueOf(100)).divide(allNum,2,BigDecimal.ROUND_HALF_UP) );
     }
 }

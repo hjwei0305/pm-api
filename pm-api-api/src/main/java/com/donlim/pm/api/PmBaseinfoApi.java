@@ -102,4 +102,12 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     @ApiOperation(value = "导出项目" ,notes = "导出项目")
     ResultData<List<PmBaseinfoExcelDto>> export(@RequestBody Search search);
 
+    /**
+     * 项目进度表
+     * @param search 查询条件
+     */
+    @PostMapping(path = "getProScheduleReport",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "项目进度表" ,notes = "项目进度表")
+    ResultData getProScheduleReport(@RequestBody Search search);
+
 }

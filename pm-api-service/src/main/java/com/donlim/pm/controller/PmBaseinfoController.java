@@ -141,7 +141,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                     }
                 }
                 Map<String, List<ProjectPlan>> finishMap = projectPlanList.stream()
-                        .filter(p -> StringUtils.isNotBlank(p.getSchedureDays()) && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
+                        .filter(p -> StringUtils.isNotBlank(p.getSchedureDays()) && null != p.getSchedureStatus()
+                                && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成") && Integer.valueOf(p.getPlanType()) != 0)
                         .collect(Collectors.groupingBy(ProjectPlan::getWorkOnduty));
                 if (null != member && finishMap.keySet().contains(member)){
                     personDay = finishMap.get(member).stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -383,7 +384,8 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 }
             }
             Map<String, List<ProjectPlan>> finishMap = projectPlanList.stream()
-                    .filter(p -> StringUtils.isNotBlank(p.getSchedureDays()) && null != p.getSchedureStatus() && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成"))
+                    .filter(p -> StringUtils.isNotBlank(p.getSchedureDays()) && null != p.getSchedureStatus()
+                            && null != p.getWorkOnduty() && p.getSchedureStatus().equals("完成") && Integer.valueOf(p.getPlanType()) != 0)
                     .collect(Collectors.groupingBy(ProjectPlan::getWorkOnduty));
             if (null != member && finishMap.keySet().contains(member)){
                 personDay = finishMap.get(member).stream().map(a -> BigDecimal.valueOf(Integer.valueOf(a.getSchedureDays()))).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -430,6 +432,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         TypeMap<PmBaseinfo, PmBaseinfoExcelDto> typeMap = modelMapper.typeMap(PmBaseinfo.class, PmBaseinfoExcelDto.class);
         List<PmBaseinfoExcelDto> collect = pmBaseinfoList.stream().map(typeMap::map).collect(Collectors.toList());
         return ResultData.success(collect);
+    }
+
+    @Override
+    public ResultData getProScheduleReport(Search search) {
+        return ResultData.success(service.getProScheduleReport(search));
     }
 
     @Override

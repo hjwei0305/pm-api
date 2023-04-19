@@ -4,6 +4,8 @@ import com.donlim.pm.em.FileType;
 import com.donlim.pm.em.NodeType;
 import com.donlim.pm.em.SmallNodeType;
 
+import java.util.List;
+
 /**
  * @Description:
  * @Author: chenzhiquan
@@ -44,6 +46,23 @@ public class EnumUtils extends com.changhong.sei.util.EnumUtils {
     public static String getNodeTypeRemark(NodeType type)
     {
         return getEnumItemRemark(NodeType.class, type);
+    }
+
+    /**
+     * 根据@Remark获取枚举对象
+     * @param enumClass
+     * @param remark
+     * @return
+     */
+    public static <E extends Enum<E>> E getEnumByRemark(Class<E> enumClass,String remark) {
+        List<EnumEntity> enumEntities = getEnumDataList(enumClass);
+        E anEnum = null;
+        for (EnumEntity enumEntity : enumEntities) {
+            if(remark.equals(enumEntity.getRemark())){
+                anEnum = (E) enumEntity.getAnEnum();
+            }
+        }
+        return anEnum;
     }
 
 
