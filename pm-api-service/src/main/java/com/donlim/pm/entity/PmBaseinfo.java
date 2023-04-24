@@ -39,6 +39,11 @@ public class PmBaseinfo extends BaseAuditableEntity implements Serializable {
     @Column(name = "sys_name")
     private String sysName;
     /**
+     * 项目年份
+     */
+    @Column(name = "year")
+    private String year;
+    /**
      * 组织编码
      */
     @Column(name = "orgcode")

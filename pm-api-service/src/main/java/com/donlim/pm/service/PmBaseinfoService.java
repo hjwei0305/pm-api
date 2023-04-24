@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
 import com.changhong.sei.core.dto.serach.Search;
+import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.edm.dto.DocumentDto;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -12,12 +13,10 @@ import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.constant.IppConstant;
 import com.donlim.pm.dao.PmBaseinfoDao;
 import com.donlim.pm.dao.ProjectPlanDao;
-import com.donlim.pm.dto.IppProjectInfoDetails;
-import com.donlim.pm.dto.PmBaseinfoDto;
-import com.donlim.pm.dto.ProScheduleReportDTO;
-import com.donlim.pm.dto.ProjectInfoDto;
+import com.donlim.pm.dto.*;
 import com.donlim.pm.em.*;
 import com.donlim.pm.entity.PmBaseinfo;
+import com.donlim.pm.entity.PmOrganize;
 import com.donlim.pm.entity.ProjectPlan;
 import com.donlim.pm.util.EnumUtils;
 import com.donlim.pm.util.ReflectUtils;
@@ -53,6 +52,8 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     private ProjectPlanDao projectPlanDao;
     @Autowired
     private ModelMapper dtoModelMapper;
+    @Autowired
+    private PmOrganizeService pmOrganizeService;
 
     @Override
     protected BaseEntityDao<PmBaseinfo> getDao() {
@@ -197,7 +198,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
                 }
                 if (pmBaseinfo.getStatus().equals("0")) {
-                    APPBODYS finish = EipConnector.isFinish(pmBaseinfo.getCode());
+                    APPBODYS finish = EipConnector.isFinish(pmBaseinfo.getCode().replaceAll(" ",""));
                     if(!ObjectUtils.isEmpty(finish) && !StringUtils.isBlank(finish.getCHECKDATE())){
                         pmBaseinfo.setStatus(finish.isRESULT() ? "1" : "0");
                         pmBaseinfo.setFinalFinishDate(LocalDate.parse(finish.getCHECKDATE(), DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -711,5 +712,60 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             }
         }
         reportDto.setCompletionRate(finishNum.multiply(BigDecimal.valueOf(100)).divide(allNum,2,BigDecimal.ROUND_HALF_UP) );
+    }
+
+    /**
+     * 项目进度表统计
+     * @param search
+     * @return
+     */
+    public List<YearProjectReportDTO> getYearProjectReport(Search search) {
+        List<SearchFilter> filters = search.getFilters();
+        String year = null;
+        String orgname = null;
+        List<PmOrganize> orgList = new ArrayList<>();
+        List<YearProjectReportDTO> resultList = new ArrayList<>();
+        for (SearchFilter filter : filters) {
+            if("orgname".equals(filter.getFieldName())){
+                orgname = (String) filter.getValue();
+            }
+            if("year".equals(filter.getFieldName())){
+                year = (String) filter.getValue();
+            }
+        }
+        // 处理科室
+        if(StringUtils.isNotBlank(orgname)){
+            orgList = pmOrganizeService.getChildrenNodesByName(orgname);
+        }else {
+            orgList = pmOrganizeService.getChildrenNodesByName("数字化管理中心");
+        }
+        orgList = orgList.stream().filter(a -> "系统运维管理部".equals(a.getName()) || a.getNodeLevel() == 3).collect(Collectors.toList());
+        List<PmBaseinfo> baseinfoList = findByFilters(search);
+        for (PmOrganize pmOrganize : orgList) {
+            List<PmBaseinfo> pmBaseinfoList = baseinfoList.stream().filter(info -> pmOrganize.getName().equals(info.getOrgname())).collect(Collectors.toList());
+            // 科室名称、科室负责人
+            YearProjectReportDTO yearProjectReportDTO = dtoModelMapper.map(pmOrganize, YearProjectReportDTO.class);
+            // 结案数量
+            long finishNum = pmBaseinfoList.stream()
+                    .filter(a -> EnumUtils.getEnumByRemark(ProjectProgress.class, "项目结案").equals(a.getCurrentPeriod())
+                            && pmOrganize.getName().equals(a.getOrgname()))
+                    .count();
+            // 未结案数量
+            long notFinishNum = pmBaseinfoList.stream()
+                    .filter(a -> a.getIsPause() == false
+                            && !EnumUtils.getEnumByRemark(ProjectProgress.class, "项目结案").equals(a.getCurrentPeriod())
+                            && pmOrganize.getName().equals(a.getOrgname()))
+                    .count();
+            // 暂停数量
+            long pauseNum = pmBaseinfoList.stream().filter(a -> a.getIsPause() == true).count();
+            // 项目总数
+            long totalNum = pmBaseinfoList.size();
+            yearProjectReportDTO.setFinishNum(finishNum);
+            yearProjectReportDTO.setNotFinishNum(notFinishNum);
+            yearProjectReportDTO.setPauseNum(pauseNum);
+            yearProjectReportDTO.setTotalNum(totalNum);
+            resultList.add(yearProjectReportDTO);
+        }
+        return resultList;
     }
 }

@@ -110,4 +110,12 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     @ApiOperation(value = "项目进度表" ,notes = "项目进度表")
     ResultData getProScheduleReport(@RequestBody Search search);
 
+    /**
+     * 科室年度项目
+     * @param search 查询条件
+     */
+    @PostMapping(path = "getYearProjectReport",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "科室年度项目" ,notes = "项目进度表")
+    ResultData getYearProjectReport(@RequestBody Search search);
+
 }

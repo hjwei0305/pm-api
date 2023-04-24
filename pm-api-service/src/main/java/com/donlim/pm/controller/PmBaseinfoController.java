@@ -279,6 +279,9 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             }
             pmLogService.save(LogType.ModifyWeekPlan,pmBaseinfoDto);
         }
+        if(StringUtils.isEmpty(pmBaseinfoDto.getYear())){
+            return ResultData.fail("项目年份为空，不能保存。");
+        }
         if(StringUtils.isEmpty(pmBaseinfoDto.getName())){
             return ResultData.fail("项目名称为空，不能保存。");
         }
@@ -437,6 +440,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData getProScheduleReport(Search search) {
         return ResultData.success(service.getProScheduleReport(search));
+    }
+
+    @Override
+    public ResultData getYearProjectReport(Search search) {
+        return ResultData.success(service.getYearProjectReport(search));
     }
 
     @Override

@@ -43,6 +43,11 @@ public class PmBaseinfoDto extends BaseEntityDto {
     @ApiModelProperty(name = "系统名称")
     private String sysName;
     /**
+     * 项目年份
+     */
+    @ApiModelProperty(name = "项目年份")
+    private String year;
+    /**
      * 组织编码
      */
     @ApiModelProperty(name = "组织编码")
