@@ -163,6 +163,6 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
                 BigDecimal.valueOf(personalMonthReport.getFinishNum()).multiply(BigDecimal.valueOf(100)
                         .divide(BigDecimal.valueOf(personalMonthReport.getTotalNum()),2,BigDecimal.ROUND_HALF_UP)));
         personalMonthReport.setWorkHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getWorkHours())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue());
-        personalMonthReport.setWorkHouresRate(BigDecimal.valueOf(personalMonthReport.getWorkHours()).divide(BigDecimal.valueOf(188),2,BigDecimal.ROUND_HALF_UP));
+        personalMonthReport.setWorkHouresRate(BigDecimal.valueOf(personalMonthReport.getWorkHours()).multiply(BigDecimal.valueOf(100).divide(BigDecimal.valueOf(188),2,BigDecimal.ROUND_HALF_UP)));
     }
 }
