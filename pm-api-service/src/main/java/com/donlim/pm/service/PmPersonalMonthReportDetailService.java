@@ -65,7 +65,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
      */
     public List<PmPersonalMonthReportDetail> createPersonalMonthPlan(String ym) throws SeiException {
         ArrayList<PmPersonalMonthReportDetail> resultList = new ArrayList<>();
-        // 工号
+        // 姓名
         String userName = ContextUtil.getUserName();
 //        userName = "张晓橦";
 //        //是否已有重复数据
@@ -118,7 +118,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
                 PmPersonalMonthReport personalMonthReport = pmPersonalMonthReportService.findByProperty("id", monthReportDetailDtoList.get(0).getPersonalMonthReportId());
 //                PmPersonalMonthReport personalMonthReport = personalMonthReportOptional.get();
                 if(!personalMonthReport.getEmployeeName().equals(userName)){
-                    throw new SeiException("请别修改他人计划！");
+                    throw new SeiException("不能修改他人计划！");
                 }
                 dealPersonalMonthReport(personalMonthReport,monthReportDetailDtoList);
                 // 去除删除的明细
@@ -164,9 +164,13 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
         personalMonthReport.setFinishNum((int)monthReportDetailDtoList.stream().filter(a -> true == a.getComplete()).map(PmPersonalMonthReportDetailDto::getComplete).count());
         personalMonthReport.setOvertimeNum(personalMonthReport.getTotalNum() - personalMonthReport.getFinishNum());
         personalMonthReport.setCompeletionRate(
-                BigDecimal.valueOf(personalMonthReport.getFinishNum()).multiply(BigDecimal.valueOf(100)
-                        .divide(BigDecimal.valueOf(personalMonthReport.getTotalNum()),2,BigDecimal.ROUND_HALF_UP)));
+                BigDecimal.valueOf(personalMonthReport.getFinishNum())
+                        .multiply(BigDecimal.valueOf(100))
+                        .divide(BigDecimal.valueOf(personalMonthReport.getTotalNum()),2,BigDecimal.ROUND_HALF_UP));
         personalMonthReport.setWorkHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getWorkHours())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue());
-        personalMonthReport.setWorkHouresRate(BigDecimal.valueOf(personalMonthReport.getWorkHours()).multiply(BigDecimal.valueOf(100).divide(BigDecimal.valueOf(188),2,BigDecimal.ROUND_HALF_UP)));
+        personalMonthReport.setWorkHouresRate(
+                BigDecimal.valueOf(personalMonthReport.getWorkHours())
+                        .multiply(BigDecimal.valueOf(100))
+                        .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
     }
 }
