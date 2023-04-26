@@ -113,9 +113,13 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
 //            userName = "张晓橦";
 //            userAccount = "376951";
             // 判断是否存在计划
-            Optional<PmPersonalMonthReport> personalMonthReportOptional = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, monthReportDetailDtoList.get(0).getYm());
-            if(personalMonthReportOptional.isPresent()){
-                PmPersonalMonthReport personalMonthReport = personalMonthReportOptional.get();
+//            Optional<PmPersonalMonthReport> personalMonthReportOptional = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, monthReportDetailDtoList.get(0).getYm());
+            if(StringUtils.isNotBlank(monthReportDetailDtoList.get(0).getPersonalMonthReportId())){
+                PmPersonalMonthReport personalMonthReport = pmPersonalMonthReportService.findByProperty("id", monthReportDetailDtoList.get(0).getPersonalMonthReportId());
+//                PmPersonalMonthReport personalMonthReport = personalMonthReportOptional.get();
+                if(!personalMonthReport.getEmployeeName().equals(userName)){
+                    throw new SeiException("请别修改他人计划！");
+                }
                 dealPersonalMonthReport(personalMonthReport,monthReportDetailDtoList);
                 // 去除删除的明细
                 List<String> oldIds = findByFilter(new SearchFilter("personalMonthReportId", personalMonthReport.getId(), SearchFilter.Operator.EQ)).stream().map(PmPersonalMonthReportDetail::getId).collect(Collectors.toList());
