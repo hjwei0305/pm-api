@@ -4,9 +4,7 @@ import com.changhong.sei.core.entity.BaseAuditableEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -27,6 +25,10 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
      */
     @Column(name = "project_id")
     private String projectId;
+
+    @JoinColumn(name = "project_id",insertable = false,updatable = false)
+    @ManyToOne
+    private PmBaseinfo pmBaseinfo;
     /**
      * 计划类型(0:主计划，1:后端计划，2:前端计划，3:实施计划，4:UI计划)
      */
@@ -256,5 +258,13 @@ public class ProjectPlan extends BaseAuditableEntity implements Serializable {
 
     public void setOrderNo(Integer orderNo) {
         this.orderNo = orderNo;
+    }
+
+    public PmBaseinfo getPmBaseinfo() {
+        return pmBaseinfo;
+    }
+
+    public void setPmBaseinfo(PmBaseinfo pmBaseinfo) {
+        this.pmBaseinfo = pmBaseinfo;
     }
 }

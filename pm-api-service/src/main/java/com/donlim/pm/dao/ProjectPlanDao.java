@@ -48,4 +48,12 @@ public interface ProjectPlanDao extends BaseEntityDao<ProjectPlan> {
      * @return
      */
     List<ProjectPlan> getAllByPlanTypeAndSchedureNo(String planType,String schedureNo);
+
+    /**
+     * 某人的计划，不包含主计划
+     * @param username
+     * @param planType
+     * @return
+     */
+    List<ProjectPlan> getAllByWorkOndutyContainsAndPlanTypeNotAndPlanStartDateIsNotNullAndPlanEndDateIsNotNull(String username,String planType);
 }
