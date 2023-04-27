@@ -112,7 +112,12 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
      * 是否达成
      */
     @Column(name = "is_complete")
-    private Boolean complete;
+    private Integer complete;
+    /**
+     * 是否生成
+     */
+    @Column(name = "auto_generate")
+    private Boolean autoGenerate;
     /**
      * 租户代码
      */
@@ -256,11 +261,11 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
         this.fourthWeekSituation = fourthWeekSituation;
     }
 
-    public Boolean getComplete() {
+    public Integer getComplete() {
         return complete;
     }
 
-    public void setComplete(Boolean complete) {
+    public void setComplete(Integer complete) {
         this.complete = complete;
     }
 
@@ -272,4 +277,11 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
         this.tenantCode = tenantCode;
     }
 
+    public Boolean getAutoGenerate() {
+        return autoGenerate;
+    }
+
+    public void setAutoGenerate(Boolean autoGenerate) {
+        this.autoGenerate = autoGenerate;
+    }
 }

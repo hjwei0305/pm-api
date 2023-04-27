@@ -93,6 +93,8 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
             entity.setType("B");
             entity.setWorkHours(ObjectUtils.isEmpty(entity.getSchedureDays()) ? 0 : entity.getSchedureDays()*8);
             entity.setScheNo(no++);
+            entity.setAutoGenerate(true);
+            entity.setComplete(2);
             resultList.add(entity);
         }
         // 计算工作占比
@@ -161,8 +163,9 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
      */
     private void dealPersonalMonthReport(PmPersonalMonthReport personalMonthReport, List<PmPersonalMonthReportDetailDto> monthReportDetailDtoList) {
         personalMonthReport.setTotalNum(monthReportDetailDtoList.size());
-        personalMonthReport.setFinishNum((int)monthReportDetailDtoList.stream().filter(a -> true == a.getComplete()).map(PmPersonalMonthReportDetailDto::getComplete).count());
-        personalMonthReport.setOvertimeNum(personalMonthReport.getTotalNum() - personalMonthReport.getFinishNum());
+        // complete ：1 完成 2 未完成（计算逾期） 3 空白状态（不计算逾期）
+        personalMonthReport.setFinishNum((int)monthReportDetailDtoList.stream().filter(a -> 1 == a.getComplete()).map(PmPersonalMonthReportDetailDto::getComplete).count());
+        personalMonthReport.setOvertimeNum((int)monthReportDetailDtoList.stream().filter(a -> 0 == a.getComplete()).map(PmPersonalMonthReportDetailDto::getComplete).count());
         personalMonthReport.setCompeletionRate(
                 BigDecimal.valueOf(personalMonthReport.getFinishNum())
                         .multiply(BigDecimal.valueOf(100))

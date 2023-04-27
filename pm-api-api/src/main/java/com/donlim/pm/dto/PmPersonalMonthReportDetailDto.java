@@ -111,7 +111,12 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
      * 是否达成
      */
     @ApiModelProperty(value = "是否达成")
-    private Boolean complete;
+    private Integer complete;
+    /**
+     * 是否达成
+     */
+    @ApiModelProperty(value = "是否生成")
+    private Boolean autoGenerate;
     /**
      * 租户代码
      */
@@ -277,11 +282,11 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
         this.workHouresRate = workHouresRate;
     }
 
-    public Boolean getComplete() {
+    public Integer getComplete() {
         return complete;
     }
 
-    public void setComplete(Boolean complete) {
+    public void setComplete(Integer complete) {
         this.complete = complete;
     }
 
@@ -291,5 +296,13 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
 
     public void setLastEditedDate(Date lastEditedDate) {
         this.lastEditedDate = lastEditedDate;
+    }
+
+    public Boolean getAutoGenerate() {
+        return autoGenerate;
+    }
+
+    public void setAutoGenerate(Boolean autoGenerate) {
+        this.autoGenerate = autoGenerate;
     }
 }
