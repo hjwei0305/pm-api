@@ -116,7 +116,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
         if(CollectionUtils.isNotEmpty(monthReportDetailDtoList) && StringUtils.isNotBlank(monthReportDetailDtoList.get(0).getYm())){
             String userName = ContextUtil.getUserName();
             String userAccount = ContextUtil.getUserAccount();
-            userName = "张晓橦";
+//            userName = "张晓橦";
 //            userAccount = "376951";
             // 判断是否存在计划
 //            Optional<PmPersonalMonthReport> personalMonthReportOptional = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, monthReportDetailDtoList.get(0).getYm());
