@@ -67,7 +67,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
         ArrayList<PmPersonalMonthReportDetail> resultList = new ArrayList<>();
         // 姓名
         String userName = ContextUtil.getUserName();
-        userName = "张晓橦";
+//        userName = "张晓橦";
 //        //是否已有重复数据
 //        Optional<PmPersonalMonthReport> personalMonthReport = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, ym);
 //        if(personalMonthReport.isPresent()){
