@@ -43,6 +43,11 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
     @ApiModelProperty(value = "计划结束时间")
     private LocalDate planEndDate;
     /**
+     * 计划天数
+     */
+    @ApiModelProperty(value = "计划天数")
+    private Integer planDays;
+    /**
      * 实际开始时间
      */
     @ApiModelProperty(value = "实际开始时间")
@@ -304,5 +309,13 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
 
     public void setAutoGenerate(Boolean autoGenerate) {
         this.autoGenerate = autoGenerate;
+    }
+
+    public Integer getPlanDays() {
+        return planDays;
+    }
+
+    public void setPlanDays(Integer planDays) {
+        this.planDays = planDays;
     }
 }

@@ -44,6 +44,11 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
     @Column(name = "plan_end_date")
     private LocalDate planEndDate;
     /**
+     * 计划天数
+     */
+    @Column(name = "plan_days")
+    private Integer planDays;
+    /**
      * 实际开始时间
      */
     @Column(name = "actual_start_date")
@@ -283,5 +288,13 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
 
     public void setAutoGenerate(Boolean autoGenerate) {
         this.autoGenerate = autoGenerate;
+    }
+
+    public Integer getPlanDays() {
+        return planDays;
+    }
+
+    public void setPlanDays(Integer planDays) {
+        this.planDays = planDays;
     }
 }

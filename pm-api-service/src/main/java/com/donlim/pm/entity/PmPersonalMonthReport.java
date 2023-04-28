@@ -69,12 +69,22 @@ public class PmPersonalMonthReport extends BaseAuditableEntity implements Serial
     @Column(name = "overtime_num")
     private Integer overtimeNum;
     /**
-     * 达成率
+     * 实际达成率
      */
     @Column(name = "compeletion_rate")
     private BigDecimal compeletionRate;
     /**
-     * 所占比例
+     * 计划占比
+     */
+    @Column(name = "plan_hours_rate")
+    private BigDecimal planHoursRate;
+    /**
+     * 计划工作小时
+     */
+    @Column(name = "plan_hours")
+    private Integer planHours;
+    /**
+     * 实际占比例
      */
     @Column(name = "work_houres_rate")
     private BigDecimal workHouresRate;
@@ -192,5 +202,21 @@ public class PmPersonalMonthReport extends BaseAuditableEntity implements Serial
 
     public void setWorkHouresRate(BigDecimal workHouresRate) {
         this.workHouresRate = workHouresRate;
+    }
+
+    public BigDecimal getPlanHoursRate() {
+        return planHoursRate;
+    }
+
+    public void setPlanHoursRate(BigDecimal planHoursRate) {
+        this.planHoursRate = planHoursRate;
+    }
+
+    public Integer getPlanHours() {
+        return planHours;
+    }
+
+    public void setPlanHours(Integer planHours) {
+        this.planHours = planHours;
     }
 }

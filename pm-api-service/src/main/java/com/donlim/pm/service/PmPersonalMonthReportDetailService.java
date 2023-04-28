@@ -67,7 +67,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
         ArrayList<PmPersonalMonthReportDetail> resultList = new ArrayList<>();
         // 姓名
         String userName = ContextUtil.getUserName();
-//        userName = "张晓橦";
+        userName = "张晓橦";
 //        //是否已有重复数据
 //        Optional<PmPersonalMonthReport> personalMonthReport = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, ym);
 //        if(personalMonthReport.isPresent()){
@@ -84,7 +84,10 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
         LocalDate firstLocalDate = LocalDate.parse(firstDay, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate lastLocalDate = LocalDate.parse(lastDay, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         List<ProjectPlan> allPlan = projectPlanDao.getAllByWorkOndutyContainsAndPlanTypeNotAndPlanStartDateIsNotNullAndPlanEndDateIsNotNull(userName, "0");
-        List<ProjectPlan> collect = allPlan.stream().filter(a -> a.getPlanStartDate().compareTo(lastLocalDate) <= 0 && a.getPlanEndDate().compareTo(firstLocalDate) >= 0).collect(Collectors.toList());
+        List<ProjectPlan> collect = allPlan.stream()
+                .filter(a -> a.getPlanStartDate().compareTo(lastLocalDate) <= 0 && a.getPlanEndDate().compareTo(firstLocalDate) >= 0)
+                .sorted(Comparator.comparing(ProjectPlan::getProjectId))
+                .collect(Collectors.toList());
         int no = 1;
         for (ProjectPlan projectPlan : collect) {
             PmPersonalMonthReportDetail entity = modelMapper.map(projectPlan, PmPersonalMonthReportDetail.class);
@@ -95,6 +98,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
             entity.setScheNo(no++);
             entity.setAutoGenerate(true);
             entity.setComplete(2);
+            entity.setPlanDays(entity.getPlanEndDate().compareTo(entity.getPlanStartDate()) + 1);
             resultList.add(entity);
         }
         // 计算工作占比
@@ -112,7 +116,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
         if(CollectionUtils.isNotEmpty(monthReportDetailDtoList) && StringUtils.isNotBlank(monthReportDetailDtoList.get(0).getYm())){
             String userName = ContextUtil.getUserName();
             String userAccount = ContextUtil.getUserAccount();
-//            userName = "张晓橦";
+            userName = "张晓橦";
 //            userAccount = "376951";
             // 判断是否存在计划
 //            Optional<PmPersonalMonthReport> personalMonthReportOptional = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, monthReportDetailDtoList.get(0).getYm());
@@ -170,9 +174,16 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
                 BigDecimal.valueOf(personalMonthReport.getFinishNum())
                         .multiply(BigDecimal.valueOf(100))
                         .divide(BigDecimal.valueOf(personalMonthReport.getTotalNum()),2,BigDecimal.ROUND_HALF_UP));
+        // 实际工时、占比
         personalMonthReport.setWorkHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getWorkHours())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue());
         personalMonthReport.setWorkHouresRate(
                 BigDecimal.valueOf(personalMonthReport.getWorkHours())
+                        .multiply(BigDecimal.valueOf(100))
+                        .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
+        // 计划工时、占比
+        personalMonthReport.setPlanHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getPlanDays())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue() * 8);
+        personalMonthReport.setPlanHoursRate(
+                BigDecimal.valueOf(personalMonthReport.getPlanHours())
                         .multiply(BigDecimal.valueOf(100))
                         .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
     }

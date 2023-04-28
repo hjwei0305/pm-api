@@ -63,14 +63,24 @@ public class PmPersonalMonthReportDto extends BaseEntityDto {
     @ApiModelProperty(value = "逾期项")
     private Integer overtimeNum;
     /**
-     * 达成率
+     * 计划工作小时
      */
-    @ApiModelProperty(value = "达成率")
+    @ApiModelProperty(value = "计划工作小时")
+    private Integer planHours;
+    /**
+     * 计划占比
+     */
+    @ApiModelProperty(value = "计划占比")
+    private BigDecimal planHoursRate;
+    /**
+     * 实际达成率
+     */
+    @ApiModelProperty(value = "实际达成率")
     private BigDecimal compeletionRate;
     /**
-     * 所占比例
+     * 实际占比
      */
-    @ApiModelProperty(value = "所占比例")
+    @ApiModelProperty(value = "实际占比")
     private BigDecimal workHouresRate;
     /**
      * 工作小时
@@ -200,5 +210,21 @@ public class PmPersonalMonthReportDto extends BaseEntityDto {
 
     public void setLastEditedDate(Date lastEditedDate) {
         this.lastEditedDate = lastEditedDate;
+    }
+
+    public Integer getPlanHours() {
+        return planHours;
+    }
+
+    public void setPlanHours(Integer planHours) {
+        this.planHours = planHours;
+    }
+
+    public BigDecimal getPlanHoursRate() {
+        return planHoursRate;
+    }
+
+    public void setPlanHoursRate(BigDecimal planHoursRate) {
+        this.planHoursRate = planHoursRate;
     }
 }

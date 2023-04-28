@@ -71,4 +71,22 @@ public class HRMSConnector {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 处理组织不在中心人员，手动添加到指定科室（后续加优化）
+     * @return
+     */
+    public static List<EmployeeDTO.DataDTO> getOneEmp() {
+        REST_TEMPLATE.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        url = HRMSConstant.HRMSURL + HRMSConstant.GET_EMP;
+        try {
+            result = REST_TEMPLATE.getForEntity(url, String.class);
+        } catch (Exception e) {
+            throw (e);
+        }
+        List<EmployeeDTO> empList = JSONObject.parseArray("[" + result.getBody() + "]", EmployeeDTO.class);
+        return empList.get(0).getData().stream()
+                .filter(emp -> "381800".equals(emp.getEmployeeCode()) || "795888".equals(emp.getEmployeeCode()))
+                .collect(Collectors.toList());
+    }
+
 }
