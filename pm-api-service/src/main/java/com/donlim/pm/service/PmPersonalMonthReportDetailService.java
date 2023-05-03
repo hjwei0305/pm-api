@@ -98,7 +98,7 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
             entity.setScheNo(no++);
             entity.setAutoGenerate(true);
             entity.setComplete(2);
-            entity.setPlanDays(entity.getPlanEndDate().compareTo(entity.getPlanStartDate()) + 1);
+            entity.setPlanDays((int)(entity.getPlanEndDate().toEpochDay() - (entity.getPlanStartDate().toEpochDay())) + 1);
             resultList.add(entity);
         }
         // 计算工作占比
@@ -118,15 +118,14 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
             String userAccount = ContextUtil.getUserAccount();
 //            userName = "张晓橦";
 //            userAccount = "376951";
-            // 判断是否存在计划
-//            Optional<PmPersonalMonthReport> personalMonthReportOptional = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, monthReportDetailDtoList.get(0).getYm());
+            // 计划id非空，从详情进入修改
             if(StringUtils.isNotBlank(monthReportDetailDtoList.get(0).getPersonalMonthReportId())){
                 PmPersonalMonthReport personalMonthReport = pmPersonalMonthReportService.findByProperty("id", monthReportDetailDtoList.get(0).getPersonalMonthReportId());
-//                PmPersonalMonthReport personalMonthReport = personalMonthReportOptional.get();
                 if(!personalMonthReport.getEmployeeName().equals(userName)){
                     throw new SeiException("不能修改他人计划！");
                 }
                 dealPersonalMonthReport(personalMonthReport,monthReportDetailDtoList);
+                pmPersonalMonthReportService.save(personalMonthReport);
                 // 去除删除的明细
                 List<String> oldIds = findByFilter(new SearchFilter("personalMonthReportId", personalMonthReport.getId(), SearchFilter.Operator.EQ)).stream().map(PmPersonalMonthReportDetail::getId).collect(Collectors.toList());
                 oldIds.removeAll(monthReportDetailDtoList.stream().map(BaseEntityDto::getId).collect(Collectors.toList()));
@@ -135,27 +134,39 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
                     detailDto.setPersonalMonthReportId(personalMonthReport.getId());
                     detailList.add(modelMapper.map(detailDto,PmPersonalMonthReportDetail.class));
                 }
-                save(detailList);
-                detailList.sort(Comparator.comparingInt(PmPersonalMonthReportDetail::getScheNo));
-                return detailList;
             }else {
-                PmPersonalMonthReport personalMonthReport = new PmPersonalMonthReport();
-                PmEmployee employeeCode = pmEmployeeService.findByProperty("employeeCode", userAccount);
-                personalMonthReport.setEmployeeCode(userAccount);
-                personalMonthReport.setEmployeeName(userName);
-                personalMonthReport.setGroupName(employeeCode.getOrgname());
-                personalMonthReport.setYm(monthReportDetailDtoList.get(0).getYm());
-                dealPersonalMonthReport(personalMonthReport,monthReportDetailDtoList);
-                OperateResultWithData<PmPersonalMonthReport> saveResult = pmPersonalMonthReportService.save(personalMonthReport);
-                PmPersonalMonthReport saveMonthReport = saveResult.getData();
-                for (PmPersonalMonthReportDetailDto detailDto : monthReportDetailDtoList) {
-                    detailDto.setPersonalMonthReportId(saveMonthReport.getId());
-                    detailList.add(modelMapper.map(detailDto,PmPersonalMonthReportDetail.class));
+                // 计划id为空，判断是否重复创建
+                Optional<PmPersonalMonthReport> personalMonthReportOptional = pmPersonalMonthReportDao.getFirstByEmployeeNameAndYm(userName, monthReportDetailDtoList.get(0).getYm());
+                if(personalMonthReportOptional.isPresent()){
+                    PmPersonalMonthReport pmPersonalMonthReport = personalMonthReportOptional.get();
+                    dealPersonalMonthReport(pmPersonalMonthReport,monthReportDetailDtoList);
+                    pmPersonalMonthReportService.save(pmPersonalMonthReport);
+                    // 明细覆盖
+                    List<String> oldIds = findByFilter(new SearchFilter("personalMonthReportId", pmPersonalMonthReport.getId(), SearchFilter.Operator.EQ)).stream().map(PmPersonalMonthReportDetail::getId).collect(Collectors.toList());
+                    delete(oldIds);
+                    for (PmPersonalMonthReportDetailDto detailDto : monthReportDetailDtoList) {
+                        detailDto.setPersonalMonthReportId(pmPersonalMonthReport.getId());
+                        detailList.add(modelMapper.map(detailDto,PmPersonalMonthReportDetail.class));
+                    }
+                }else {
+                    PmPersonalMonthReport personalMonthReport = new PmPersonalMonthReport();
+                    PmEmployee employeeCode = pmEmployeeService.findByProperty("employeeCode", userAccount);
+                    personalMonthReport.setEmployeeCode(userAccount);
+                    personalMonthReport.setEmployeeName(userName);
+                    personalMonthReport.setGroupName(employeeCode.getOrgname());
+                    personalMonthReport.setYm(monthReportDetailDtoList.get(0).getYm());
+                    dealPersonalMonthReport(personalMonthReport,monthReportDetailDtoList);
+                    OperateResultWithData<PmPersonalMonthReport> saveResult = pmPersonalMonthReportService.save(personalMonthReport);
+                    PmPersonalMonthReport saveMonthReport = saveResult.getData();
+                    for (PmPersonalMonthReportDetailDto detailDto : monthReportDetailDtoList) {
+                        detailDto.setPersonalMonthReportId(saveMonthReport.getId());
+                        detailList.add(modelMapper.map(detailDto,PmPersonalMonthReportDetail.class));
+                    }
                 }
-                save(detailList);
-                detailList.sort(Comparator.comparingInt(PmPersonalMonthReportDetail::getScheNo));
-                return detailList;
             }
+            save(detailList);
+            detailList.sort(Comparator.comparingInt(PmPersonalMonthReportDetail::getScheNo));
+            return detailList;
         }
         return null;
     }
