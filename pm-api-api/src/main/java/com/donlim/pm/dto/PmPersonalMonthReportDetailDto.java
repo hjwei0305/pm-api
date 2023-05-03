@@ -87,6 +87,10 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "工作小时(H)")
     private Integer workHours;
+    @ApiModelProperty(value = "工作小时(手工)")
+    private Integer realWorkHours;
+    @ApiModelProperty(value = "所占比例(H)")
+    private BigDecimal realWorkHoursRate;
     /**
      * 协助人
      */
@@ -317,5 +321,21 @@ public class PmPersonalMonthReportDetailDto extends BaseEntityDto {
 
     public void setPlanDays(Integer planDays) {
         this.planDays = planDays;
+    }
+
+    public Integer getRealWorkHours() {
+        return realWorkHours;
+    }
+
+    public void setRealWorkHours(Integer realWorkHours) {
+        this.realWorkHours = realWorkHours;
+    }
+
+    public BigDecimal getRealWorkHoursRate() {
+        return realWorkHoursRate;
+    }
+
+    public void setRealWorkHoursRate(BigDecimal realWorkHoursRate) {
+        this.realWorkHoursRate = realWorkHoursRate;
     }
 }

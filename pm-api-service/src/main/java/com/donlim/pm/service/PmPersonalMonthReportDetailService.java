@@ -94,18 +94,20 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
             entity.setId(null);
             entity.setProjectName(projectPlan.getPmBaseinfo().getName());
             entity.setType("B");
-            entity.setWorkHours(ObjectUtils.isEmpty(entity.getSchedureDays()) ? 0 : entity.getSchedureDays()*8);
+//            entity.setWorkHours(ObjectUtils.isEmpty(entity.getSchedureDays()) ? 0 : entity.getSchedureDays()*8);
             entity.setScheNo(no++);
             entity.setAutoGenerate(true);
             entity.setComplete(2);
-            entity.setPlanDays((int)(entity.getPlanEndDate().toEpochDay() - (entity.getPlanStartDate().toEpochDay())) + 1);
+            entity.setRealWorkHours(0);
+            entity.setRealWorkHoursRate(BigDecimal.ZERO);
+//            entity.setPlanDays((int)(entity.getPlanEndDate().toEpochDay() - (entity.getPlanStartDate().toEpochDay())) + 1);
             resultList.add(entity);
         }
         // 计算工作占比
 //        BigDecimal sumHours = resultList.stream().map(a -> BigDecimal.valueOf(a.getWorkHours())).reduce(BigDecimal.ZERO, BigDecimal::add);
-        for (PmPersonalMonthReportDetail detail : resultList) {
-            detail.setWorkHouresRate(BigDecimal.valueOf(detail.getWorkHours()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(188),2,BigDecimal.ROUND_HALF_UP));
-        }
+//        for (PmPersonalMonthReportDetail detail : resultList) {
+//            detail.setWorkHouresRate(BigDecimal.valueOf(detail.getWorkHours()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(188),2,BigDecimal.ROUND_HALF_UP));
+//        }
 
         return resultList;
     }
@@ -185,17 +187,23 @@ public class PmPersonalMonthReportDetailService extends BaseEntityService<PmPers
                 BigDecimal.valueOf(personalMonthReport.getFinishNum())
                         .multiply(BigDecimal.valueOf(100))
                         .divide(BigDecimal.valueOf(personalMonthReport.getTotalNum()),2,BigDecimal.ROUND_HALF_UP));
-        // 实际工时、占比
-        personalMonthReport.setWorkHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getWorkHours())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue());
+        // 实际工时、占比（改用手工数据）
+        personalMonthReport.setWorkHours(monthReportDetailDtoList.stream().filter(a -> !ObjectUtils.isEmpty(a.getRealWorkHours())).map(a -> BigDecimal.valueOf(a.getRealWorkHours())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue());
         personalMonthReport.setWorkHouresRate(
                 BigDecimal.valueOf(personalMonthReport.getWorkHours())
                         .multiply(BigDecimal.valueOf(100))
                         .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
-        // 计划工时、占比
-        personalMonthReport.setPlanHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getPlanDays())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue() * 8);
-        personalMonthReport.setPlanHoursRate(
-                BigDecimal.valueOf(personalMonthReport.getPlanHours())
-                        .multiply(BigDecimal.valueOf(100))
-                        .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
+//        // 实际工时、占比
+//        personalMonthReport.setWorkHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getWorkHours())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue());
+//        personalMonthReport.setWorkHouresRate(
+//                BigDecimal.valueOf(personalMonthReport.getWorkHours())
+//                        .multiply(BigDecimal.valueOf(100))
+//                        .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
+//        // 计划工时、占比
+//        personalMonthReport.setPlanHours(monthReportDetailDtoList.stream().map(a -> BigDecimal.valueOf(a.getPlanDays())).reduce(BigDecimal.ZERO,BigDecimal::add).intValue() * 8);
+//        personalMonthReport.setPlanHoursRate(
+//                BigDecimal.valueOf(personalMonthReport.getPlanHours())
+//                        .multiply(BigDecimal.valueOf(100))
+//                        .divide(BigDecimal.valueOf(188),0,BigDecimal.ROUND_HALF_UP));
     }
 }

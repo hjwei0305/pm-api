@@ -79,6 +79,16 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
     @Column(name = "type")
     private String type;
     /**
+     * 所占比例(手工)
+     */
+    @Column(name = "real_work_hours_rate")
+    private BigDecimal realWorkHoursRate;
+    /**
+     * 工作小时(手工)
+     */
+    @Column(name = "real_work_hours")
+    private Integer realWorkHours;
+    /**
      * 所占比例(%)
      */
     @Column(name = "work_houres_rate")
@@ -296,5 +306,21 @@ public class PmPersonalMonthReportDetail extends BaseAuditableEntity implements 
 
     public void setPlanDays(Integer planDays) {
         this.planDays = planDays;
+    }
+
+    public BigDecimal getRealWorkHoursRate() {
+        return realWorkHoursRate;
+    }
+
+    public void setRealWorkHoursRate(BigDecimal realWorkHoursRate) {
+        this.realWorkHoursRate = realWorkHoursRate;
+    }
+
+    public Integer getRealWorkHours() {
+        return realWorkHours;
+    }
+
+    public void setRealWorkHours(Integer realWorkHours) {
+        this.realWorkHours = realWorkHours;
     }
 }
