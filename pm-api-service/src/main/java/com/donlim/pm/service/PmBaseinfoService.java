@@ -606,6 +606,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             String proOpt = null;
             if(StringUtils.isBlank(pmBaseinfo.getProOptId())){
                 if(StringUtils.isBlank(pmBaseinfo.getProOpt())){
+                    // 没有配置任何流程
                     reportDto.setRequirement("/");
                     reportDto.setDevelopment("/");
                     reportDto.setTest("/");
@@ -662,22 +663,27 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         BigDecimal finishNum = BigDecimal.ONE;
         BigDecimal allNum = BigDecimal.ONE;
 
-        for (int i = 2;i <= 6 ;i++) {
+        for (int i = 2;i <= 7 ;i++) {
             if(!proOptMap.containsKey(String.valueOf(i))){
                 switch (i){
                     case 2:
                         reportDto.setRequirement("/");
                         break;
                     case 3:
-                        reportDto.setDevelopment("/");
+                        if(StringUtils.isBlank(reportDto.getRequirement())){
+                            reportDto.setRequirement("/");
+                        }
                         break;
                     case 4:
-                        reportDto.setTest("/");
+                        reportDto.setDevelopment("/");
                         break;
                     case 5:
-                        reportDto.setPromote("/");
+                        reportDto.setTest("/");
                         break;
                     case 6:
+                        reportDto.setPromote("/");
+                        break;
+                    case 7:
                         reportDto.setFinish("/");
                         break;
                 }
@@ -686,7 +692,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                 if(ObjectUtils.isEmpty(anEnum)){
                     result = "0";
                 }else {
-                    result = anEnum.ordinal() >= i ? "1" : "0";
+                    result = anEnum.ordinal()+1 >= i ? "1" : "0";
                     allNum = allNum.add(BigDecimal.ONE);
                     if("1".equals(result)){
                         finishNum = finishNum.add(BigDecimal.ONE);
@@ -697,15 +703,20 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                         reportDto.setRequirement(result);
                         break;
                     case 3:
-                        reportDto.setDevelopment(result);
+                        if(StringUtils.isBlank(reportDto.getRequirement())){
+                            reportDto.setRequirement(result);
+                        }
                         break;
                     case 4:
-                        reportDto.setTest(result);
+                        reportDto.setDevelopment(result);
                         break;
                     case 5:
-                        reportDto.setPromote(result);
+                        reportDto.setTest(result);
                         break;
                     case 6:
+                        reportDto.setPromote(result);
+                        break;
+                    case 7:
                         reportDto.setFinish(result);
                         break;
                 }

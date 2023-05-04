@@ -23,6 +23,11 @@ public class ProScheduleReportDTO extends BaseEntity {
     @Column(name = "project_types")
     private String projectTypes;
     /**
+     * 系统名称
+     */
+    @Column(name = "sys_name")
+    private String sysName;
+    /**
      * 项目名称
      */
     @Column(name = "name")
