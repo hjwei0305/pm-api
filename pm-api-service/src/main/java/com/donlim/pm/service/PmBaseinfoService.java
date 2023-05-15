@@ -732,45 +732,35 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
      */
     public List<YearProjectReportDTO> getYearProjectReport(Search search) {
         List<SearchFilter> filters = search.getFilters();
-        String year = null;
-        String orgname = null;
-        List<PmOrganize> orgList = new ArrayList<>();
+        // 处理科室
+        List<PmOrganize> orgList = pmOrganizeService.getChildrenNodesByName("数字化管理中心").stream()
+                .filter(a -> !a.getFrozen() &&  ("系统运维管理部".equals(a.getName()) || a.getNodeLevel() == 3))
+                .collect(Collectors.toList());
         List<YearProjectReportDTO> resultList = new ArrayList<>();
         for (SearchFilter filter : filters) {
             if("orgname".equals(filter.getFieldName())){
-                orgname = (String) filter.getValue();
-            }
-            if("year".equals(filter.getFieldName())){
-                year = (String) filter.getValue();
+                orgList = orgList.stream().filter(a -> (filter.getValue()).equals(a.getName()))
+                        .collect(Collectors.toList());
             }
         }
-        // 处理科室
-        if(StringUtils.isNotBlank(orgname)){
-            orgList = pmOrganizeService.getChildrenNodesByName(orgname);
-        }else {
-            orgList = pmOrganizeService.getChildrenNodesByName("数字化管理中心");
-        }
-        orgList = orgList.stream().filter(a -> "系统运维管理部".equals(a.getName()) || a.getNodeLevel() == 3).collect(Collectors.toList());
         List<PmBaseinfo> baseinfoList = findByFilters(search);
         for (PmOrganize pmOrganize : orgList) {
-            List<PmBaseinfo> pmBaseinfoList = baseinfoList.stream().filter(info -> pmOrganize.getName().equals(info.getOrgname())).collect(Collectors.toList());
+            List<PmBaseinfo> pmBaseinfoList = baseinfoList.stream()
+                    .filter(info -> pmOrganize.getName().equals(info.getOrgname()))
+                    .collect(Collectors.toList());
             // 科室名称、科室负责人
             YearProjectReportDTO yearProjectReportDTO = dtoModelMapper.map(pmOrganize, YearProjectReportDTO.class);
             // 结案数量
             long finishNum = pmBaseinfoList.stream()
-                    .filter(a -> EnumUtils.getEnumByRemark(ProjectProgress.class, "项目结案").equals(a.getCurrentPeriod())
-                            && pmOrganize.getName().equals(a.getOrgname()))
-                    .count();
-            // 未结案数量
-            long notFinishNum = pmBaseinfoList.stream()
-                    .filter(a -> a.getIsPause() == false
-                            && !EnumUtils.getEnumByRemark(ProjectProgress.class, "项目结案").equals(a.getCurrentPeriod())
-                            && pmOrganize.getName().equals(a.getOrgname()))
+                    .filter(a -> "项目结案".equals(a.getCurrentPeriod()) && pmOrganize.getName().equals(a.getOrgname()))
                     .count();
             // 暂停数量
             long pauseNum = pmBaseinfoList.stream().filter(a -> a.getIsPause() == true).count();
             // 项目总数
             long totalNum = pmBaseinfoList.size();
+            // 未结案数量
+            long notFinish = totalNum - pauseNum - finishNum;
+            long notFinishNum = notFinish >= 0 ? notFinish : 0;
             yearProjectReportDTO.setFinishNum(finishNum);
             yearProjectReportDTO.setNotFinishNum(notFinishNum);
             yearProjectReportDTO.setPauseNum(pauseNum);

@@ -94,8 +94,11 @@ public class PmEmployeeService extends BaseEntityService<PmEmployee> {
         }
         for (PmEmployee emp : allList) {
             if(saveList.stream().filter(o -> emp.getEmployeeCode().equals(o.getEmployeeCode())).collect(Collectors.toList()).size() == 0 ){
-                emp.setEmpstatid(EmpstatidEnum.LEAVE);
-                saveList.add(emp);
+                if(!"381799".equals(emp.getEmployeeCode()) && !"795888".equals(emp.getEmployeeCode())
+                        && !"381800".equals(emp.getEmployeeCode())){
+                    emp.setEmpstatid(EmpstatidEnum.LEAVE);
+                    saveList.add(emp);
+                }
             }
         }
         save(saveList);

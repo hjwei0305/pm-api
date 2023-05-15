@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +30,16 @@ import java.util.Map;
 @FeignClient(name = "pm-api", path = PmOrganizeApi.PATH)
 public interface PmOrganizeApi extends BaseTreeApi<PmOrganizeDto>, FindByPageApi<PmOrganizeDto> {
     String PATH = "pmOrganize";
+    /**
+     * 获取一个节点的所有子节点（非冻结）
+     *
+     * @param nodeId      节点Id
+     * @param includeSelf 是否包含本节点
+     * @return 子节点清单
+     */
+    @GetMapping(path = "getChildrenNodesNotFrozen")
+    @ApiOperation(value = "获取一个节点的所有子节点", notes = "获取一个节点的所有子节点,可以包含本节点")
+    ResultData<List<PmOrganizeDto>> getChildrenNodesNotFrozen(@RequestParam("nodeId") String nodeId, @RequestParam("includeSelf") boolean includeSelf);
 
     /**
      * 获取组织结构树

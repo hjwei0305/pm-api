@@ -6,6 +6,8 @@ import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.excel.PmBaseinfoExcelDto;
+import com.donlim.pm.dto.excel.ProScheduleReportExcelDto;
+import com.donlim.pm.dto.excel.YearProjectReportExcelDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -95,7 +97,7 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     ResultData findPageByUserName() throws IllegalAccessException;
 
     /**
-     * 订单一览表导出excel
+     * 项目导出excel
      * @param search 查询条件
      */
     @PostMapping(path = "export",consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -111,11 +113,27 @@ public interface PmBaseinfoApi extends BaseEntityApi<PmBaseinfoDto>, FindByPageA
     ResultData getProScheduleReport(@RequestBody Search search);
 
     /**
+     * 项目进度表导出excel
+     * @param search 查询条件
+     */
+    @PostMapping(path = "exportProScheduleReport",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "导出项目" ,notes = "导出项目")
+    ResultData<List<ProScheduleReportExcelDto>> exportProScheduleReport(@RequestBody Search search);
+
+    /**
      * 科室年度项目
      * @param search 查询条件
      */
     @PostMapping(path = "getYearProjectReport",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "科室年度项目" ,notes = "项目进度表")
     ResultData getYearProjectReport(@RequestBody Search search);
+
+    /**
+     * 科室年度项目导出excel
+     * @param search 查询条件
+     */
+    @PostMapping(path = "exportYearProjReport",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "导出项目" ,notes = "导出项目")
+    ResultData<List<YearProjectReportExcelDto>> exportYearProjReport(@RequestBody Search search);
 
 }

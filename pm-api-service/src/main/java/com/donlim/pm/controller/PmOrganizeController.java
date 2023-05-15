@@ -52,6 +52,14 @@ public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrgan
     }
 
     @Override
+    public ResultData<List<PmOrganizeDto>> getChildrenNodesNotFrozen(String nodeId, boolean includeSelf) {
+        List<PmOrganizeDto> resultList = getChildrenNodes(nodeId, includeSelf).getData().stream()
+                .filter(a -> !a.getFrozen())
+                .collect(Collectors.toList());
+        return ResultData.success(resultList);
+    }
+
+    @Override
     public ResultData<PmOrganizeDto> findTree() {
         return ResultData.success(convertToDto(service.findTree()));
     }

@@ -14,7 +14,11 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.api.PmBaseinfoApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.ProScheduleReportDTO;
+import com.donlim.pm.dto.YearProjectReportDTO;
 import com.donlim.pm.dto.excel.PmBaseinfoExcelDto;
+import com.donlim.pm.dto.excel.ProScheduleReportExcelDto;
+import com.donlim.pm.dto.excel.YearProjectReportExcelDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
@@ -443,8 +447,24 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     }
 
     @Override
+    public ResultData<List<ProScheduleReportExcelDto>> exportProScheduleReport(Search search) {
+        List<ProScheduleReportDTO> proScheduleReportDTOS = service.getProScheduleReport(search);
+        TypeMap<ProScheduleReportDTO, ProScheduleReportExcelDto> typeMap = dtoModelMapper.typeMap(ProScheduleReportDTO.class, ProScheduleReportExcelDto.class);
+        List<ProScheduleReportExcelDto> excelList = proScheduleReportDTOS.stream().map(typeMap::map).collect(Collectors.toList());
+        return ResultData.success(excelList);
+    }
+
+    @Override
     public ResultData getYearProjectReport(Search search) {
         return ResultData.success(service.getYearProjectReport(search));
+    }
+
+    @Override
+    public ResultData<List<YearProjectReportExcelDto>> exportYearProjReport(Search search) {
+        List<YearProjectReportDTO> yearProjectReportDTOS = service.getYearProjectReport(search);
+        TypeMap<YearProjectReportDTO, YearProjectReportExcelDto> typeMap = dtoModelMapper.typeMap(YearProjectReportDTO.class, YearProjectReportExcelDto.class);
+        List<YearProjectReportExcelDto> excelList = yearProjectReportDTOS.stream().map(typeMap::map).collect(Collectors.toList());
+        return ResultData.success(excelList);
     }
 
     @Override
