@@ -1,5 +1,6 @@
 package com.donlim.pm.controller;
 
+import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
@@ -21,6 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,6 +64,11 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
 
     @Override
     public ResultData<PmBaseinfoWeekDto> save(PmBaseinfoWeekDto dto) {
+        // 限制修改权限
+        PmBaseinfo pmBaseinfo = pmBaseinfoService.findFirstByProperty("id", dto.getBaseinfoId());
+        if(!pmBaseinfo.getMember().contains(ContextUtil.getUserName())){
+            return ResultData.fail("非项目成员，没有修改权限");
+        }
         // 字数判断
         if(StringUtils.isBlank(dto.getWeekPlan()) || dto.getWeekPlan().length() <5){
             return ResultData.fail("本周计划字数不能少于5个。");
@@ -76,12 +83,12 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
         ResultData<PmBaseinfoWeekDto> result = super.save(dto);
         PmBaseinfoWeekDto resultDto = result.getData();
         // 保存到项目信息
-        PmBaseinfo pmBaseinfo = pmBaseinfoService.findFirstByProperty("id", dto.getBaseinfoId());
         pmBaseinfo.setWeekPlan(resultDto.getWeekPlan());
         pmBaseinfo.setNextWeekPlan(resultDto.getNextWeekPlan());
         Instant instant = resultDto.getLastEditedDate().toInstant();
         pmBaseinfo.setWeekPlanUpdate(instant.atZone(ZoneId.systemDefault()).toLocalDate());
         pmBaseinfoService.save(pmBaseinfo);
+        // 双周保存日志
         pmLogService.save(LogType.ModifyWeekPlan,modelMapper.map(pmBaseinfo, PmBaseinfoDto.class));
         // 新建点击保存 -- 判断有无附件进行绑定；非新建 -- 上传就绑定
         if (StringUtils.isEmpty(dto.getId()) && !CollectionUtils.isEmpty(dto.getAttachmentIdList())) {
@@ -96,5 +103,20 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
     public ResultData<PmBaseinfoWeekDto> saveAttachList(PmBaseinfoWeekDto dto) throws IllegalAccessException {
         service.bindFileList(dto);
         return ResultDataUtil.success("执行成功");
+    }
+
+    @Override
+    public ResultData getWeekReport(Search search) {
+        return ResultData.success(service.getWeekReport(search));
+
+    }
+
+    @Override
+    public ResultData<PmBaseinfoWeekDto> confirmFinishPlan(PmBaseinfoWeekDto dto) {
+        PmBaseinfoWeek pmBaseinfoWeek = service.confirmFinishPlan(dto);
+        if(!ObjectUtils.isEmpty(pmBaseinfoWeek)){
+            return ResultData.success(convertToDto(pmBaseinfoWeek));
+        }
+        return ResultData.fail("id为【" + dto.getId() + "】的双周计划不存在，请联系管理员");
     }
 }

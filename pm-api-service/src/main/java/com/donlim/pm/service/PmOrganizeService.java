@@ -51,6 +51,12 @@ public class PmOrganizeService extends BaseTreeService<PmOrganize> {
             if(pmOrganizes.size()>0){
                 // 更新
                 PmOrganize pmOrganize  = pmOrganizes.get(0);
+                pmOrganize.setOrgid(dataDTO.getOrgid());
+                pmOrganize.setCode(dataDTO.getCode());
+                pmOrganize.setName(dataDTO.getOrgname());
+                pmOrganize.setExtorgname(dataDTO.getExtorgname());
+                pmOrganize.setSuperid(dataDTO.getSuperid());
+                pmOrganize.setIdpath(dataDTO.getIdpath());
                 pmOrganize.setFrozen(false);
                 saveList.add(pmOrganize);
             }else {
