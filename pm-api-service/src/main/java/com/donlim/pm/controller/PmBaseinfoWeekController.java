@@ -10,6 +10,8 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.PmBaseinfoWeekApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.PmBaseinfoWeekDto;
+import com.donlim.pm.dto.WeekReportDto;
+import com.donlim.pm.dto.excel.WeekPlanReportExcelDto;
 import com.donlim.pm.em.LogType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.PmBaseinfoWeek;
@@ -19,6 +21,7 @@ import com.donlim.pm.service.PmLogService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -118,5 +123,13 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
             return ResultData.success(convertToDto(pmBaseinfoWeek));
         }
         return ResultData.fail("id为【" + dto.getId() + "】的双周计划不存在，请联系管理员");
+    }
+
+    @Override
+    public ResultData<List<WeekPlanReportExcelDto>> exportWeekPlanReport(Search search) {
+        List<WeekReportDto> weekReportDTOS = service.getWeekReport(search);
+        TypeMap<WeekReportDto, WeekPlanReportExcelDto> typeMap = dtoModelMapper.typeMap(WeekReportDto.class, WeekPlanReportExcelDto.class);
+        List<WeekPlanReportExcelDto> excelList = weekReportDTOS.stream().map(typeMap::map).collect(Collectors.toList());
+        return ResultData.success(excelList);
     }
 }

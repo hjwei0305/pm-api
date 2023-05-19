@@ -5,6 +5,7 @@ import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.Search;
 import com.donlim.pm.dto.PmBaseinfoWeekDto;
+import com.donlim.pm.dto.excel.WeekPlanReportExcelDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 /**
@@ -50,4 +52,13 @@ public interface PmBaseinfoWeekApi extends BaseEntityApi<PmBaseinfoWeekDto>, Fin
     @PostMapping(path = "confirmFinishPlan",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "验证双周计划是否完成" ,notes = "验证双周计划是否完成")
     ResultData<PmBaseinfoWeekDto> confirmFinishPlan(@RequestBody PmBaseinfoWeekDto dto);
+
+    /**
+     * 双周明细导出excel
+     * @param search 查询条件
+     */
+    @PostMapping(path = "exportWeekPlanReport",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "双周明细导出excel" ,notes = "双周明细导出excel")
+    ResultData<List<WeekPlanReportExcelDto>> exportWeekPlanReport(@RequestBody Search search);
+
 }
