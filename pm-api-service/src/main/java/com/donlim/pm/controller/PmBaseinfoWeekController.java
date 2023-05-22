@@ -90,6 +90,7 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
         // 保存到项目信息
         pmBaseinfo.setWeekPlan(resultDto.getWeekPlan());
         pmBaseinfo.setNextWeekPlan(resultDto.getNextWeekPlan());
+        pmBaseinfo.setWorkRisk(resultDto.getWorkRisk());
         Instant instant = resultDto.getLastEditedDate().toInstant();
         pmBaseinfo.setWeekPlanUpdate(instant.atZone(ZoneId.systemDefault()).toLocalDate());
         pmBaseinfoService.save(pmBaseinfo);
