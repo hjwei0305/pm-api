@@ -35,12 +35,10 @@ import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -267,22 +265,26 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
 //            pmBaseinfoDto = convertToDto(pmBaseinfo);
             pmBaseinfoDto = dto;
             pmBaseinfoDto.setId(pmBaseinfo.getId());
+            pmBaseinfoDto.setWeekPlan(pmBaseinfo.getWeekPlan());
+            pmBaseinfoDto.setNextWeekPlan(pmBaseinfo.getNextWeekPlan());
+            pmBaseinfoDto.setWorkRisk(pmBaseinfo.getWorkRisk());
+            pmBaseinfoDto.setWeekPlanUpdate(pmBaseinfo.getWeekPlanUpdate());
         } else {
             pmBaseinfoDto = dto;
             pmBaseinfoDto.setId(null);
         }
-        if(!ObjectUtils.isEmpty(pmBaseinfoDto.getWeekPlanUpdate()) && pmBaseinfoDto.getWeekPlanUpdate().compareTo(LocalDate.now()) >= 0){
-            if(StringUtils.isBlank(pmBaseinfoDto.getWeekPlan()) || pmBaseinfoDto.getWeekPlan().length() <5){
-                return ResultData.fail("本周计划字数不能少于5个。");
-            }
-            if(StringUtils.isBlank(pmBaseinfoDto.getNextWeekPlan()) ||pmBaseinfoDto.getNextWeekPlan().length() <5){
-                return ResultData.fail("下周计划字数不能少于5个。");
-            }
-            if(StringUtils.isBlank(pmBaseinfoDto.getWorkRisk())){
-                return ResultData.fail("工作风险点不能为空。");
-            }
-            pmLogService.save(LogType.ModifyWeekPlan,pmBaseinfoDto);
-        }
+//        if(!ObjectUtils.isEmpty(pmBaseinfoDto.getWeekPlanUpdate()) && pmBaseinfoDto.getWeekPlanUpdate().compareTo(LocalDate.now()) >= 0){
+//            if(StringUtils.isBlank(pmBaseinfoDto.getWeekPlan()) || pmBaseinfoDto.getWeekPlan().length() <5){
+//                return ResultData.fail("本周计划字数不能少于5个。");
+//            }
+//            if(StringUtils.isBlank(pmBaseinfoDto.getNextWeekPlan()) ||pmBaseinfoDto.getNextWeekPlan().length() <5){
+//                return ResultData.fail("下周计划字数不能少于5个。");
+//            }
+//            if(StringUtils.isBlank(pmBaseinfoDto.getWorkRisk())){
+//                return ResultData.fail("工作风险点不能为空。");
+//            }
+//            pmLogService.save(LogType.ModifyWeekPlan,pmBaseinfoDto);
+//        }
         if(StringUtils.isEmpty(pmBaseinfoDto.getYear())){
             return ResultData.fail("项目年份为空，不能保存。");
         }
@@ -301,18 +303,18 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         if(dto.getStartDate() == null || dto.getPlanFinishDate() == null){
             return ResultData.fail("项目开始或计划结案日期为空，不能保存。");
         }
-        pmBaseinfoDto.setProjectTypes(dto.getProjectTypes());
-        pmBaseinfoDto.setCurrentPeriod(dto.getCurrentPeriod());
-        pmBaseinfoDto.setLeader(dto.getLeader());
-        pmBaseinfoDto.setAssist(dto.getAssist());
-        pmBaseinfoDto.setDesigner(dto.getDesigner());
-        pmBaseinfoDto.setImplementer(dto.getImplementer());
-        pmBaseinfoDto.setDeveloper(dto.getDeveloper());
-        pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
-        pmBaseinfoDto.setProOpt(dto.getProOpt());
-        pmBaseinfoDto.setStartDate(dto.getStartDate());
-        pmBaseinfoDto.setPlanFinishDate(dto.getPlanFinishDate());
-        pmBaseinfoDto.setFinalFinishDate(dto.getFinalFinishDate());
+//        pmBaseinfoDto.setProjectTypes(dto.getProjectTypes());
+//        pmBaseinfoDto.setCurrentPeriod(dto.getCurrentPeriod());
+//        pmBaseinfoDto.setLeader(dto.getLeader());
+//        pmBaseinfoDto.setAssist(dto.getAssist());
+//        pmBaseinfoDto.setDesigner(dto.getDesigner());
+//        pmBaseinfoDto.setImplementer(dto.getImplementer());
+//        pmBaseinfoDto.setDeveloper(dto.getDeveloper());
+//        pmBaseinfoDto.setAttendanceMemberrCount(dto.getAttendanceMemberrCount());
+//        pmBaseinfoDto.setProOpt(dto.getProOpt());
+//        pmBaseinfoDto.setStartDate(dto.getStartDate());
+//        pmBaseinfoDto.setPlanFinishDate(dto.getPlanFinishDate());
+//        pmBaseinfoDto.setFinalFinishDate(dto.getFinalFinishDate());
         pmBaseinfoDto.setStatus(null != dto.getStatus() ? dto.getStatus() : "0");
         if(!StringUtils.isBlank(dto.getOrgname())){
             pmBaseinfoDto.setOrgname(dto.getOrgname());
