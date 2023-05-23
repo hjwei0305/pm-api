@@ -106,4 +106,8 @@ public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrgan
         service.synOrg();
         return ResultDataUtil.success("执行成功");
     }
+
+    //写一个二分查找
+
+
 }
