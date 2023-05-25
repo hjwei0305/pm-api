@@ -70,15 +70,15 @@ public class PmBaseinfoWeekService extends BaseEntityService<PmBaseinfoWeek> {
 
     public List<WeekReportDto> getWeekReport(Search search) {
         List<PmBaseinfo> pmBaseinfoList = pmBaseinfoService.findByFilters(search);
-        // 项目类型转换
-        for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
-            if(StringUtils.isNotEmpty(pmBaseinfo.getProjectTypes())){
-                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(pmBaseinfo.getProjectTypes()));
-                pmBaseinfo.setProjectTypes(enumItemRemark);
-            }
-        }
         TypeMap<PmBaseinfo, WeekReportDto> typeMap = modelMapper.typeMap(PmBaseinfo.class, WeekReportDto.class);
         List<WeekReportDto> weekReportDtoList = pmBaseinfoList.stream().map(typeMap::map).collect(Collectors.toList());
+        // 项目类型转换
+        for (WeekReportDto weekReportDto : weekReportDtoList) {
+            if(StringUtils.isNotEmpty(weekReportDto.getProjectTypes())){
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(weekReportDto.getProjectTypes()));
+                weekReportDto.setProjectTypes(enumItemRemark);
+            }
+        }
         // 双周计划根据项目id分组
         Map<String, List<PmBaseinfoWeek>> weekMap = findAll().stream()
                 .sorted(Comparator.comparing(PmBaseinfoWeek::getCreatedDate,Comparator.reverseOrder()))
