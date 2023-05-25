@@ -6,6 +6,7 @@ import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.dao.PmLogDao;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.em.LogType;
+import com.donlim.pm.em.OperationType;
 import com.donlim.pm.entity.PmLog;
 import com.donlim.pm.util.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,14 @@ public class PmLogService extends BaseEntityService<PmLog> {
         pmLog.setContent(EnumUtils.getEnumItemRemark(LogType.class,logType));
         pmLog.setProjectId(dto.getId());
         pmLog.setProjectTypes(dto.getProjectTypes());
+        dao.save(pmLog);
+    }
+
+    public void save(OperationType operationType){
+        PmLog pmLog=new PmLog();
+        pmLog.setEmployeeCode(ContextUtil.getUserAccount());
+        pmLog.setEmployeeName(ContextUtil.getUserName());
+        pmLog.setContent(EnumUtils.getEnumItemRemark(OperationType.class,operationType));
         dao.save(pmLog);
     }
 

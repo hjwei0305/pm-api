@@ -1,6 +1,5 @@
 package com.donlim.pm.controller;
 
-import com.changhong.sei.basic.api.UserApi;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.controller.BaseEntityController;
 import com.changhong.sei.core.dto.ResultData;
@@ -11,7 +10,6 @@ import com.changhong.sei.core.dto.serach.SearchOrder;
 import com.changhong.sei.core.log.LogUtil;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.changhong.sei.core.utils.ResultDataUtil;
-import com.changhong.sei.edm.sdk.DocumentManager;
 import com.donlim.pm.api.PmBaseinfoApi;
 import com.donlim.pm.dto.PmBaseinfoDto;
 import com.donlim.pm.dto.ProScheduleReportDTO;
@@ -20,6 +18,7 @@ import com.donlim.pm.dto.excel.PmBaseinfoExcelDto;
 import com.donlim.pm.dto.excel.ProScheduleReportExcelDto;
 import com.donlim.pm.dto.excel.YearProjectReportExcelDto;
 import com.donlim.pm.em.LogType;
+import com.donlim.pm.em.OperationType;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.ProjectPlan;
@@ -61,10 +60,6 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     private PmBaseinfoService service;
     @Autowired
     private PmLogService pmLogService;
-    @Autowired
-    private DocumentManager documentManager;
-    @Autowired
-    private UserApi userApi;
     @Autowired
     private TodoListService todoListService;
     @Autowired
@@ -245,6 +240,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
     @Override
     public ResultData<PmBaseinfoDto> save(PmBaseinfoDto dto) {
         service.bindFile(dto);
+        pmLogService.save(OperationType.UploadProjFile);
         return ResultData.success();
     }
 
@@ -453,6 +449,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         List<ProScheduleReportDTO> proScheduleReportDTOS = service.getProScheduleReport(search);
         TypeMap<ProScheduleReportDTO, ProScheduleReportExcelDto> typeMap = dtoModelMapper.typeMap(ProScheduleReportDTO.class, ProScheduleReportExcelDto.class);
         List<ProScheduleReportExcelDto> excelList = proScheduleReportDTOS.stream().map(typeMap::map).collect(Collectors.toList());
+        pmLogService.save(OperationType.ExportProSchedule);
         return ResultData.success(excelList);
     }
 
@@ -466,6 +463,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
         List<YearProjectReportDTO> yearProjectReportDTOS = service.getYearProjectReport(search);
         TypeMap<YearProjectReportDTO, YearProjectReportExcelDto> typeMap = dtoModelMapper.typeMap(YearProjectReportDTO.class, YearProjectReportExcelDto.class);
         List<YearProjectReportExcelDto> excelList = yearProjectReportDTOS.stream().map(typeMap::map).collect(Collectors.toList());
+        pmLogService.save(OperationType.ExportYearProjReport);
         return ResultData.success(excelList);
     }
 

@@ -8,7 +8,9 @@ import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.core.service.BaseEntityService;
 import com.donlim.pm.api.PmPersonalMonthReportDetailApi;
 import com.donlim.pm.dto.PmPersonalMonthReportDetailDto;
+import com.donlim.pm.em.OperationType;
 import com.donlim.pm.entity.PmPersonalMonthReportDetail;
+import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.service.PmPersonalMonthReportDetailService;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
@@ -36,6 +38,8 @@ public class PmPersonalMonthReportDetailController extends BaseEntityController<
      */
     @Autowired
     private PmPersonalMonthReportDetailService service;
+    @Autowired
+    private PmLogService pmLogService;
 
     @Override
     public BaseEntityService<PmPersonalMonthReportDetail> getService() {
@@ -68,6 +72,7 @@ public class PmPersonalMonthReportDetailController extends BaseEntityController<
     public ResultData monthPlanSaveBatch(List<PmPersonalMonthReportDetailDto> monthReportDetailDtoList) {
         List<PmPersonalMonthReportDetail> pmPersonalMonthReportDetails = service.monthPlanSaveBatch(monthReportDetailDtoList);
         if(CollectionUtils.isNotEmpty(pmPersonalMonthReportDetails)){
+            pmLogService.save(OperationType.SavePersonalMonthReport);
             return ResultData.success(pmPersonalMonthReportDetails);
         }
         return ResultData.fail("保存内容或月份不能为空");

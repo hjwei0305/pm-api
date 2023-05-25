@@ -13,6 +13,7 @@ import com.donlim.pm.dto.PmBaseinfoWeekDto;
 import com.donlim.pm.dto.WeekReportDto;
 import com.donlim.pm.dto.excel.WeekPlanReportExcelDto;
 import com.donlim.pm.em.LogType;
+import com.donlim.pm.em.OperationType;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.PmBaseinfoWeek;
 import com.donlim.pm.service.PmBaseinfoService;
@@ -121,6 +122,7 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
     public ResultData<PmBaseinfoWeekDto> confirmFinishPlan(PmBaseinfoWeekDto dto) {
         PmBaseinfoWeek pmBaseinfoWeek = service.confirmFinishPlan(dto);
         if(!ObjectUtils.isEmpty(pmBaseinfoWeek)){
+            pmLogService.save(OperationType.ConfirmWeekPlan);
             return ResultData.success(convertToDto(pmBaseinfoWeek));
         }
         return ResultData.fail("id为【" + dto.getId() + "】的双周计划不存在，请联系管理员");
@@ -131,6 +133,7 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
         List<WeekReportDto> weekReportDTOS = service.getWeekReport(search);
         TypeMap<WeekReportDto, WeekPlanReportExcelDto> typeMap = dtoModelMapper.typeMap(WeekReportDto.class, WeekPlanReportExcelDto.class);
         List<WeekPlanReportExcelDto> excelList = weekReportDTOS.stream().map(typeMap::map).collect(Collectors.toList());
+        pmLogService.save(OperationType.ExportWeekPlanReport);
         return ResultData.success(excelList);
     }
 }

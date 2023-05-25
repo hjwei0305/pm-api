@@ -11,7 +11,9 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.PmOrganizeApi;
 import com.donlim.pm.dto.PmOrganizeDto;
 import com.donlim.pm.dto.excel.PmOrganizeExcelDto;
+import com.donlim.pm.em.OperationType;
 import com.donlim.pm.entity.PmOrganize;
+import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.service.PmOrganizeService;
 import io.swagger.annotations.Api;
 import org.modelmapper.ModelMapper;
@@ -40,6 +42,14 @@ public class PmOrganizeController extends BaseTreeController<PmOrganize, PmOrgan
      */
     @Autowired
     private PmOrganizeService service;
+    @Autowired
+    private PmLogService pmLogService;
+
+    @Override
+    public ResultData<PmOrganizeDto> save(PmOrganizeDto dto) {
+        pmLogService.save(OperationType.ModifyOrgInfo);
+        return super.save(dto);
+    }
 
     @Override
     public BaseTreeService<PmOrganize> getService() {

@@ -15,11 +15,13 @@ import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.dto.excel.TodoListExcelDto;
+import com.donlim.pm.em.OperationType;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.flow.BaseFlowController;
 import com.donlim.pm.flow.BaseFlowEntityService;
 import com.donlim.pm.service.PmEmployeeService;
+import com.donlim.pm.service.PmLogService;
 import com.donlim.pm.service.TodoListService;
 import com.donlim.pm.webservice.eipcenter.SvcHdrTypes;
 import io.swagger.annotations.Api;
@@ -51,6 +53,8 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
     private TodoListService service;
     @Autowired
     private PmEmployeeService pmEmployeeService;
+    @Autowired
+    private PmLogService pmLogService;
 
     @Override
     public BaseFlowEntityService<TodoList> getService() {
@@ -164,6 +168,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
             }
         }
         ResultData<TodoListDto> saveResultData = super.save(dto);
+        pmLogService.save(OperationType.SaveToDoList);
         // 保存结案且已发送过待办 删除EIP待办
 //        if(dto.getOndutyCode().equals("376951")){
             if(dto.getId() != null && dto.getIsFinished() && dto.getIsSync().equals("1")){
