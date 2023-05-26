@@ -401,6 +401,11 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             }
             info.setPersonDay(personDay);
 
+            if (StringUtils.isNotEmpty(info.getProjectTypes())) {
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectTypes.class, Integer.valueOf(info.getProjectTypes()));
+                info.setProjectTypes(enumItemRemark);
+            }
+
             /*Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
                     .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
                     .collect(Collectors.groupingBy(ProjectPlan::getPlanType));
