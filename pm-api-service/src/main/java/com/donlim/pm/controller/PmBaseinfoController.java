@@ -150,7 +150,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                 }
                 info.setPersonDay(personDay);
                 // 进行中计划备注中显示
-                Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
+                /*Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
                         .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
                         .collect(Collectors.groupingBy(ProjectPlan::getPlanType));
                 String progress = "";
@@ -180,7 +180,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                         index++;
                     }
                 }
-                info.setRemark(progress);
+                info.setRemark(progress);*/
             }
         });
         if(true || ContextUtil.getUserAccount().equals("admin")){
@@ -401,7 +401,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
             }
             info.setPersonDay(personDay);
 
-            Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
+            /*Map<String, List<ProjectPlan>> doingList = projectPlanList.stream()
                     .filter(p -> null != p.getSchedureStatus() && p.getSchedureStatus().equals("进行中"))
                     .collect(Collectors.groupingBy(ProjectPlan::getPlanType));
             String progress = "";
@@ -431,7 +431,7 @@ public class PmBaseinfoController extends BaseEntityController<PmBaseinfo, PmBas
                     index++;
                 }
             }
-            info.setRemark(progress);
+            info.setRemark(progress);*/
         });
         ModelMapper modelMapper = new ModelMapper();
         TypeMap<PmBaseinfo, PmBaseinfoExcelDto> typeMap = modelMapper.typeMap(PmBaseinfo.class, PmBaseinfoExcelDto.class);
