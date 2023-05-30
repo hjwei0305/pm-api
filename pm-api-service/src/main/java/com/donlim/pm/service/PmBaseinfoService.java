@@ -179,6 +179,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
+//        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(p -> p.getCode().equals("E20220930001")).collect(Collectors.toList());
         List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
             if (null != pmBaseinfo.getCode()) {
@@ -198,49 +199,55 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                     pmBaseinfo.setTest(IppConnector.getTestResult(pmBaseinfo.getCode()));
                 }
                 if (pmBaseinfo.getStatus().equals("0")) {
-                    APPBODYS finish = EipConnector.isFinish(pmBaseinfo.getCode().replaceAll(" ",""));
-                    if(!ObjectUtils.isEmpty(finish) && !StringUtils.isBlank(finish.getCHECKDATE())){
+                    APPBODYS finish = EipConnector.isFinish(pmBaseinfo.getCode().replaceAll(" ", ""));
+                    if (!ObjectUtils.isEmpty(finish) && !StringUtils.isBlank(finish.getCHECKDATE())) {
                         pmBaseinfo.setStatus(finish.isRESULT() ? "1" : "0");
-                        pmBaseinfo.setFinalFinishDate(LocalDate.parse(finish.getCHECKDATE(), DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-                    }
-                }
-                pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
-                //计算主计划达成率
-//                List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
-                // 除主计划外，其他计划表
-                List<ProjectPlan> otherPlanList = projectPlanDao.getAllByProjectIdAndPlanTypeNot(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
-                int finishNum = 0;
-                // 是否逾期 \ 提前
-                long overTimeDay=0;
-                long advanceDay=0;
-                //计算是否逾期，逾期天数
-                if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
-                    if(pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())){
-                        if(LocalDate.now().isAfter(pmBaseinfo.getFinalFinishDate())){
-                            overTimeDay =pmBaseinfo.getFinalFinishDate().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+                        if (finish.getCHECKDATE().contains("/")) {
+                            finish.setCHECKDATE(finish.getCHECKDATE().replaceAll("/", "-"));
                         }
-                    }else{
-                        advanceDay =pmBaseinfo.getPlanFinishDate().toEpochDay()- pmBaseinfo.getFinalFinishDate().toEpochDay();
+                        if (finish.getCHECKDATE().split("-")[1].length() == 1) {
+                            finish.setCHECKDATE(finish.getCHECKDATE().substring(0, 5) + "0" + finish.getCHECKDATE().substring(5));
+                        }
+                        pmBaseinfo.setFinalFinishDate(LocalDate.parse(finish.getCHECKDATE(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                     }
+                }
+            }
+            pmBaseinfo.setCurrentPeriod(findByIdForSchedule(pmBaseinfo.getId()).getCurrentPeriod());
+            //计算主计划达成率
+//            List<ProjectPlan> planList = projectPlanDao.getAllByProjectIdAndPlanType(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
+            // 除主计划外，其他计划表
+            List<ProjectPlan> otherPlanList = projectPlanDao.getAllByProjectIdAndPlanTypeNot(pmBaseinfo.getId(), PROJECT_MASTER_PLAN);
+            int finishNum = 0;
+            // 是否逾期 \ 提前
+            long overTimeDay=0;
+            long advanceDay=0;
+            //计算是否逾期，逾期天数
+            if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
+                if (pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())) {
+                    if (LocalDate.now().isAfter(pmBaseinfo.getFinalFinishDate())) {
+                        overTimeDay = pmBaseinfo.getFinalFinishDate().toEpochDay() - pmBaseinfo.getPlanFinishDate().toEpochDay();
+                    }
+                } else {
+                    advanceDay = pmBaseinfo.getPlanFinishDate().toEpochDay() - pmBaseinfo.getFinalFinishDate().toEpochDay();
+                }
+            }
+            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
+                overTimeDay =LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
+            }
+            pmBaseinfo.setOveredDays(overTimeDay);
+            pmBaseinfo.setAdvanceDays(advanceDay);
+            if(overTimeDay>0){
+                pmBaseinfo.setIsOverdue(true);
+            }else{
+                pmBaseinfo.setIsOverdue(false);
+            }
+            if(advanceDay>0){
+                pmBaseinfo.setIsAdvance(true);
+            }else{
+                pmBaseinfo.setIsAdvance(false);
+            }
 
-                }
-                if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
-                    overTimeDay =LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
-                }
-                pmBaseinfo.setOveredDays(overTimeDay);
-                pmBaseinfo.setAdvanceDays(advanceDay);
-                if(overTimeDay>0){
-                    pmBaseinfo.setIsOverdue(true);
-                }else{
-                    pmBaseinfo.setIsOverdue(false);
-                }
-                if(advanceDay>0){
-                    pmBaseinfo.setIsAdvance(true);
-                }else{
-                    pmBaseinfo.setIsAdvance(false);
-                }
-
-                for (ProjectPlan projectPlan : otherPlanList) {
+            for (ProjectPlan projectPlan : otherPlanList) {
                     // 按主计划序号1计算是否逾期
 //                    if (projectPlan.getSchedureNo().equals("1")) {
 //                        if (projectPlan.getPlanEndDate() != null) {
@@ -253,17 +260,16 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
 //                            }
 //                        }
 //                    }
-                    if (projectPlan.getActualEndDate() != null) {
-                        finishNum++;
-                    }
+                if (projectPlan.getActualEndDate() != null) {
+                    finishNum++;
                 }
-                String scheduleRatePercent = "0%";
-                // 规定计划总数 > 6
-                if (otherPlanList.size() >=7) {
-                    scheduleRatePercent = Math.round(finishNum * 100 / otherPlanList.size()) + "%";
-                }
-                pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
             }
+            String scheduleRatePercent = "0%";
+            // 规定计划总数 > 6
+            if (otherPlanList.size() >=7) {
+                scheduleRatePercent = Math.round(finishNum * 100 / otherPlanList.size()) + "%";
+            }
+            pmBaseinfo.setMasterScheduleRate(scheduleRatePercent);
             save(pmBaseinfoList);
         }
     }
