@@ -46,6 +46,14 @@ public interface PmBaseinfoWeekApi extends BaseEntityApi<PmBaseinfoWeekDto>, Fin
     ResultData getWeekReport(@RequestBody Search search);
 
     /**
+     * 双周计划明细子表查询
+     * @param search 查询条件
+     */
+    @PostMapping(path = "getWeekReportDetail",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "双周计划明细子表查询" ,notes = "双周计划明细主表查询")
+    ResultData getWeekReportDetail(@RequestBody Search search);
+
+    /**
      * 验证双周计划是否完成
      * @param dto
      */

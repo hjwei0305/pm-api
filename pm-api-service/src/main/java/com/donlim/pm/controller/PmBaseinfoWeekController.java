@@ -119,6 +119,11 @@ public class PmBaseinfoWeekController extends BaseEntityController<PmBaseinfoWee
     }
 
     @Override
+    public ResultData getWeekReportDetail(Search search) {
+        return ResultData.success(service.findByFilters(search));
+    }
+
+    @Override
     public ResultData<PmBaseinfoWeekDto> confirmFinishPlan(PmBaseinfoWeekDto dto) {
         PmBaseinfoWeek pmBaseinfoWeek = service.confirmFinishPlan(dto);
         if(!ObjectUtils.isEmpty(pmBaseinfoWeek)){

@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -101,7 +98,11 @@ public class PmBaseinfoWeekService extends BaseEntityService<PmBaseinfoWeek> {
                 week.setFinishPlan(null);
             }
         });
-        return weekReportDtoList;
+        List<WeekReportDto> weekNullList = weekReportDtoList.stream().filter(week -> week.getLastEditedDate() == null).collect(Collectors.toList());
+        List<WeekReportDto> weekNotNullList = weekReportDtoList.stream().filter(week -> week.getLastEditedDate() != null).collect(Collectors.toList());
+        Collections.sort(weekNotNullList, Comparator.comparing(WeekReportDto::getLastEditedDate).reversed());
+        weekNotNullList.addAll(weekNullList);
+        return weekNotNullList;
     }
 
     @Transactional(rollbackFor = Exception.class)
