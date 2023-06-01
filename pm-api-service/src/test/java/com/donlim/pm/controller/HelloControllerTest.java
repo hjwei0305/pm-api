@@ -1,7 +1,15 @@
 package com.donlim.pm.controller;
 
+import com.changhong.sei.basic.api.EmployeeApi;
+import com.changhong.sei.basic.api.EmployeePositionApi;
 import com.changhong.sei.basic.api.UserApi;
+import com.changhong.sei.basic.dto.EmployeeDto;
+import com.changhong.sei.basic.dto.PositionDto;
+import com.changhong.sei.basic.dto.search.EmployeeQuickQueryParam;
 import com.changhong.sei.core.context.ContextUtil;
+import com.changhong.sei.core.dto.ResultData;
+import com.changhong.sei.core.dto.serach.PageInfo;
+import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JwtTokenUtil;
 import com.donlim.pm.connector.EipConnector;
@@ -13,6 +21,8 @@ import com.donlim.pm.service.TodoListService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,56 +38,38 @@ public class HelloControllerTest extends BaseUnitTest {
     private PmBaseinfoService pmBaseinfoService;
     @Autowired
     private  PmBaseinfoController pmBaseinfoController;
+
     @Autowired
-    private UserApi userApi;
+    private EmployeePositionApi employeePositionApi;
     @Autowired
     private TodoListService service;
+    @Autowired
+    EmployeeApi employeeApi;
 
     @Test
     public void sayHello() {
 
-        MailDto mailDto=new MailDto();
-        mailDto.setAccount("377614");
-        mailDto.setUrl("https://sei.donlim.com/#/user/login");
-        mailDto.setMailID("1234");
-        mailDto.setMailType("ADD");
-        mailDto.setMailSubject("你有一个待办未处理，请登陆项目管理系统尽快处理！");
-        EipConnector.sendNotice(mailDto);
+        EmployeeQuickQueryParam param = new EmployeeQuickQueryParam();
+        param.setOrganizationId("ECF54567-9025-11ED-8F9A-0242AC120011");
+        param.setIncludeSubNode(true);
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPage(1);
+        pageInfo.setRows(10000);
+        param.setPageInfo(pageInfo);
+        PageResult<EmployeeDto> data = employeeApi.queryEmployees(param).getData();
+        //遍历data
+        data.getRows().forEach(employeeDto -> {
+            System.out.println(employeeDto.getUserName());
+        });
 
-      /*  Search search=new Search();
-        ResultData<PageResult<PmBaseinfoDto>> byPage = pmBaseinfoController.findByPage(search);
-        System.out.println(byPage.getData());*/
 
+        ResultData<List<PositionDto>> childrenFromParentId = employeePositionApi.getChildrenFromParentId(ContextUtil.getUserId());
+        //遍历数据
+        for (PositionDto positionDto : childrenFromParentId.getData()) {
+            System.out.println(positionDto.getName());
+        }
     }
-      //  pmBaseinfoController.syncProjectInfo("E20220808002");
-       // System.out.println( EnumUtils.getEnumItemRemark(LogType.class,LogType.ModifyCodePlan));
-       /* String name = "程序员";
-        ResultData<String> result = controller.sayHello(name);
-        LOG.debug(JsonUtils.toJson(result));*/
 
-  /*      HashMap<String,String> map=new HashMap<>();
-        map.put("mm","aa");
-        map.put("bb","kk");
-        String aa =JSONObject.toJSONString(map);
-        System.out.println(aa);*/
-       // System.out.println(SmallNodeType.Start.name()); ;
-      //  System.out.println(EnumUtils.getEnumItemRemark(SmallNodeType.class,SmallNodeType.Research));
-
-      //  pmBaseinfoService.updateProjectInfo();
-      //  APPHDR appHdr=new APPHDR();
-
-       /* APPBODY appBody=new APPBODY();
-        appBody.setPROJECTNO("E20211222011");
-        SVCHDR svcHdr=new SVCHDR();
-        ObjectFactory objectFactory=new ObjectFactory();
-        CheckSearchSevice checkSearchSevice=new CheckSearchSevice();
-        SVCBODYS svcbodys = checkSearchSevice.getDomino().synchecksearch(svcHdr, appHdr, appBody);
-        if("S".equals(svcbodys.getOSVCHDRS().getRCODE())) {
-            if (svcbodys.getOAPPBODYS().isRESULT()) {
-
-            }
-        }*/
-     // IppConnector.getTestResult("E20211008003");
        @Test
        public void a(){
            Map<String, Object> claims = new HashMap<>();
@@ -102,7 +94,11 @@ public class HelloControllerTest extends BaseUnitTest {
 
        @Test
         public void b(){
-           service.SendEipTask();
+         LocalDate start=  LocalDate.of(2023,3,23);
+           LocalDate end=  LocalDate.of(2022,3,25);
+
+
+           //service.SendEipTask();
        }
 
        @Test
