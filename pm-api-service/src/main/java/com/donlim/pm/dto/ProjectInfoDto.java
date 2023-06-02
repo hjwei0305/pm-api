@@ -18,6 +18,14 @@ public class ProjectInfoDto {
      */
     private Integer processingNum;
     /**
+     * 结案
+     */
+    private Integer finishNum;
+    /**
+     * 暂停
+     */
+    private Integer pauseNum;
+    /**
      * 总数
      */
     private Integer sumNum;

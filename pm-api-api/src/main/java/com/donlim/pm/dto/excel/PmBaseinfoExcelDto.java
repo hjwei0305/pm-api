@@ -30,6 +30,8 @@ public class PmBaseinfoExcelDto {
     private String name;
     @ApiModelProperty(value = "主导人")
     private String leader;
+    @ApiModelProperty(value = "当前进度")
+    private String masterScheduleRate;
     /**
      * 开始日期
      */

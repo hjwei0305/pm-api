@@ -66,7 +66,7 @@ public class IppConnector {
                     pmBaseinfo.setPromotionDegree(ipp.getPromotionDescription());
                     pmBaseinfo.setHardwareRequirement(ipp.getHardwareNeedDescription());
                     pmBaseinfo.setProjectTypes(ipp.getProposalType());
-                    pmBaseinfo.setStatus("1");
+                    pmBaseinfo.setStatus("0");
                     pmBaseinfoList.add(pmBaseinfo);
                 }
             }
