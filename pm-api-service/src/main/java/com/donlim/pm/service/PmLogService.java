@@ -19,6 +19,7 @@ import com.donlim.pm.util.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -102,7 +103,11 @@ public class PmLogService extends BaseEntityService<PmLog> {
                         .collect(Collectors.groupingBy(PmLog::getEmployeeName));
             }
         }
+        // 处理组长挂在部门，没有统计进科室的情况
         for (PmOrganize pmOrganize : orgList) {
+            if(StringUtils.isEmpty(pmOrganize.getManager())){
+                continue;
+            }
             PmVisitStatisticsDTO pmVisitStatisticsDTO = new PmVisitStatisticsDTO();
             List<PmEmployee> pmEmployees = empMap.get(pmOrganize.getCode());
             String[] split = pmOrganize.getManager().split(",");
