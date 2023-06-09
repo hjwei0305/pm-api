@@ -510,32 +510,48 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         int notStartedNum = 0;
         //进行中数
         int processingNum = 0;
-        //已上线数
-        int onLineNum = 0;
+        // 结案数
+        int finishNum = 0;
+        // 暂停数
+        int pauseNum = 0;
+        /*
         //提前完成数
         int advanceFinishNum = 0;
+        */
+        //即将逾期项目数
+        int preOverTimeNum=0;
         //逾期数
         int overTimeNum = 0;
         //提前天数
         long advanceDay = 0;
         //逾期天数
         long overTimeDay=0;
-        //即将逾期项目数
-        int preOverTimeNum=0;
         List<PmBaseinfo> PmBaseinfoList = dao.findByFilters(search);
         for (PmBaseinfo pmBaseinfo : PmBaseinfoList) {
-            if (pmBaseinfo.getStartDate() != null && LocalDate.now().isBefore(pmBaseinfo.getStartDate()) && pmBaseinfo.getStatus().equals("0")) {
+            // 暂停项目，其他不计入
+            if(pmBaseinfo.getIsPause()){
+                pauseNum++;
+                continue;
+            }
+            if (!ObjectUtils.isEmpty(pmBaseinfo.getStartDate()) && LocalDate.now().isBefore(pmBaseinfo.getStartDate())) {
                 notStartedNum++;
             }
-            if (pmBaseinfo.getStartDate() != null && LocalDate.now().isAfter(pmBaseinfo.getStartDate()) && pmBaseinfo.getStatus().equals("0")) {
+            if (!ObjectUtils.isEmpty(pmBaseinfo.getStartDate()) && ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())  && LocalDate.now().isAfter(pmBaseinfo.getStartDate())) {
                 processingNum++;
             }
+            if (!ObjectUtils.isEmpty(pmBaseinfo.getFinalFinishDate())) {
+                finishNum++;
+            }
+            /*
             if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isBefore(pmBaseinfo.getPlanFinishDate())) {
                 advanceFinishNum++;
             }
+            */
             if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null && pmBaseinfo.getFinalFinishDate().isAfter(pmBaseinfo.getPlanFinishDate())) {
+                // 已结案延期
                 overTimeNum++;
             } else if (pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate() != null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())) {
+                // 未结案延期
                 overTimeNum++;
             }
             if (pmBaseinfo.getFinalFinishDate() != null && pmBaseinfo.getPlanFinishDate() != null) {
@@ -551,7 +567,7 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
             if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isAfter(pmBaseinfo.getPlanFinishDate())){
                 overTimeDay +=LocalDate.now().toEpochDay()- pmBaseinfo.getPlanFinishDate().toEpochDay();
             }
-            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && pmBaseinfo.getPlanFinishDate().isBefore(LocalDate.now())){
+            if(pmBaseinfo.getPlanFinishDate() != null &&  pmBaseinfo.getFinalFinishDate() == null && LocalDate.now().isBefore(pmBaseinfo.getPlanFinishDate())){
                if(pmBaseinfo.getPlanFinishDate().toEpochDay()-LocalDate.now().toEpochDay()<7){
                    preOverTimeNum ++;
                }
@@ -562,7 +578,9 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         projectInfoDto.setNotStartedNum(notStartedNum);
         projectInfoDto.setProcessingNum(processingNum);
         projectInfoDto.setSumNum(PmBaseinfoList.size());
-        projectInfoDto.setAdvanceFinishNum(advanceFinishNum);
+        projectInfoDto.setFinishNum(finishNum);
+        projectInfoDto.setPauseNum(pauseNum);
+//        projectInfoDto.setAdvanceFinishNum(advanceFinishNum);
         projectInfoDto.setOverTimeNum(overTimeNum);
         projectInfoDto.setAdvanceDay(advanceDay);
         projectInfoDto.setOverTimeDay(overTimeDay);
