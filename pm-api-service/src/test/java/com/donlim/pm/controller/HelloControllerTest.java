@@ -1,10 +1,7 @@
 package com.donlim.pm.controller;
 
-import com.changhong.sei.basic.api.EmployeeApi;
-import com.changhong.sei.basic.api.EmployeePositionApi;
-import com.changhong.sei.basic.api.UserApi;
 import com.changhong.sei.basic.dto.EmployeeDto;
-import com.changhong.sei.basic.dto.PositionDto;
+import com.changhong.sei.basic.dto.SysUserDto;
 import com.changhong.sei.basic.dto.search.EmployeeQuickQueryParam;
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
@@ -12,17 +9,14 @@ import com.changhong.sei.core.dto.serach.PageInfo;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JwtTokenUtil;
-import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.connector.IppConnector;
-import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.TodoListService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import com.changhong.sei.basic.api.*;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,36 +32,20 @@ public class HelloControllerTest extends BaseUnitTest {
     private PmBaseinfoService pmBaseinfoService;
     @Autowired
     private  PmBaseinfoController pmBaseinfoController;
-
-    @Autowired
-    private EmployeePositionApi employeePositionApi;
     @Autowired
     private TodoListService service;
     @Autowired
-    EmployeeApi employeeApi;
+    private SysUserApi sysUserApi;
 
     @Test
     public void sayHello() {
+        ResultData<SysUserDto> byEmployeeCode = sysUserApi.findByEmployeeCode("377614");
+        if(byEmployeeCode.successful()){
 
-        EmployeeQuickQueryParam param = new EmployeeQuickQueryParam();
-        param.setOrganizationId("ECF54567-9025-11ED-8F9A-0242AC120011");
-        param.setIncludeSubNode(true);
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setPage(1);
-        pageInfo.setRows(10000);
-        param.setPageInfo(pageInfo);
-        PageResult<EmployeeDto> data = employeeApi.queryEmployees(param).getData();
-        //遍历data
-        data.getRows().forEach(employeeDto -> {
-            System.out.println(employeeDto.getUserName());
-        });
-
-
-        ResultData<List<PositionDto>> childrenFromParentId = employeePositionApi.getChildrenFromParentId(ContextUtil.getUserId());
-        //遍历数据
-        for (PositionDto positionDto : childrenFromParentId.getData()) {
-            System.out.println(positionDto.getName());
+            SysUserDto data = byEmployeeCode.getData();
+            System.out.println(data.getEmployeeCode());
         }
+                
     }
 
        @Test

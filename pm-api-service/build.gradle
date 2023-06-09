@@ -22,6 +22,7 @@ dependencies {
     compile("mysql:mysql-connector-java:$mysqlVersion")
     compile("com.changhong.sei:sei-serial-sdk:$sei_version")
     compile("com.changhong.sei:sei-edm-sdk:$sei_version")
+    implementation "com.changhong.sei:sei-basic-v6-api:6.0.1.199"
     compile("com.changhong.sei:sei-basic-sdk:$sei_version")
     compile 'com.alibaba:fastjson:+'
     // 测试依赖包
