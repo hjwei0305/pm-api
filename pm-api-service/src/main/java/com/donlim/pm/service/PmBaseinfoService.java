@@ -179,10 +179,10 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
     public void updateProjectInfo() {
         //更新尚未结案的项目状态
         //List<PmBaseinfo> pmBaseinfoList = dao.findAllByStatus("0").stream().collect(Collectors.toList());
-//        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(p -> p.getCode().equals("E20220930001")).collect(Collectors.toList());
+//        List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().filter(p -> p.getCode().equals("E20230426002")).collect(Collectors.toList());
         List<PmBaseinfo> pmBaseinfoList = dao.findAll().stream().collect(Collectors.toList());
         for (PmBaseinfo pmBaseinfo : pmBaseinfoList) {
-            if (null != pmBaseinfo.getCode()) {
+            if (!StringUtils.isEmpty(pmBaseinfo.getCode())) {
                 List<IppProjectInfoDetails.TableDTO> list = IppConnector.getPorjectInfoDetails(pmBaseinfo.getCode());
                 for (IppProjectInfoDetails.TableDTO data : list) {
                     if (data.getDevelopWay().equals(IppConstant.UI)) {
@@ -207,6 +207,9 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
                         }
                         if (finish.getCHECKDATE().split("-")[1].length() == 1) {
                             finish.setCHECKDATE(finish.getCHECKDATE().substring(0, 5) + "0" + finish.getCHECKDATE().substring(5));
+                        }
+                        if (finish.getCHECKDATE().split("-")[2].length() == 1) {
+                            finish.setCHECKDATE(finish.getCHECKDATE().substring(0, 8) + "0" + finish.getCHECKDATE().substring(8));
                         }
                         pmBaseinfo.setFinalFinishDate(LocalDate.parse(finish.getCHECKDATE(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                     }
