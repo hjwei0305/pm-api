@@ -201,4 +201,10 @@ public class TodoList extends BaseFlowEntity implements Serializable {
      */
     @Column(name = "overed_days")
     private Long overedDays;
+
+    /**
+     * 是否开启
+     */
+    @Column(name = "is_start")
+    private Boolean isStart;
 }

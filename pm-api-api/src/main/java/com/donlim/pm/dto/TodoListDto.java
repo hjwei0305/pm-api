@@ -226,4 +226,9 @@ public class TodoListDto extends BaseEntityDto {
      */
     @ApiModelProperty(value = "逾期天数")
     private Long overedDays;
+    /**
+     * 是否开启
+     */
+    @ApiModelProperty(value = "是否开启")
+    private Boolean isStart;
 }
