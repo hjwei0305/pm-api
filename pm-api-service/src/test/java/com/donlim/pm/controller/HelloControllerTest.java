@@ -7,12 +7,15 @@ import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageInfo;
 import com.changhong.sei.core.dto.serach.PageResult;
+import com.changhong.sei.core.service.bo.ResponseData;
 import com.changhong.sei.core.test.BaseUnitTest;
 import com.changhong.sei.core.util.JwtTokenUtil;
 import com.donlim.pm.connector.IppConnector;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.TodoListService;
+import com.donlim.pm.service.client.FlowClient;
+import com.donlim.pm.service.client.vo.StartFlowVo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.changhong.sei.basic.api.*;
@@ -36,16 +39,20 @@ public class HelloControllerTest extends BaseUnitTest {
     private TodoListService service;
     @Autowired
     private SysUserApi sysUserApi;
-
+    @Autowired
+    private FlowClient flowClient;
     @Test
     public void sayHello() {
-        ResultData<SysUserDto> byEmployeeCode = sysUserApi.findByEmployeeCode("377614");
-        if(byEmployeeCode.successful()){
+        StartFlowVo startFlowVo = new StartFlowVo();
+        startFlowVo.setBusinessKey("0E18340F-1971-11EE-93E7-0242AC140020");
+        startFlowVo.setBusinessModelCode("com.donlim.pm.entity.TodoList");
+        startFlowVo.setFlowDefKey("DBQDSPCOPYCOPY");
+        startFlowVo.setTypeId("B43A390D-4902-11ED-B56B-0242AC140022");
+        startFlowVo.setOpinion("");
+        startFlowVo.setTaskList("[{\"nodeId\":\"UserTask_6\",\"userVarName\":\"UserTask_6_Normal\",\"flowTaskType\":\"common\",\"instancyStatus\":false,\"solidifyFlow\":false,\"userIds\":\"DDBBDE54-BC82-11EC-BD40-0242AC140011\"}]");
 
-            SysUserDto data = byEmployeeCode.getData();
-            System.out.println(data.getEmployeeCode());
-        }
-                
+        ResponseData responseData = flowClient.startFlow(startFlowVo);
+        System.out.println(responseData.getData().toString());
     }
 
        @Test
