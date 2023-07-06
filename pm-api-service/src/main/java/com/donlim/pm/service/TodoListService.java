@@ -194,7 +194,7 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
             if (todo.getFlowStatus().equals(FlowStatus.COMPLETED)) {
                 finishNum++;
             }
-            if (todo.getOveredDays() != null && todo.getOveredDays() > 0) {
+            if (!todo.getFlowStatus().equals(FlowStatus.INIT) && todo.getOveredDays() != null && todo.getOveredDays() > 0) {
                 overTimeNum++;
             }
         }
