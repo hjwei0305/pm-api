@@ -13,6 +13,7 @@ import com.changhong.sei.core.utils.ResultDataUtil;
 import com.donlim.pm.api.TodoListApi;
 import com.donlim.pm.connector.EipConnector;
 import com.donlim.pm.dto.MailDto;
+import com.donlim.pm.dto.ProjectInfoDto;
 import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.dto.excel.TodoListExcelDto;
 import com.donlim.pm.em.OperationType;
@@ -214,7 +215,7 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         return convertToDtoPageResult(service.findByPage(search));
     }
     @Override
-    public ResultData<PageResult<TodoListDto>> projFindByPage2(Search search) {
+    public ResultData<List<TodoListDto>> projFindByPage2(Search search) {
         List<SearchFilter> filtersList = search.getFilters();
         SearchFilter searchFilter = new SearchFilter("type","待办清单", SearchFilter.Operator.EQ);
         filtersList.add(searchFilter);
@@ -222,7 +223,12 @@ public class TodoListController extends BaseFlowController<TodoList, TodoListDto
         if(search.getFilters() == null){
             return ResultData.success();
         }
-        return convertToDtoPageResult(service.findByPage(search));
+        return ResultData.success(convertToDtos(service.findByFilters(search)));
+    }
+
+    @Override
+    public ResultData<ProjectInfoDto> projFindByPage2Summary(Search search) {
+        return ResultData.success(service.projFindByPage2Summary(search));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.donlim.pm.service;
 
 import com.changhong.sei.core.context.ContextUtil;
 import com.changhong.sei.core.dao.BaseEntityDao;
+import com.changhong.sei.core.dto.flow.FlowStatus;
 import com.changhong.sei.core.dto.serach.Search;
 import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.changhong.sei.edm.sdk.DocumentManager;
@@ -10,6 +11,7 @@ import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dao.TodoListDao;
 import com.donlim.pm.dto.MailDto;
 import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.ProjectInfoDto;
 import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.dto.excel.TodoListExcelDto;
 import com.donlim.pm.entity.PmEmployee;
@@ -167,5 +169,39 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
                 todoList.setOveredDays(overDay);
             }
         }
+    }
+
+    public ProjectInfoDto projFindByPage2Summary(Search search) {
+        ProjectInfoDto projectInfoDto = new ProjectInfoDto();
+        // 进行中
+        int processingNum = 0;
+        // 结案
+        int finishNum = 0;
+        // 逾期
+        int overTimeNum = 0;
+        List<SearchFilter> filtersList = search.getFilters();
+        SearchFilter searchFilter = new SearchFilter("type","待办清单", SearchFilter.Operator.EQ);
+        filtersList.add(searchFilter);
+        search.setFilters(filtersList);
+        List<TodoList> todoList = dao.findByFilters(search);
+        for (TodoList todo : todoList) {
+            if(todo.getFlowStatus() == null){
+                todo.setFlowStatus(FlowStatus.INIT);
+            }
+            if (todo.getFlowStatus().equals(FlowStatus.INPROCESS)) {
+                processingNum++;
+            }
+            if (todo.getFlowStatus().equals(FlowStatus.COMPLETED)) {
+                finishNum++;
+            }
+            if (todo.getOveredDays() != null && todo.getOveredDays() > 0) {
+                overTimeNum++;
+            }
+        }
+        projectInfoDto.setProcessingNum(processingNum);
+        projectInfoDto.setSumNum(todoList.size());
+        projectInfoDto.setFinishNum(finishNum);
+        projectInfoDto.setOverTimeNum(overTimeNum);
+        return projectInfoDto;
     }
 }

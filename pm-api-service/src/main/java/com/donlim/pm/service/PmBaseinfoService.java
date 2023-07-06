@@ -653,17 +653,27 @@ public class PmBaseinfoService extends BaseEntityService<PmBaseinfo> {
         }
         // 合计列
         ProScheduleReportDTO sumDTO = new ProScheduleReportDTO();
-        List<Integer> requireMentList = proScheduleReportDTOS.stream().filter(a -> !a.getRequirement().equals("/"))
-                .map(a -> Integer.valueOf(a.getRequirement())).collect(Collectors.toList());
-        List<Integer> developList = proScheduleReportDTOS.stream().filter(a -> !a.getDevelopment().equals("/"))
-                .map(a -> Integer.valueOf(a.getDevelopment())).collect(Collectors.toList());
-        List<Integer> testList = proScheduleReportDTOS.stream().filter(a -> !a.getTest().equals("/"))
-                .map(a -> Integer.valueOf(a.getTest())).collect(Collectors.toList());
-        List<Integer> promoteList = proScheduleReportDTOS.stream().filter(a -> !a.getPromote().equals("/"))
-                .map(a -> Integer.valueOf(a.getPromote())).collect(Collectors.toList());
-        List<Integer> finishList = proScheduleReportDTOS.stream().filter(a -> !a.getFinish().equals("/"))
-                .map(a -> Integer.valueOf(a.getFinish())).collect(Collectors.toList());
-        BigDecimal req = requireMentList.size() == 0 ? BigDecimal.ZERO :BigDecimal.valueOf(requireMentList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(requireMentList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        List<Integer> requireMentList = proScheduleReportDTOS.stream()
+                .filter(a -> !a.getRequirement().equals("/"))
+                .map(a -> Integer.valueOf(a.getRequirement()))
+                .collect(Collectors.toList());
+        List<Integer> developList = proScheduleReportDTOS.stream()
+                .filter(a -> !a.getDevelopment().equals("/"))
+                .map(a -> Integer.valueOf(a.getDevelopment()))
+                .collect(Collectors.toList());
+        List<Integer> testList = proScheduleReportDTOS.stream()
+                .filter(a -> !a.getTest().equals("/"))
+                .map(a -> Integer.valueOf(a.getTest()))
+                .collect(Collectors.toList());
+        List<Integer> promoteList = proScheduleReportDTOS.stream()
+                .filter(a -> !a.getPromote().equals("/"))
+                .map(a -> Integer.valueOf(a.getPromote()))
+                .collect(Collectors.toList());
+        List<Integer> finishList = proScheduleReportDTOS.stream()
+                .filter(a -> !a.getFinish().equals("/"))
+                .map(a -> Integer.valueOf(a.getFinish()))
+                .collect(Collectors.toList());
+        BigDecimal req = requireMentList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(requireMentList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(requireMentList.size()), 2, BigDecimal.ROUND_HALF_UP);
         BigDecimal dev = developList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(developList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(developList.size()), 2, BigDecimal.ROUND_HALF_UP);
         BigDecimal tes = testList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(testList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(testList.size()), 2, BigDecimal.ROUND_HALF_UP);
         BigDecimal pro = promoteList.size() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(promoteList.stream().filter(a -> a == 1).count()).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(promoteList.size()), 2, BigDecimal.ROUND_HALF_UP);

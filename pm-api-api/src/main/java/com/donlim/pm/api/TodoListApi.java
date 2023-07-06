@@ -7,6 +7,7 @@ import com.changhong.sei.core.dto.flow.Executor;
 import com.changhong.sei.core.dto.flow.FlowInvokeParams;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
+import com.donlim.pm.dto.ProjectInfoDto;
 import com.donlim.pm.dto.TodoListDto;
 import com.donlim.pm.dto.excel.TodoListExcelDto;
 import io.swagger.annotations.ApiOperation;
@@ -53,7 +54,11 @@ public interface TodoListApi extends BaseEntityApi<TodoListDto>, FindByPageApi<T
 
     @PostMapping(path = "projFindByPage2", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "查找项目待办清单", notes = "查找项目待办清单")
-    ResultData<PageResult<TodoListDto>> projFindByPage2(@RequestBody Search search);
+    ResultData<List<TodoListDto>> projFindByPage2(@RequestBody Search search);
+
+    @PostMapping(path = "projFindByPage2Summary", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "项目待办清单汇总数据", notes = "项目待办清单汇总数据")
+    ResultData<ProjectInfoDto> projFindByPage2Summary(@RequestBody Search search);
 
     /**
      * 导出
