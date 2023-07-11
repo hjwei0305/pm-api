@@ -173,20 +173,31 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
 
     public ProjectInfoDto projFindByPage2Summary(Search search) {
         ProjectInfoDto projectInfoDto = new ProjectInfoDto();
+        //未开始数
+        int notStartedNum = 0;
         // 进行中
         int processingNum = 0;
         // 结案
         int finishNum = 0;
         // 逾期
         int overTimeNum = 0;
+        // 即将逾期项目数
+        int preOverTimeNum = 0;
+        //提前天数
+        long advanceDay = 0;
+        //逾期天数
+        long overTimeDay = 0;
         List<SearchFilter> filtersList = search.getFilters();
-        SearchFilter searchFilter = new SearchFilter("type","待办清单", SearchFilter.Operator.EQ);
+        SearchFilter searchFilter = new SearchFilter("type", "待办清单", SearchFilter.Operator.EQ);
         filtersList.add(searchFilter);
         search.setFilters(filtersList);
         List<TodoList> todoList = dao.findByFilters(search);
         for (TodoList todo : todoList) {
-            if(todo.getFlowStatus() == null){
+            if (todo.getFlowStatus() == null) {
                 todo.setFlowStatus(FlowStatus.INIT);
+            }
+            if (todo.getFlowStatus().equals(FlowStatus.INIT)) {
+                notStartedNum++;
             }
             if (todo.getFlowStatus().equals(FlowStatus.INPROCESS)) {
                 processingNum++;
@@ -194,14 +205,25 @@ public class TodoListService extends BaseFlowEntityService<TodoList> {
             if (todo.getFlowStatus().equals(FlowStatus.COMPLETED)) {
                 finishNum++;
             }
+            if (todo.getFlowStatus().equals(FlowStatus.INPROCESS) && todo.getCompletionDate().toEpochDay() - LocalDate.now().toEpochDay() < 7) {
+                preOverTimeNum++;
+            }
             if (!todo.getFlowStatus().equals(FlowStatus.INIT) && todo.getOveredDays() != null && todo.getOveredDays() > 0) {
                 overTimeNum++;
+                overTimeDay += todo.getOveredDays();
+            }
+            if (todo.getFlowStatus().equals(FlowStatus.COMPLETED) && todo.getConfirmationTime() != null && todo.getConfirmationTime().isBefore(todo.getCompletionDate())) {
+                advanceDay += todo.getCompletionDate().toEpochDay() - todo.getConfirmationTime().toEpochDay();
             }
         }
         projectInfoDto.setProcessingNum(processingNum);
+        projectInfoDto.setNotStartedNum(notStartedNum);
         projectInfoDto.setSumNum(todoList.size());
         projectInfoDto.setFinishNum(finishNum);
+        projectInfoDto.setPreOverTimeNum(preOverTimeNum);
         projectInfoDto.setOverTimeNum(overTimeNum);
+        projectInfoDto.setOverTimeDay(overTimeDay);
+        projectInfoDto.setAdvanceDay(advanceDay);
         return projectInfoDto;
     }
 }

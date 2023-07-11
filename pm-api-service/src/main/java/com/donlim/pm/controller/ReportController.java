@@ -7,20 +7,25 @@ import com.changhong.sei.core.dto.serach.SearchFilter;
 import com.donlim.pm.api.ReportApi;
 import com.donlim.pm.dao.PmEmployeeDao;
 import com.donlim.pm.dao.TodoListDao;
+import com.donlim.pm.dto.PersonalBaseInfoReportDto;
 import com.donlim.pm.dto.PersonnelProjectStatisticsDto;
 import com.donlim.pm.em.EmpstatidEnum;
+import com.donlim.pm.em.ProjectProgress;
 import com.donlim.pm.em.ProjectTypes;
 import com.donlim.pm.entity.PmBaseinfo;
 import com.donlim.pm.entity.PmEmployee;
 import com.donlim.pm.entity.TodoList;
 import com.donlim.pm.service.PmBaseinfoService;
 import com.donlim.pm.service.PmEmployeeService;
+import com.donlim.pm.util.EnumUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -96,5 +101,58 @@ public class ReportController  implements ReportApi {
                 .collect(Collectors.toList());
         pageResult.setRows(sortList);
        return ResultData.success(pageResult);
+    }
+
+    @Override
+    public ResultData<List<PersonalBaseInfoReportDto>> haveNoProjectList(Search search) {
+        List<PersonalBaseInfoReportDto> list = new ArrayList<>();
+        List<SearchFilter> filters = new ArrayList<>();
+        SearchFilter searchFilter = new SearchFilter("employeeCode","380287", SearchFilter.Operator.NE);
+        SearchFilter searchFilter2 = new SearchFilter("empstatid", EmpstatidEnum.LEAVE, SearchFilter.Operator.NE);
+        SearchFilter searchFilter3 = new SearchFilter("employeeCode","274735", SearchFilter.Operator.NE);
+        SearchFilter searchFilter4 = new SearchFilter("employeeCode","043660", SearchFilter.Operator.NE);
+        filters.add(searchFilter);
+        filters.add(searchFilter2);
+        filters.add(searchFilter3);
+        filters.add(searchFilter4);
+        Search empSearch = new Search();
+        empSearch.setFilters(filters);
+        List<PmEmployee> byFilters = pmEmployeeService.findByFilters(empSearch);
+        for (PmEmployee pmEmployee : byFilters) {
+            int notStartedNum = 0;
+            int pauseNum = 0;
+            int finishNum = 0;
+            int projectTotalNum = 0;
+            PersonalBaseInfoReportDto dto = new PersonalBaseInfoReportDto();
+            for (PmBaseinfo pmBaseinfo : pmBaseinfoService.findByFilters(search)) {
+                String enumItemRemark = EnumUtils.getEnumItemRemark(ProjectProgress.class, ProjectProgress.FINISH);
+                if( pmBaseinfo.getLeader()!=null && pmBaseinfo.getLeader().contains(pmEmployee.getEmployeeName())){
+                    projectTotalNum++;
+                    if(pmBaseinfo.getIsPause()){
+                        pauseNum++;
+                    }
+                    if(pmBaseinfo.getStartDate().isAfter(LocalDate.now())){
+                        notStartedNum++;
+                    }
+                    if(!StringUtils.isEmpty(pmBaseinfo.getCurrentPeriod()) && pmBaseinfo.getCurrentPeriod().equals(enumItemRemark)){
+                        finishNum++;
+                    }
+                }
+            }
+            dto.setEmployeeCode(pmEmployee.getEmployeeCode());
+            dto.setEmployeeName(pmEmployee.getEmployeeName());
+            dto.setNotStartedNum(notStartedNum);
+            dto.setPauseNum(pauseNum);
+            dto.setFinishNum(finishNum);
+            dto.setProjectTotalNum(projectTotalNum);
+            dto.setProcessingNum(projectTotalNum-notStartedNum-pauseNum-finishNum);
+            list.add(dto);
+        }
+        // 按进行中项目升序
+        List<PersonalBaseInfoReportDto> sortList = list.stream()
+                .sorted(Comparator.comparingInt(PersonalBaseInfoReportDto::getProjectTotalNum))
+                .sorted(Comparator.comparingInt(PersonalBaseInfoReportDto::getProcessingNum))
+                .collect(Collectors.toList());
+        return ResultData.success(sortList);
     }
 }

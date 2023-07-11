@@ -6,22 +6,18 @@ package com.donlim.pm.api;
  * @Date: 2022/9/15.
  */
 
-import com.changhong.sei.core.api.BaseEntityApi;
-import com.changhong.sei.core.api.FindByPageApi;
 import com.changhong.sei.core.dto.ResultData;
 import com.changhong.sei.core.dto.serach.PageResult;
 import com.changhong.sei.core.dto.serach.Search;
-import com.donlim.pm.dto.PersonnelProjectStatisticsDto;
-import com.donlim.pm.dto.PmBaseinfoDto;
+import com.donlim.pm.dto.PersonalBaseInfoReportDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 基础资料(PmBaseinfo)API
@@ -42,4 +38,12 @@ public interface ReportApi {
     @PostMapping(path = "findPersonnelProjectStatistics",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "查找欠料计划",notes = "查找欠料计划")
     ResultData<PageResult> findPersonnelProjectStatistics(@RequestBody Search search);
+
+    /**
+     * 无项目名单
+     * @param search 查询条件
+     */
+    @PostMapping(path = "haveNoProjectList",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "无项目名单" ,notes = "无项目名单")
+    ResultData<List<PersonalBaseInfoReportDto>> haveNoProjectList(@RequestBody Search search);
 }
